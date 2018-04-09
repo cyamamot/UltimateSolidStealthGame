@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimateSolidStealthGame", "Assembly-CSharp.csproj", "{2830FEBD-9728-708C-12AE-2F7AA1C38486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimateSolidStealthGame", "Assembly-CSharp-Editor.csproj", "{60609678-F19B-771C-11B7-86803774D7B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2830FEBD-9728-708C-12AE-2F7AA1C38486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2830FEBD-9728-708C-12AE-2F7AA1C38486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2830FEBD-9728-708C-12AE-2F7AA1C38486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2830FEBD-9728-708C-12AE-2F7AA1C38486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60609678-F19B-771C-11B7-86803774D7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60609678-F19B-771C-11B7-86803774D7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60609678-F19B-771C-11B7-86803774D7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60609678-F19B-771C-11B7-86803774D7B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
