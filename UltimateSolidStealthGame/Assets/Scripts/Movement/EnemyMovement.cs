@@ -10,8 +10,9 @@ public class EnemyMovement : MonoBehaviour {
 	int destPatrolIndex;
 	Graph graph;
 	UnityEngine.AI.NavMeshAgent nav;
-	Queue<Vertex> path = new Queue<Vertex> ();
+	List<int> path;
 	Enums.directions direction;
+	int lastVertexIndex;
 	int currVertexIndex;
 
 	// Use this for initialization
@@ -23,6 +24,7 @@ public class EnemyMovement : MonoBehaviour {
 				nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 				transform.position.Set (transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition (transform.position);
+				lastVertexIndex = currVertexIndex;
 				path = graph.FindShortestPath (currVertexIndex, patrolVertices [0]);
 			}
 		}
@@ -51,17 +53,55 @@ public class EnemyMovement : MonoBehaviour {
 		}
 	}
 
-	void TravelBetweenPatrolPoints() {      
+	/*void TravelBetweenPatrolPoints() {      
 		if (path != null && path.Count > 0) {
-			Vertex v = path.Peek();
+			Vertex v = path[0];
 			float currX = transform.position.x;
 			float currZ = transform.position.z;
 			float destX = v.position.x;
 			float destZ = v.position.z;
 			if (currX == destX && currZ == destZ) {
-				path.Dequeue ();
+				path.RemoveAt (0);
 				if (path.Count > 0 && nav != null) {
-					nav.SetDestination (path.Peek().position);
+					nav.SetDestination (path [0].position);
+				}
+			}
+		}
+	}*/
+
+	void TravelBetweenPatrolPoints() {      
+		if (path != null && path.Count > 0) {
+			Vertex v = graph.vertices[path[0]];
+			float currX = transform.position.x;
+			float currZ = transform.position.z;
+			float destX = v.position.x;
+			float destZ = v.position.z;
+			if (nav.remainingDistance == 0) {
+				if (lastVertexIndex != currVertexIndex) {
+					graph.vertices [lastVertexIndex].occupied = false;
+					graph.vertices [currVertexIndex].occupied = true;
+				}
+				if (path.Count > 1) {
+                    if (graph.vertices[path[1]].occupied == true) { 
+						return;
+					}
+				}
+				path.RemoveAt (0);
+				if (path.Count > 0 && nav != null) {
+                    lastVertexIndex = currVertexIndex;
+                    Vector3 moveDir = graph.vertices[path[0]].position - graph.vertices[currVertexIndex].position;
+                    if (moveDir.x > 0) {
+                        currVertexIndex += 1;
+                    } else if (moveDir.x < 0) {
+                        currVertexIndex -= 1;
+                    } else if (moveDir.z > 0) {
+                        currVertexIndex += graph.gridWidth;
+                    } else if (moveDir.z < 0) {
+                        currVertexIndex -= graph.gridWidth;
+                    }
+					graph.vertices [lastVertexIndex].occupied = true;
+					graph.vertices [currVertexIndex].occupied = true;
+					nav.SetDestination (graph.vertices[path[0]].position);
 				}
 			}
 		}

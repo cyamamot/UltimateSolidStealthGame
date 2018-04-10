@@ -6,6 +6,7 @@ public class Graph : MonoBehaviour{
 
 	public List<Vertex> vertices;
 	public int width;
+	public int gridWidth;
 	public int height;
 	public bool ready = false;
 	public float vertexDistance = 1.0f;
@@ -22,6 +23,8 @@ public class Graph : MonoBehaviour{
 					if (!Physics.CheckSphere (pos, 0.125f)) {
 						Vertex vert = new Vertex ();
 						vert.position.Set (pos.x, 0.0f, pos.z);
+						vert.visited = false;
+						vert.occupied = false;
 						vert.index = count;
 						vertices.Add (vert);
 					} else {
@@ -37,7 +40,7 @@ public class Graph : MonoBehaviour{
 
 	void SetAdjacent() {
 		int numVertices = vertices.Count;
-		int gridWidth = width * (int) (1.0f / vertexDistance) - 1;
+		gridWidth = width * (int) (1.0f / vertexDistance) - 1;
 		for (int i = 0; i < numVertices; i++) {
 			if (vertices[i] != null && vertices[i].adjacentVertices.Count == 0) {
 				if ((i - 1) >= 0 && ((i - 1) % gridWidth) < (i % gridWidth) && vertices[i - 1] != null) {
@@ -56,30 +59,30 @@ public class Graph : MonoBehaviour{
 		}
 	}
 
-	public Queue<Vertex> FindShortestPath(int begin, int end) {
+	public List<int> FindShortestPath(int begin, int end) {
 		Vertex source = vertices[begin];
 		Vertex dest = vertices[end];
-		Queue<List<Vertex>> queue = new Queue<List<Vertex>> ();
+		Queue<List<int>> queue = new Queue<List<int>> ();
 		foreach (Vertex v in vertices) {
 			if (v != null) {
 				v.visited = false;
 			}
 		}
 		source.visited = true;
-		List<Vertex> path = new List<Vertex> ();
-		path.Add (source);
+		List<int> path = new List<int> ();
+		path.Add (source.index);
 		queue.Enqueue (path);
 		while (queue.Count != 0) {
-			List<Vertex> currPath = queue.Dequeue ();
-			Vertex currVertex = currPath[currPath.Count - 1];
+			List<int> currPath = queue.Dequeue ();
+			Vertex currVertex = vertices[currPath[currPath.Count - 1]];
 			if (currVertex.position == dest.position) {
-				return new Queue<Vertex> (currPath);
+				return currPath;
 			} else {
 				foreach (int index in currVertex.adjacentVertices) {
 					if (vertices[index].visited == false) {
-						List<Vertex> newPath = new List<Vertex> (currPath);
+						List<int> newPath = new List<int> (currPath);
 						vertices[index].visited = true;
-						newPath.Add (vertices[index]);
+						newPath.Add (index);
 						queue.Enqueue (newPath);
 					}
 				}

@@ -24,11 +24,14 @@ public class VertexDisplay : MonoBehaviour {
 			if (Input.GetMouseButtonDown(1)) {
 				Debug.Log (vert.index + " : ");
 				Debug.Log ("    position : " + vert.position);
+				Debug.Log ("    occupied : " + vert.occupied);
 				foreach (int i in vert.adjacentVertices) {
 					Debug.Log ("    adjacent : " + i);
 				}
+				Debug.Log (" ");
 			} else if (Input.GetMouseButtonDown(0)) {
-				Debug.Log (vert.index + " : ");
+				Debug.Log (vert.index);
+				Debug.Log (" ");
 			}
 		}
 	}
