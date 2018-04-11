@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour {
 	Enums.directions direction;
 	int lastVertexIndex;
 	int currVertexIndex;
+	string name;
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour {
 				transform.position.Set(transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition(transform.position);
 				lastVertexIndex = currVertexIndex;
+				name = gameObject.name;
+				graph.vertices [currVertexIndex].occupiedBy = name;
 				graph.vertices [currVertexIndex].occupied = true;
 			}
 		}
@@ -33,77 +36,75 @@ public class PlayerMovement : MonoBehaviour {
 		SetNewDestination ();
 	}
 
-	/*void SetNewDestination() {
-		if (nav != null && graph != null) {
-			Vector3 pos = new Vector3 (transform.position.x, 0.5f, transform.position.z);
-			if (movement != Vector3.zero) {
-				if (pos.x % moveAmount == 0.0f && pos.z % moveAmount == 0.0f) {
-					if (!Physics.CheckSphere (transform.position + movement, 0.25f)) {
-						nav.SetDestination (transform.position + movement);
-					} else {
-						StopMoving ();
-					}
-				}
-			} else {
-				if (pos.x % moveAmount == 0.0f && pos.z % moveAmount == 0.0f) {
-					StopMoving ();
-				}
-			}
-		}
-	}*/
-
 	void SetNewDestination() {
 		if (nav != null && graph != null) {
 			Vector3 pos = new Vector3 (transform.position.x, 0.5f, transform.position.z);
-			if (nav.remainingDistance == 0) {
+			if (nav.remainingDistance <= 0.1f) {
 				if (lastVertexIndex != currVertexIndex) {
-					graph.vertices [lastVertexIndex].occupied = false;
+					if (graph.vertices[lastVertexIndex].occupiedBy == name) {
+						graph.vertices [lastVertexIndex].occupied = false;
+						graph.vertices [lastVertexIndex].occupiedBy = "";
+					}
 					graph.vertices [currVertexIndex].occupied = true;
+					graph.vertices [currVertexIndex].occupiedBy = name;
 				}
 				if (movement != Vector3.zero) {
 					switch (direction) {
 					case Enums.directions.left:
-						if (graph.vertices [currVertexIndex - 1] != null && graph.vertices [currVertexIndex - 1].occupied == false) {
+						if (graph.vertices [currVertexIndex - 1] != null) {
+							if (graph.vertices [currVertexIndex - 1].occupied == true) {
+								StopMoving ();
+								return;
+							}
 							lastVertexIndex = currVertexIndex;
 							currVertexIndex -= 1;
-							graph.vertices [lastVertexIndex].occupied = true;
-							graph.vertices [currVertexIndex].occupied = true;
-							nav.SetDestination (graph.vertices [currVertexIndex].position);
 						} else {
 							StopMoving ();
 						}
 						break;
 					case Enums.directions.right:
-						if (graph.vertices [currVertexIndex + 1] != null && graph.vertices [currVertexIndex + 1].occupied == false) {
+						if (graph.vertices [currVertexIndex + 1] != null) {
+							if (graph.vertices [currVertexIndex + 1].occupied == true) {
+								StopMoving ();
+								return;
+							}
 							lastVertexIndex = currVertexIndex;
 							currVertexIndex += 1;
-							graph.vertices [currVertexIndex].occupied = true;
-							nav.SetDestination (graph.vertices [currVertexIndex].position);
 						} else {
 							StopMoving ();
 						}
 						break;
 					case Enums.directions.up:
-						if (graph.vertices [currVertexIndex + graph.gridWidth] != null && graph.vertices [currVertexIndex + graph.gridWidth].occupied == false) {
+						if (graph.vertices [currVertexIndex + graph.gridWidth] != null) {
+							if (graph.vertices [currVertexIndex + graph.gridWidth].occupied == true) {
+								StopMoving ();
+								return;
+							}
 							lastVertexIndex = currVertexIndex;
 							currVertexIndex += graph.gridWidth;
-							graph.vertices [currVertexIndex].occupied = true;
-							nav.SetDestination (graph.vertices [currVertexIndex].position);
 						} else {
 							StopMoving ();
 						}
 						break;
 					case Enums.directions.down:
-						if (graph.vertices [currVertexIndex - graph.gridWidth] != null && graph.vertices [currVertexIndex - graph.gridWidth].occupied == false) {
+						if (graph.vertices [currVertexIndex - graph.gridWidth] != null) {
+							if (graph.vertices [currVertexIndex - graph.gridWidth].occupied == true) {
+								StopMoving ();
+								return;
+							}
 							lastVertexIndex = currVertexIndex;
 							currVertexIndex -= graph.gridWidth;
-							graph.vertices [currVertexIndex].occupied = true;
-							nav.SetDestination (graph.vertices [currVertexIndex].position);
+
 						} else {
 							StopMoving ();
 						}
 						break;
 					}
+					graph.vertices [lastVertexIndex].occupied = true;
+					graph.vertices [lastVertexIndex].occupiedBy = name;
+					graph.vertices [currVertexIndex].occupied = true;
+					graph.vertices [currVertexIndex].occupiedBy = name;
+					nav.SetDestination (graph.vertices [currVertexIndex].position);
 				} 
 			}
 		}
@@ -121,10 +122,11 @@ public class PlayerMovement : MonoBehaviour {
 		case Enums.directions.up:
 			movement.Set (0.0f, 0.0f, moveAmount);
 			break;
-		case Enums.directions.down:
-			movement.Set (0.0f, 0.0f, -moveAmount);
+        case Enums.directions.down:
+            movement.Set(0.0f, 0.0f, -moveAmount);
 			break;
 		}
+		transform.rotation = Quaternion.LookRotation(movement);
 	}
 
 	public void StopMoving() {

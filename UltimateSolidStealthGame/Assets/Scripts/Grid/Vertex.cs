@@ -10,4 +10,5 @@ public class Vertex {
 	public List<int> adjacentVertices = new List<int> ();
 	public int index;
 	public bool occupied;
+	public string occupiedBy;
 }
