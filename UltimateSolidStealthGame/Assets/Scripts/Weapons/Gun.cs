@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour {
+public abstract class Gun : MonoBehaviour {
 
 	public GameObject bullet;
 
-	public virtual void Fire () {}
+	public abstract void Fire ();
 }

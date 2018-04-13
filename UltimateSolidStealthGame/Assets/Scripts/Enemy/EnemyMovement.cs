@@ -6,26 +6,51 @@ using UnityEngine.AI;
 public class EnemyMovement : MonoBehaviour {
 	
 	public List<int> patrolVertices = new List<int> ();
+	public int pauseLength = 10;
+	public int CurrVertexIndex {
+		get {
+			return currVertexIndex;
+		}
+	}
+	public List<int> Path {
+		set {
+			path = value;
+		}
+	}
+	public bool Alerted {
+		get {
+			return alerted;
+		}
+		set {
+			alerted = value;
+		}
+	}
 
+	[SerializeField]
+	int currVertexIndex;
+	int lastVertexIndex;
+	bool alerted;
 	int destPatrolIndex;
 	Graph graph;
 	UnityEngine.AI.NavMeshAgent nav;
 	List<int> path;
 	Enums.directions direction;
-	int lastVertexIndex;
-	int currVertexIndex;
 	string name;
+	Vector3 lastMoveDir;
 
 	// Use this for initialization
 	void Start() {
+		alerted = false;
 		GameObject temp = GameObject.FindGameObjectWithTag ("Graph");
 		if (temp) {
 			graph = temp.GetComponent<Graph> ();
 			if (graph) {
 				nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+				path = new List<int> ();
 				transform.position.Set (transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition (transform.position);
 				lastVertexIndex = currVertexIndex;
+				lastMoveDir = transform.forward;
 				name = gameObject.name;
 				graph.vertices [currVertexIndex].occupiedBy = name;
 				graph.vertices [currVertexIndex].occupied = true;
@@ -39,9 +64,15 @@ public class EnemyMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		if (graph.ready == true) {
+			if (alerted == true) {
+				if (path.Count == 0 && patrolVertices.Count > 0) {
+					alerted = false;
+					StartCoroutine ("Pause", currVertexIndex);
+				}
+			}
+			TravelBetweenPathPoints ();
 			OnPatrol ();
-			TravelBetweenPatrolPoints ();
-		}
+		} 
 	}
 
 	void OnPatrol() {
@@ -55,11 +86,12 @@ public class EnemyMovement : MonoBehaviour {
 			if (currX == destX && currZ == destZ) {
 				destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
 				path = graph.FindShortestPath (patrolIndexInGraph, patrolVertices[destPatrolIndex]);
+				StartCoroutine ("Pause", patrolIndexInGraph);
 			}
 		}
 	}
 
-	void TravelBetweenPatrolPoints() {      
+	void TravelBetweenPathPoints() {      
 		if (path != null && path.Count > 0) {
 			Vertex v = graph.vertices[path[0]];
 			float currX = transform.position.x;
@@ -84,7 +116,15 @@ public class EnemyMovement : MonoBehaviour {
 				if (path.Count > 0 && nav != null) {
                     lastVertexIndex = currVertexIndex;
                     Vector3 moveDir = graph.vertices[path[0]].position - graph.vertices[currVertexIndex].position;
-					transform.rotation = Quaternion.LookRotation(moveDir);
+
+
+					if (moveDir != lastMoveDir) {
+						StartCoroutine ("TurnDownPath", moveDir);
+					}
+
+
+					lastMoveDir = moveDir;
+					//transform.rotation = Quaternion.LookRotation(moveDir);
                     if (moveDir.x > 0) {
                         currVertexIndex += 1;
                     } else if (moveDir.x < 0) {
@@ -102,5 +142,34 @@ public class EnemyMovement : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	IEnumerator Pause(int startIndex) {
+		enabled = false;
+		for (int i = 0; i < pauseLength; i++) {
+			if (alerted == false) {
+				yield return new WaitForSeconds (0.1f);
+			} else {
+				enabled = true;
+				yield break;
+			}
+		}
+		path = graph.FindShortestPath (startIndex, patrolVertices [destPatrolIndex]);
+		enabled = true;
+	}
+
+	IEnumerator TurnDownPath(Vector3 towards) {
+		int count = 0;
+		float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
+		while (Vector3.Angle(transform.forward.normalized, towards.normalized) != 0.0f && count <= 100) {
+			if (angle < 0) {
+				transform.rotation *= Quaternion.Euler (0, -15, 0);
+			} else {
+				transform.rotation *= Quaternion.Euler (0, 15, 0);
+			}
+			count++;
+			yield return null;
+		}
+		yield return null;
 	}
 }

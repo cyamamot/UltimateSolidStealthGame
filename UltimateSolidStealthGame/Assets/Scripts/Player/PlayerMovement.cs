@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
+	public int CurrVertexIndex {
+		get {
+			return currVertexIndex;
+		}
+	}
+
+	[SerializeField]
+	int currVertexIndex;
+	int lastVertexIndex;
 	Graph graph;
 	float moveAmount;
 	Vector3 movement;
 	UnityEngine.AI.NavMeshAgent nav;
 	Enums.directions direction;
-	int lastVertexIndex;
-	int currVertexIndex;
 	string name;
 
 	// Use this for initialization
@@ -25,7 +32,7 @@ public class PlayerMovement : MonoBehaviour {
 				transform.position.Set(transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition(transform.position);
 				lastVertexIndex = currVertexIndex;
-				name = gameObject.name;
+				name = "Player";
 				graph.vertices [currVertexIndex].occupiedBy = name;
 				graph.vertices [currVertexIndex].occupied = true;
 			}
@@ -33,7 +40,9 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void Update() {  
-		SetNewDestination ();
+		if (graph.ready == true) {
+			SetNewDestination ();
+		}
 	}
 
 	void SetNewDestination() {

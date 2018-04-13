@@ -79,9 +79,9 @@ public class Graph : MonoBehaviour{
 				return currPath;
 			} else {
 				foreach (int index in currVertex.adjacentVertices) {
-					if (vertices[index].visited == false) {
+					if (vertices[index].visited == false && (vertices[index].occupiedBy == "Player" || vertices[index].occupied == false)) {
 						List<int> newPath = new List<int> (currPath);
-						vertices[index].visited = true;
+						vertices [index].visited = true;
 						newPath.Add (index);
 						queue.Enqueue (newPath);
 					}
