@@ -8,22 +8,14 @@ public class EnemyMovement : MonoBehaviour {
 	public List<int> patrolVertices = new List<int> ();
 	public int pauseLength = 10;
 	public int CurrVertexIndex {
-		get {
-			return currVertexIndex;
-		}
+		get { return currVertexIndex; }
 	}
 	public List<int> Path {
-		set {
-			path = value;
-		}
+		set { path = value; }
 	}
 	public bool Alerted {
-		get {
-			return alerted;
-		}
-		set {
-			alerted = value;
-		}
+		get { return alerted; }
+		set { alerted = value; }
 	}
 
 	[SerializeField]
@@ -35,8 +27,9 @@ public class EnemyMovement : MonoBehaviour {
 	UnityEngine.AI.NavMeshAgent nav;
 	List<int> path;
 	Enums.directions direction;
-	string name;
+	string enemyName;
 	Vector3 lastMoveDir;
+	GameObject player;
 
 	// Use this for initialization
 	void Start() {
@@ -51,9 +44,10 @@ public class EnemyMovement : MonoBehaviour {
 				currVertexIndex = graph.GetIndexFromPosition (transform.position);
 				lastVertexIndex = currVertexIndex;
 				lastMoveDir = transform.forward;
-				name = gameObject.name;
-				graph.vertices [currVertexIndex].occupiedBy = name;
+				enemyName = gameObject.name;
+				graph.vertices [currVertexIndex].occupiedBy = enemyName;
 				graph.vertices [currVertexIndex].occupied = true;
+				player = GameObject.FindGameObjectWithTag ("Player");
 				if (patrolVertices.Count > 0) {
 					path = graph.FindShortestPath (currVertexIndex, patrolVertices [0]);
 				}
@@ -68,6 +62,11 @@ public class EnemyMovement : MonoBehaviour {
 				if (path.Count == 0 && patrolVertices.Count > 0) {
 					alerted = false;
 					StartCoroutine ("Pause", currVertexIndex);
+				} else if (path.Count == 2 && player != null) {
+					if (Vector3.Distance(player.transform.position, transform.position) == graph.vertexDistance) {
+						Vector3 moveDir = player.transform.position - transform.position;
+						StartCoroutine ("TurnDownPath", moveDir);
+					}
 				}
 			}
 			TravelBetweenPathPoints ();
@@ -100,12 +99,12 @@ public class EnemyMovement : MonoBehaviour {
 			float destZ = v.position.z;
 			if (nav.remainingDistance <= 0.1f) {
 				if (lastVertexIndex != currVertexIndex) {
-					if (graph.vertices[lastVertexIndex].occupiedBy == name) {
+					if (graph.vertices[lastVertexIndex].occupiedBy == enemyName) {
 						graph.vertices [lastVertexIndex].occupied = false;
 						graph.vertices [lastVertexIndex].occupiedBy = "";
 					}
 					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = name;
+					graph.vertices [currVertexIndex].occupiedBy = enemyName;
 				}
 				if (path.Count > 1) {
                     if (graph.vertices[path[1]].occupied == true) { 
@@ -113,32 +112,28 @@ public class EnemyMovement : MonoBehaviour {
 					}
 				}
 				path.RemoveAt (0);
+				Vector3 moveDir;
 				if (path.Count > 0 && nav != null) {
-                    lastVertexIndex = currVertexIndex;
-                    Vector3 moveDir = graph.vertices[path[0]].position - graph.vertices[currVertexIndex].position;
-
-
+					lastVertexIndex = currVertexIndex;
+					moveDir = graph.vertices [path [0]].position - graph.vertices [currVertexIndex].position;
 					if (moveDir != lastMoveDir) {
 						StartCoroutine ("TurnDownPath", moveDir);
 					}
-
-
 					lastMoveDir = moveDir;
-					//transform.rotation = Quaternion.LookRotation(moveDir);
-                    if (moveDir.x > 0) {
-                        currVertexIndex += 1;
-                    } else if (moveDir.x < 0) {
-                        currVertexIndex -= 1;
-                    } else if (moveDir.z > 0) {
-                        currVertexIndex += graph.gridWidth;
-                    } else if (moveDir.z < 0) {
-                        currVertexIndex -= graph.gridWidth;
-                    }
+					if (moveDir.x > 0) {
+						currVertexIndex += 1;
+					} else if (moveDir.x < 0) {
+						currVertexIndex -= 1;
+					} else if (moveDir.z > 0) {
+						currVertexIndex += graph.gridWidth;
+					} else if (moveDir.z < 0) {
+						currVertexIndex -= graph.gridWidth;
+					}
 					graph.vertices [lastVertexIndex].occupied = true;
-					graph.vertices [lastVertexIndex].occupiedBy = name;
+					graph.vertices [lastVertexIndex].occupiedBy = enemyName;
 					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = name;
-					nav.SetDestination (graph.vertices[path[0]].position);
+					graph.vertices [currVertexIndex].occupiedBy = enemyName;
+					nav.SetDestination (graph.vertices [path [0]].position);
 				}
 			}
 		}
@@ -161,15 +156,16 @@ public class EnemyMovement : MonoBehaviour {
 	IEnumerator TurnDownPath(Vector3 towards) {
 		int count = 0;
 		float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
-		while (Vector3.Angle(transform.forward.normalized, towards.normalized) != 0.0f && count <= 100) {
-			if (angle < 0) {
-				transform.rotation *= Quaternion.Euler (0, -15, 0);
+		while (Vector3.Angle(transform.forward.normalized, towards.normalized) != 0.0f && count <= 8) {
+			if (angle < 0.0f) {
+				transform.rotation *= Quaternion.Euler (0.0f, -22.5f, 0.0f);
 			} else {
-				transform.rotation *= Quaternion.Euler (0, 15, 0);
+				transform.rotation *= Quaternion.Euler (0.0f, 22.5f, 0.0f);
 			}
 			count++;
 			yield return null;
 		}
+		transform.rotation = Quaternion.LookRotation(towards);
 		yield return null;
 	}
 }

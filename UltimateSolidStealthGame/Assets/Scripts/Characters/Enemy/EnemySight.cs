@@ -8,9 +8,7 @@ public class EnemySight : MonoBehaviour {
 	public int fov = 30;
 	public int numFramesToResetPath = 1;
 	public int IgnoreEnemiesLayer {
-		get {
-			return ignoreEnemiesLayer;
-		}
+		get { return ignoreEnemiesLayer; }
 	}
 
 	int frames;
@@ -38,8 +36,8 @@ public class EnemySight : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		frames = (frames + 1) % numFramesToResetPath;
-		if (frames == (numFramesToResetPath - 1)) {
-			if (playerMovement != null && movement != null) {
+		if (playerMovement != null && movement != null) {
+			if (frames == (numFramesToResetPath - 1)) {
 				Vector3 toPlayer = playerMovement.transform.position - gameObject.transform.position;
 				Vector3 front = gameObject.transform.forward;
 				float angle = Vector3.Angle (front.normalized, toPlayer.normalized);
@@ -50,9 +48,9 @@ public class EnemySight : MonoBehaviour {
 							List<int> pathToPlayer = graph.FindShortestPath (movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
 							if (pathToPlayer != null) {
 								
-								/*foreach (int i in pathToPlayer) {
+								foreach (int i in pathToPlayer) {
 									Debug.DrawLine (graph.vertices [i].position, graph.vertices [i].position + Vector3.up, Color.red, 0.5f);
-								}*/
+								}
 
 								movement.Alerted = true;
 								movement.Path = pathToPlayer;

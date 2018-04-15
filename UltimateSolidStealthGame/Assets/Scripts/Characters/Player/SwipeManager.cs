@@ -12,10 +12,7 @@ public class SwipeManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		moveDir = Vector2.zero;
-		GameObject tempObj = GameObject.FindGameObjectWithTag ("Player");
-		if (tempObj) {
-			playerMovement = tempObj.GetComponent<PlayerMovement> ();
-		}
+		playerMovement = GetComponent<PlayerMovement> ();
 	}
 	
 	// Update is called once per frame

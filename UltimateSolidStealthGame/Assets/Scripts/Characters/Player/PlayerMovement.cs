@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
 	Vector3 movement;
 	UnityEngine.AI.NavMeshAgent nav;
 	Enums.directions direction;
-	string name;
+	string playerName;
 
 	// Use this for initialization
 	void Start () {
@@ -32,8 +32,8 @@ public class PlayerMovement : MonoBehaviour {
 				transform.position.Set(transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition(transform.position);
 				lastVertexIndex = currVertexIndex;
-				name = "Player";
-				graph.vertices [currVertexIndex].occupiedBy = name;
+				playerName = gameObject.name;
+				graph.vertices [currVertexIndex].occupiedBy = playerName;
 				graph.vertices [currVertexIndex].occupied = true;
 			}
 		}
@@ -47,15 +47,14 @@ public class PlayerMovement : MonoBehaviour {
 
 	void SetNewDestination() {
 		if (nav != null && graph != null) {
-			Vector3 pos = new Vector3 (transform.position.x, 0.5f, transform.position.z);
 			if (nav.remainingDistance <= 0.1f) {
 				if (lastVertexIndex != currVertexIndex) {
-					if (graph.vertices[lastVertexIndex].occupiedBy == name) {
+					if (graph.vertices[lastVertexIndex].occupiedBy == playerName) {
 						graph.vertices [lastVertexIndex].occupied = false;
 						graph.vertices [lastVertexIndex].occupiedBy = "";
 					}
 					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = name;
+					graph.vertices [currVertexIndex].occupiedBy = playerName;
 				}
 				if (movement != Vector3.zero) {
 					switch (direction) {
@@ -110,9 +109,9 @@ public class PlayerMovement : MonoBehaviour {
 						break;
 					}
 					graph.vertices [lastVertexIndex].occupied = true;
-					graph.vertices [lastVertexIndex].occupiedBy = name;
+					graph.vertices [lastVertexIndex].occupiedBy = playerName;
 					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = name;
+					graph.vertices [currVertexIndex].occupiedBy = playerName;
 					nav.SetDestination (graph.vertices [currVertexIndex].position);
 				} 
 			}
