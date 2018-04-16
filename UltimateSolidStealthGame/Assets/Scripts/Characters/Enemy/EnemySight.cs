@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class EnemySight : MonoBehaviour {
 
-	public int sightDistance = 6;
-	public int fov = 30;
-	public int numFramesToResetPath = 1;
-	public int IgnoreEnemiesLayer {
-		get { return ignoreEnemiesLayer; }
-	}
+	[SerializeField]
+	int sightDistance = 6;
+	[SerializeField]
+	int fov = 30;
+	[SerializeField]
+	int numFramesToResetPath = 1;
 
 	int frames;
 	PlayerMovement playerMovement;
@@ -17,6 +17,10 @@ public class EnemySight : MonoBehaviour {
 	EnemyMovement movement;
 	int ignoreEnemiesLayer;
 
+	public int IgnoreEnemiesLayer {
+		get { return ignoreEnemiesLayer; }
+	}
+		
 	// Use this for initialization
 	void Start () {
 		frames = 0;

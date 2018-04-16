@@ -4,12 +4,26 @@ using UnityEngine;
 
 public class Graph : MonoBehaviour{
 
+	[SerializeField]
+	int width;
+	[SerializeField]
+	int height;
+	[SerializeField]
+	float vertexDistance = 1.0f;
+
+	int gridWidth;
+	bool ready = false;
+
 	public List<Vertex> vertices;
-	public int width;
-	public int gridWidth;
-	public int height;
-	public bool ready = false;
-	public float vertexDistance = 1.0f;
+	public int GridWidth {
+		get { return gridWidth; }
+	}
+	public bool Ready {
+		get { return ready; }
+	}
+	public float VertexDistance {
+		get { return vertexDistance; }
+	}
 
 	// Use this for initialization
 	void Awake () {

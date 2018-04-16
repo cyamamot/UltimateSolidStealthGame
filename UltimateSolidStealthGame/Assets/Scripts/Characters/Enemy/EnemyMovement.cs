@@ -4,22 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour {
-	
-	public List<int> patrolVertices = new List<int> ();
-	public int pauseLength = 10;
-	public int CurrVertexIndex {
-		get { return currVertexIndex; }
-	}
-	public List<int> Path {
-		set { path = value; }
-	}
-	public bool Alerted {
-		get { return alerted; }
-		set { alerted = value; }
-	}
 
 	[SerializeField]
 	int currVertexIndex;
+	[SerializeField]
+	public int pauseLength = 10;
+
 	int lastVertexIndex;
 	bool alerted;
 	int destPatrolIndex;
@@ -30,6 +20,18 @@ public class EnemyMovement : MonoBehaviour {
 	string enemyName;
 	Vector3 lastMoveDir;
 	GameObject player;
+
+	public List<int> patrolVertices = new List<int> ();
+	public int CurrVertexIndex {
+		get { return currVertexIndex; }
+	}
+	public List<int> Path {
+		set { path = value; }
+	}
+	public bool Alerted {
+		get { return alerted; }
+		set { alerted = value; }
+	}
 
 	// Use this for initialization
 	void Start() {
@@ -57,13 +59,13 @@ public class EnemyMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update() {
-		if (graph.ready == true) {
+		if (graph.Ready == true) {
 			if (alerted == true) {
 				if (path.Count == 0 && patrolVertices.Count > 0) {
 					alerted = false;
 					StartCoroutine ("Pause", currVertexIndex);
 				} else if (path.Count == 2 && player != null) {
-					if (Vector3.Distance(player.transform.position, transform.position) == graph.vertexDistance) {
+					if (Vector3.Distance(player.transform.position, transform.position) == graph.VertexDistance) {
 						Vector3 moveDir = player.transform.position - transform.position;
 						StartCoroutine ("TurnDownPath", moveDir);
 					}
@@ -125,9 +127,9 @@ public class EnemyMovement : MonoBehaviour {
 					} else if (moveDir.x < 0) {
 						currVertexIndex -= 1;
 					} else if (moveDir.z > 0) {
-						currVertexIndex += graph.gridWidth;
+						currVertexIndex += graph.GridWidth;
 					} else if (moveDir.z < 0) {
-						currVertexIndex -= graph.gridWidth;
+						currVertexIndex -= graph.GridWidth;
 					}
 					graph.vertices [lastVertexIndex].occupied = true;
 					graph.vertices [lastVertexIndex].occupiedBy = enemyName;

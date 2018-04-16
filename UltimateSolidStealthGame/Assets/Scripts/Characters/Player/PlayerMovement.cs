@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public int CurrVertexIndex {
-		get {
-			return currVertexIndex;
-		}
-	}
-
 	[SerializeField]
 	int currVertexIndex;
+
 	int lastVertexIndex;
 	Graph graph;
 	float moveAmount;
@@ -20,6 +15,12 @@ public class PlayerMovement : MonoBehaviour {
 	Enums.directions direction;
 	string playerName;
 
+	public int CurrVertexIndex {
+		get {
+			return currVertexIndex;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		movement = Vector3.zero;
@@ -27,7 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (temp) {
 			graph = temp.GetComponent<Graph> ();
 			if (graph) {
-				moveAmount = graph.vertexDistance;
+				moveAmount = graph.VertexDistance;
 				nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 				transform.position.Set(transform.position.x, 0.0f, transform.position.z);
 				currVertexIndex = graph.GetIndexFromPosition(transform.position);
@@ -40,7 +41,7 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void Update() {  
-		if (graph.ready == true) {
+		if (graph.Ready == true) {
 			SetNewDestination ();
 		}
 	}
@@ -83,25 +84,25 @@ public class PlayerMovement : MonoBehaviour {
 						}
 						break;
 					case Enums.directions.up:
-						if (graph.vertices [currVertexIndex + graph.gridWidth] != null) {
-							if (graph.vertices [currVertexIndex + graph.gridWidth].occupied == true) {
+						if (graph.vertices [currVertexIndex + graph.GridWidth] != null) {
+							if (graph.vertices [currVertexIndex + graph.GridWidth].occupied == true) {
 								StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
-							currVertexIndex += graph.gridWidth;
+							currVertexIndex += graph.GridWidth;
 						} else {
 							StopMoving ();
 						}
 						break;
 					case Enums.directions.down:
-						if (graph.vertices [currVertexIndex - graph.gridWidth] != null) {
-							if (graph.vertices [currVertexIndex - graph.gridWidth].occupied == true) {
+						if (graph.vertices [currVertexIndex - graph.GridWidth] != null) {
+							if (graph.vertices [currVertexIndex - graph.GridWidth].occupied == true) {
 								StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
-							currVertexIndex -= graph.gridWidth;
+							currVertexIndex -= graph.GridWidth;
 
 						} else {
 							StopMoving ();

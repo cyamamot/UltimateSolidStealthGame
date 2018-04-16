@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class EnemyWeaponSystem : MonoBehaviour {
 
-	public GameObject gunPrefab;
-	public float fireWaitTime = 2.0f;
+	[SerializeField]
+	GameObject gunPrefab;
+	[SerializeField]
+	float fireWaitTime = 2.0f;
 
 	EnemySight sight;
 	GameObject player;
@@ -25,8 +27,11 @@ public class EnemyWeaponSystem : MonoBehaviour {
 				gunInstance.transform.localPosition = Vector3.zero;
 				gunInstance.transform.localRotation = Quaternion.identity;
 				gunInstance.transform.localScale = Vector3.one;
+				gun = gunInstance.GetComponent<Gun> ();
+				if (gun != null) {
+					gun.BulletsLeft = -1;
+				}
 			}
-			gun = gunInstance.GetComponent<Gun> ();
 		}
 	}
 

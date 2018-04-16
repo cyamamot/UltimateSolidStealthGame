@@ -7,6 +7,7 @@ TagManager:
   - Graph
   - Enemy
   - Bullet
+  - UI
   layers:
   - Default
   - TransparentFX

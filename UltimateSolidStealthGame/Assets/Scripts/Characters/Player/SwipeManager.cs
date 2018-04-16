@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SwipeManager : MonoBehaviour {
 
@@ -18,18 +19,21 @@ public class SwipeManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.touchCount > 0) {
-			Touch touch = Input.GetTouch (0);
-			switch (touch.phase) {
-			case TouchPhase.Began:
-				playerMovement.StopMoving();
-				touchStart = touch.position;
-				moveDir = Vector2.zero;
-				break;
-			case TouchPhase.Moved:
-				moveDir = touch.position - touchStart;
-				touchStart = touch.position;
-				MoveInDirection (moveDir);
-				break;
+			int id = Input.GetTouch (0).fingerId;
+			if (EventSystem.current.IsPointerOverGameObject (id) == false) {
+				Touch touch = Input.GetTouch (0);
+				switch (touch.phase) {
+				case TouchPhase.Began:
+					playerMovement.StopMoving ();
+					touchStart = touch.position;
+					moveDir = Vector2.zero;
+					break;
+				case TouchPhase.Moved:
+					moveDir = touch.position - touchStart;
+					touchStart = touch.position;
+					MoveInDirection (moveDir);
+					break;
+				}
 			}
 		}
 	}

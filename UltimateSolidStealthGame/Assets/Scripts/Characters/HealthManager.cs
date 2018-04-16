@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour {
 
-	public float health;
+	[SerializeField]
+	float health;
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +17,7 @@ public class HealthManager : MonoBehaviour {
 			Bullet bullet = collision.gameObject.GetComponent<Bullet> ();
 			if (bullet != null && bullet.Owner != gameObject.tag) {
 				health--;
-				if (health == 0) {
+				if (health <= 0) {
 					//turn off movement (kill()), make both movements inherit from base class
 				}
 			}

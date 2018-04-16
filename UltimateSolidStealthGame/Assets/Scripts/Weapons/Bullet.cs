@@ -18,8 +18,6 @@ public class Bullet : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		//trigger particle effect based on what you hit
-		if (collision.gameObject.tag != gameObject.tag) {
-			Destroy (gameObject);
-		}
+		Destroy (gameObject);
 	}
 }

@@ -58,3 +58,4 @@ MonoBehaviour:
   barrelDist: 0.25
   damage: 1
   timeBetweenRounds: 0.125
+  bulletsLeft: 12
