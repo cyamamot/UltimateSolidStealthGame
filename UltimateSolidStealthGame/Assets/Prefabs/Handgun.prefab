@@ -51,8 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac494d4a2e1f824288483258f52d73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  equipmentType: Handgun
+  numberOf: 0
+  icon: {fileID: 21300000, guid: 6f7c645471f7f8345a52d0e7dacc775a, type: 3}
   bullet: {fileID: 1527509061895760, guid: 8943d1a2bc2b1c74ca43e5acf9591276, type: 2}
-  gunType: Handgun
   roundsPerFire: 1
   bulletSpeed: 15
   barrelDist: 0.25

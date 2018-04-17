@@ -21,14 +21,14 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		sight = GetComponent<EnemySight> ();
 		player = GameObject.FindGameObjectWithTag ("Player");
 		movement = GetComponent<EnemyMovement> ();
-		if (gunPrefab != null) {
+		if (gunPrefab) {
 			gunInstance = GameObject.Instantiate (gunPrefab, transform);
 			if (gunInstance != null) {
 				gunInstance.transform.localPosition = Vector3.zero;
 				gunInstance.transform.localRotation = Quaternion.identity;
 				gunInstance.transform.localScale = Vector3.one;
 				gun = gunInstance.GetComponent<Gun> ();
-				if (gun != null) {
+				if (gun) {
 					gun.BulletsLeft = -1;
 				}
 			}
@@ -40,8 +40,8 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	}
 
 	public void FireWeapon() {
-		if (firing == false) {
-			if (sight != null && player != null && movement != null && gun != null) {
+		if (!firing) {
+			if (sight && player && movement && gun) {
 				Vector3 zeroAngleVec = new Vector3 (1.0f, 0.0f, 0.0f);
 				if (movement.Alerted == true) {
 					if (Vector3.Angle (transform.forward.normalized, zeroAngleVec) % 90.0f == 0.0f) {
@@ -49,7 +49,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 						if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, sight.IgnoreEnemiesLayer)) {
 							if (hit.transform.CompareTag ("Player") == true) {
 								firing = true;
-								gun.Fire ();
+								gun.UseEquipment ();
 								StartCoroutine ("FirePause");
 							}
 						}

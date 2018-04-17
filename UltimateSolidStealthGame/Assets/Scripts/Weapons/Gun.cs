@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Gun : MonoBehaviour {
+public class Gun : Equipment {
 
 	[SerializeField]
 	GameObject bullet;
-	[SerializeField]
-	string gunType;
 	[SerializeField]
 	int roundsPerFire = 1;
 	[SerializeField]
@@ -21,9 +20,7 @@ public class Gun : MonoBehaviour {
 	[SerializeField]
 	int bulletsLeft;
 
-	public string GunType {
-		get { return gunType; }
-	}
+
 	public float Damage {
 		get { return damage; }
 	}
@@ -32,11 +29,16 @@ public class Gun : MonoBehaviour {
 		set { bulletsLeft = value; }
 	}
 
+
 	bool firing = false;
 
-	public void Fire () {
-		if (bullet != null) {
-			if (firing == false) {
+	void Start() {
+		count = bulletsLeft;
+	}
+
+	public override void UseEquipment () {
+		if (bullet) {
+			if (!firing) {
 				firing = true;
 				StartCoroutine ("Shoot");
 			}
@@ -51,12 +53,13 @@ public class Gun : MonoBehaviour {
 				GameObject firedBullet = (GameObject)Instantiate (bullet, barrelPos, Quaternion.AngleAxis (90, transform.right));
 				Rigidbody rb = firedBullet.GetComponent<Rigidbody> ();
 				Bullet b = firedBullet.GetComponent<Bullet> ();
-				if (rb != null && b != null) {
+				if (rb && b) {
 					b.Owner = gameObject.tag;
 					b.Damage = damage;
 					rb.velocity = parent.forward * bulletSpeed;
 					if (bulletsLeft > 0) {
 						bulletsLeft--;
+						count = bulletsLeft;
 					}
 					yield return new WaitForSeconds (timeBetweenRounds);
 				}

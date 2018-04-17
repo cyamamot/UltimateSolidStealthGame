@@ -6,51 +6,42 @@ using UnityEngine.UI;
 public class PlayerWeaponSystem : MonoBehaviour {
 
 	[SerializeField]
-	GameObject handgunPrefab;
-	[SerializeField]
-	GameObject uziPrefab;
-	[SerializeField]
-	GameObject riflePrefab;
+	List<GameObject> equipmentPrefabs;
 
-	GameObject handgun;
-	GameObject uzi;
-	GameObject rifle;
+	List<GameObject> equipmentInstances;
 	PlayerUI ui;
-	string currGunType;
-	GameObject currGun;
-	Gun gun;
+	string currEquipmentType;
+	GameObject currEquipment;
+	Equipment equipment;
 
-	public string CurrGunType {
-		get { return currGunType; }
+	public string CurrEquipmentType {
+		get { return currEquipmentType; }
 	}
-	public GameObject CurrGun {
-		get { return currGun; }
+	public GameObject CurrEquipment {
+		get { return currEquipment; }
+	}
+	public Equipment Equipment {
+		get { return equipment; }
 	}
 
 	// Use this for initialization
 	void Start () {
-		handgun = GameObject.Instantiate (handgunPrefab, transform);
-		handgun.SetActive (false);
-		uzi = GameObject.Instantiate (uziPrefab, transform);
-		uzi.SetActive (false);
-		rifle = GameObject.Instantiate (riflePrefab, transform);
-		rifle.SetActive (false);
-		GameObject temp = GameObject.FindGameObjectWithTag ("UI");
-		if (temp != null) {
-			ui = temp.GetComponent<PlayerUI> ();
-			if (ui != null) {
-				Gun h = handgun.GetComponent<Gun> ();
-				Gun u = uzi.GetComponent<Gun> ();
-				Gun r = rifle.GetComponent<Gun> ();
-				ui.SetGunsForUI (ref h, ref u, ref r);
-			}
+		equipmentInstances = new List<GameObject> ();
+		GameObject temp;
+		foreach (GameObject g in equipmentPrefabs) {
+			temp = GameObject.Instantiate (g, transform);
+			temp.gameObject.SetActive (false);
+			equipmentInstances.Add (temp);
 		}
-		SwapToKnife ();
-	}
-
-	void Update() {
-		if (gun && gun.BulletsLeft == 0) {
-			SwapToKnife ();
+		temp = GameObject.FindGameObjectWithTag ("UI");
+		if (temp) {
+			ui = temp.GetComponent<PlayerUI> ();
+			if (ui) {
+				for (int i = 0; i < equipmentInstances.Count; i++) {
+					GameObject g = equipmentInstances [i];
+					ui.AddEquipment (ref g);
+				}
+			}
 		}
 	}
 
@@ -58,49 +49,39 @@ public class PlayerWeaponSystem : MonoBehaviour {
 		//use for gun pickup
 	}
 	
-	public void UseWeapon() {
-		if (gun != null) {
-			gun.Fire ();
-		} else {
-			//USE KNIFE (MESH-ONLY GAMEOBJECT)
+	public void UseEquipped() {
+		if (equipment) {
+			equipment.UseEquipment ();
 		}
 	}
 
-	public void SwapWeapon(string gunType) {
-		if (currGun != null) {
-			currGun.gameObject.SetActive (false);
+	public void SwapEquipment(string eType) {
+		if (currEquipment) {
+			currEquipment.gameObject.SetActive (false);
 		}
-		switch (gunType) {
-		case "Handgun":
-			handgun.SetActive (true);
-			currGun = handgun;
-			break;
-		case "Uzi":
-			uzi.SetActive (true);
-			currGun = uzi;
-			break;
-		case "AssaultRifle":
-			rifle.SetActive (true);
-			currGun = rifle;
-			break;
+		foreach (GameObject g in equipmentInstances) {
+			Equipment e = g.GetComponent<Equipment> ();
+			if (e.EquipmentType == eType) {
+				g.SetActive (true);
+				currEquipment = g;
+				equipment = currEquipment.GetComponent<Equipment> ();
+				currEquipmentType = equipment.EquipmentType;
+				ui.UpdateUIOnGunSwap (equipment, currEquipmentType);
+				break;
+			}
 		}
-		gun = currGun.GetComponent<Gun> ();
-		currGunType = gun.GunType;
 	}
 
-	public void SwapToKnife() {
-		if (currGun != null) {
-			currGun.gameObject.SetActive (false);
-		}
-		gun = null;
-		currGunType = "";
-		currGun = null;
-	}
-
-	void KnifeAttack() {
-		RaycastHit hit;
-		if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity)) {
-
+	public void AddEquipment(GameObject newPrefab) {
+		GameObject temp = GameObject.Instantiate (newPrefab, transform);
+		temp.gameObject.SetActive (false);
+		equipmentInstances.Add (temp);
+		GameObject temp2 = GameObject.FindGameObjectWithTag ("UI");
+		if (temp2) {
+			ui = temp2.GetComponent<PlayerUI> ();
+			if (ui) {
+				ui.AddEquipment (ref temp);
+			}
 		}
 	}
 }

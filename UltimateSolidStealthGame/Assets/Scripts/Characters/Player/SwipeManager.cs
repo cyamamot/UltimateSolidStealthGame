@@ -20,7 +20,7 @@ public class SwipeManager : MonoBehaviour {
 	void Update () {
 		if (Input.touchCount > 0) {
 			int id = Input.GetTouch (0).fingerId;
-			if (EventSystem.current.IsPointerOverGameObject (id) == false) {
+			if (!EventSystem.current.IsPointerOverGameObject (id)) {
 				Touch touch = Input.GetTouch (0);
 				switch (touch.phase) {
 				case TouchPhase.Began:

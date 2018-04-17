@@ -1,13 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Weapons\Gun.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI\PlayerUI.cs">
     <Files>
-      <File FileName="Assets\Scripts\Characters\Enemy\EnemyMovement.cs" Line="159" Column="95" />
-      <File FileName="Assets\Scripts\Characters\Enemy\EnemySight.cs" Line="55" Column="33" />
-      <File FileName="Assets\Scripts\Weapons\EnemyWeaponSystem.cs" Line="8" Column="31" />
-      <File FileName="Assets\Scripts\Characters\HealthManager.cs" Line="15" Column="56" />
-      <File FileName="Assets\Scripts\Weapons\Bullet.cs" Line="21" Column="7" />
-      <File FileName="Assets\Scripts\Weapons\Gun.cs" Line="10" Column="29" />
+      <File FileName="Assets\Scripts\Characters\Enemy\EnemyMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Characters\HealthManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Weapons\Gun.cs" Line="62" Column="12" />
+      <File FileName="Assets\Scripts\Characters\Player\PlayerWeaponSystem.cs" Line="69" Column="55" />
+      <File FileName="Assets\Scripts\Characters\Enemy\EnemyWeaponSystem.cs" Line="31" Column="12" />
+      <File FileName="Assets\Scripts\Weapons\Equipment.cs" Line="19" Column="14" />
+      <File FileName="Assets\Scripts\UI\PlayerUI.cs" Line="79" Column="26" />
+      <File FileName="Assets\Scripts\UI\WeaponSelectWheel.cs" Line="45" Column="3" />
+      <File FileName="Assets\Scripts\Characters\Player\SwipeManager.cs" Line="23" Column="57" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
