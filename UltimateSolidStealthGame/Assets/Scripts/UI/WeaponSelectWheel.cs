@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponSelectWheel : MonoBehaviour {
 
-	[SerializeField]
-	float wheelRadius = 1.0f;
+	float wheelRadius;
 
+	Image bgCircle;
 	List<GameObject> buttonList;
 	int lastListSize;
 	float midX;
@@ -14,9 +15,10 @@ public class WeaponSelectWheel : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		bgCircle = GetComponent<Image> ();
+		bgCircle.gameObject.SetActive (false);
 		buttonList = new List<GameObject> ();
-		midX = Screen.width / 2.0f;
-		midY = Screen.height / 2.0f;
+		wheelRadius = Screen.height / 3.0f;
 	}
 	
 	// Update is called once per frame
@@ -44,11 +46,13 @@ public class WeaponSelectWheel : MonoBehaviour {
 		foreach (GameObject g in buttonList) {
 			g.SetActive (true);
 		}
+		bgCircle.gameObject.SetActive (true);
 	}
 
 	public void HideWheel() {
 		foreach (GameObject g in buttonList) {
 			g.SetActive (false);
 		}
+		bgCircle.gameObject.SetActive (false);
 	}
 }

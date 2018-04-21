@@ -33,6 +33,10 @@ public class SwipeManager : MonoBehaviour {
 					touchStart = touch.position;
 					MoveInDirection (moveDir);
 					break;
+				//case TouchPhase.Ended:
+					//moveDir = Vector2.zero;
+					//playerMovement.StopMoving ();
+					//break;
 				}
 			}
 		}

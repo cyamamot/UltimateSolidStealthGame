@@ -8,60 +8,61 @@ public class PlayerMovement : MonoBehaviour {
 	int currVertexIndex;
 
 	int lastVertexIndex;
-	Graph graph;
 	float moveAmount;
 	Vector3 movement;
-	UnityEngine.AI.NavMeshAgent nav;
 	Enums.directions direction;
 	string playerName;
 
+	PlayerManager manager;
+	UnityEngine.AI.NavMeshAgent nav;
+
 	public int CurrVertexIndex {
-		get {
-			return currVertexIndex;
-		}
+		get { return currVertexIndex; }
+	}
+	public Vector3 Movement {
+		get { return movement; }
+	}
+	public UnityEngine.AI.NavMeshAgent Nav {
+		get { return nav; }
 	}
 
 	// Use this for initialization
 	void Start () {
 		movement = Vector3.zero;
-		GameObject temp = GameObject.FindGameObjectWithTag ("Graph");
-		if (temp) {
-			graph = temp.GetComponent<Graph> ();
-			if (graph) {
-				moveAmount = graph.VertexDistance;
-				nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
-				transform.position.Set(transform.position.x, 0.0f, transform.position.z);
-				currVertexIndex = graph.GetIndexFromPosition(transform.position);
-				lastVertexIndex = currVertexIndex;
-				playerName = gameObject.name;
-				graph.vertices [currVertexIndex].occupiedBy = playerName;
-				graph.vertices [currVertexIndex].occupied = true;
-			}
-		}
+		manager = GetComponent<PlayerManager> ();
+		moveAmount = manager.Graph.VertexDistance;
+		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+		transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+		currVertexIndex = manager.Graph.GetIndexFromPosition(transform.position);
+		lastVertexIndex = currVertexIndex;
+		playerName = gameObject.name;
+		manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
+		manager.Graph.vertices [currVertexIndex].occupied = true;
 	}
 
 	void Update() {  
-		if (graph.Ready == true) {
+		if (manager.Graph.Ready == true) {
 			SetNewDestination ();
 		}
 	}
 
 	void SetNewDestination() {
-		if (nav != null && graph != null) {
+		if (nav && manager && manager.Graph) {
 			if (nav.remainingDistance <= 0.1f) {
 				if (lastVertexIndex != currVertexIndex) {
-					if (graph.vertices[lastVertexIndex].occupiedBy == playerName) {
-						graph.vertices [lastVertexIndex].occupied = false;
-						graph.vertices [lastVertexIndex].occupiedBy = "";
+					if (manager.Graph.vertices[lastVertexIndex].occupiedBy == playerName) {
+						manager.Graph.vertices [lastVertexIndex].occupied = false;
+						manager.Graph.vertices [lastVertexIndex].occupiedBy = "";
 					}
-					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = playerName;
+					manager.Graph.vertices [currVertexIndex].occupied = true;
+					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
 				}
 				if (movement != Vector3.zero) {
+					transform.rotation = Quaternion.LookRotation(movement);
 					switch (direction) {
 					case Enums.directions.left:
-						if (graph.vertices [currVertexIndex - 1] != null) {
-							if (graph.vertices [currVertexIndex - 1].occupied == true) {
+						if (manager.Graph.vertices [currVertexIndex - 1] != null) {
+							if (manager.Graph.vertices [currVertexIndex - 1].occupied == true) {
 								StopMoving ();
 								return;
 							}
@@ -72,8 +73,8 @@ public class PlayerMovement : MonoBehaviour {
 						}
 						break;
 					case Enums.directions.right:
-						if (graph.vertices [currVertexIndex + 1] != null) {
-							if (graph.vertices [currVertexIndex + 1].occupied == true) {
+						if (manager.Graph.vertices [currVertexIndex + 1] != null) {
+							if (manager.Graph.vertices [currVertexIndex + 1].occupied == true) {
 								StopMoving ();
 								return;
 							}
@@ -84,36 +85,36 @@ public class PlayerMovement : MonoBehaviour {
 						}
 						break;
 					case Enums.directions.up:
-						if (graph.vertices [currVertexIndex + graph.GridWidth] != null) {
-							if (graph.vertices [currVertexIndex + graph.GridWidth].occupied == true) {
+						if (manager.Graph.vertices [currVertexIndex + manager.Graph.GridWidth] != null) {
+							if (manager.Graph.vertices [currVertexIndex + manager.Graph.GridWidth].occupied == true) {
 								StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
-							currVertexIndex += graph.GridWidth;
+							currVertexIndex += manager.Graph.GridWidth;
 						} else {
 							StopMoving ();
 						}
 						break;
 					case Enums.directions.down:
-						if (graph.vertices [currVertexIndex - graph.GridWidth] != null) {
-							if (graph.vertices [currVertexIndex - graph.GridWidth].occupied == true) {
+						if (manager.Graph.vertices [currVertexIndex - manager.Graph.GridWidth] != null) {
+							if (manager.Graph.vertices [currVertexIndex - manager.Graph.GridWidth].occupied == true) {
 								StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
-							currVertexIndex -= graph.GridWidth;
+							currVertexIndex -= manager.Graph.GridWidth;
 
 						} else {
 							StopMoving ();
 						}
 						break;
 					}
-					graph.vertices [lastVertexIndex].occupied = true;
-					graph.vertices [lastVertexIndex].occupiedBy = playerName;
-					graph.vertices [currVertexIndex].occupied = true;
-					graph.vertices [currVertexIndex].occupiedBy = playerName;
-					nav.SetDestination (graph.vertices [currVertexIndex].position);
+					manager.Graph.vertices [lastVertexIndex].occupied = true;
+					manager.Graph.vertices [lastVertexIndex].occupiedBy = playerName;
+					manager.Graph.vertices [currVertexIndex].occupied = true;
+					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
+					nav.SetDestination (manager.Graph.vertices [currVertexIndex].position);
 				} 
 			}
 		}
@@ -135,7 +136,6 @@ public class PlayerMovement : MonoBehaviour {
             movement.Set(0.0f, 0.0f, -moveAmount);
 			break;
 		}
-		transform.rotation = Quaternion.LookRotation(movement);
 	}
 
 	public void StopMoving() {
