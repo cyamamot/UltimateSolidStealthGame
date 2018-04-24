@@ -17,6 +17,7 @@ public class EnemyMovement : MonoBehaviour {
 	Enums.directions direction;
 	string enemyName;
 	Vector3 lastMoveDir;
+	bool turning;
 
 	EnemyManager manager;
 	UnityEngine.AI.NavMeshAgent nav;
@@ -60,7 +61,7 @@ public class EnemyMovement : MonoBehaviour {
 	void Update() {
 		if (manager && manager.Graph.Ready) {
 			if (alerted == true) {
-				if (path == null || (path.Count == 0 && patrolVertices.Count > 0)) {
+				if (path.Count == 0 && patrolVertices.Count > 0) {
 					alerted = false;
 					StartCoroutine ("Pause", currVertexIndex);
 				} else if (path.Count <= 2 && manager.Player != null) {
@@ -72,11 +73,17 @@ public class EnemyMovement : MonoBehaviour {
 			}
 			TravelBetweenPathPoints ();
 			OnPatrol ();
+
+
+			foreach(int i in path) {
+				Vector3 pos = manager.Graph.vertices [i].position;
+				Debug.DrawLine (pos, pos + Vector3.up, Color.red, 0.01f);
+			}
 		} 
 	}
 
 	void OnPatrol() {
-		if (alerted == false && patrolVertices.Count > 1) {
+		if (!alerted && patrolVertices.Count > 1) {
 			int patrolIndexInGraph = patrolVertices [destPatrolIndex];
 			Vertex v = manager.Graph.vertices[patrolIndexInGraph];
 			float currX = transform.position.x;
@@ -85,14 +92,13 @@ public class EnemyMovement : MonoBehaviour {
 			float destZ = v.position.z;
 			if (currX == destX && currZ == destZ) {
 				destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
-				//path = manager.Graph.FindShortestPath (patrolIndexInGraph, patrolVertices[destPatrolIndex]);
 				StartCoroutine ("Pause", patrolIndexInGraph);
 			}
 		}
 	}
 
 	void TravelBetweenPathPoints() {      
-		if (path != null && path.Count > 0) {
+		if (path.Count > 0) {
 			Vertex v = manager.Graph.vertices [path [0]];
 			float currX = transform.position.x;
 			float currZ = transform.position.z;
@@ -137,38 +143,47 @@ public class EnemyMovement : MonoBehaviour {
 					nav.SetDestination (manager.Graph.vertices [path [0]].position);
 				}
 			}
-		} else if (patrolVertices.Count > 0 && path != null && path.Count == 0){
-			StartCoroutine ("Pause", currVertexIndex);
+		} else if (patrolVertices.Count > 0 && path.Count == 0){
+			BackToPatrol ();
 		}
+	}
+
+	public void BackToPatrol() {
+		path = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices [destPatrolIndex]);
 	}
 
 	IEnumerator Pause(int startIndex) {
 		enabled = false;
 		for (int i = 0; i < pauseLength; i++) {
-			if (alerted == false) {
+			if (!alerted) {
 				yield return new WaitForSeconds (0.1f);
-			} else {
+			} else if (alerted || manager.Distraction.Distracted || path.Count != 0){
 				enabled = true;
 				yield break;
 			}
 		}
-		path = manager.Graph.FindShortestPath (startIndex, patrolVertices [destPatrolIndex]);
+		if (path.Count == 0) {
+			path = manager.Graph.FindShortestPath (startIndex, patrolVertices [destPatrolIndex]);
+		}
 		enabled = true;
 	}
 
 	IEnumerator TurnDownPath(Vector3 towards) {
-		int count = 0;
-		float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
-		while (Vector3.Angle(transform.forward.normalized, towards.normalized) != 0.0f && count <= 8) {
-			if (angle < 0.0f) {
-				transform.rotation *= Quaternion.Euler (0.0f, -22.5f, 0.0f);
-			} else {
-				transform.rotation *= Quaternion.Euler (0.0f, 22.5f, 0.0f);
+		if (!turning) {
+			turning = true;
+			int count = 0;
+			float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
+			while (Vector3.Angle (transform.forward.normalized, towards.normalized) != 0.0f && count <= 8) {
+				if (angle < 0.0f) {
+					transform.rotation *= Quaternion.Euler (0.0f, -22.5f, 0.0f);
+				} else {
+					transform.rotation *= Quaternion.Euler (0.0f, 22.5f, 0.0f);
+				}
+				count++;
+				yield return null;
 			}
-			count++;
-			yield return null;
+			transform.rotation = Quaternion.LookRotation (towards);
+			turning = false;
 		}
-		transform.rotation = Quaternion.LookRotation(towards);
-		yield return null;
 	}
 }

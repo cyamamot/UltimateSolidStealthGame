@@ -52,9 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipmentType: Cigarette
-  count: 3
+  count: 15
   icon: {fileID: 0}
-  cigarettePackPrefab: {fileID: 1970354924884994, guid: 932504e8f90561542870a7ab0484072e,
+  cigarettePackPrefab: {fileID: 1938919652208252, guid: 932504e8f90561542870a7ab0484072e,
     type: 2}
-  smokeBreakLength: 15
-  packLifetime: 20
+  smokeBreakLength: 5
+  packLifetime: 30

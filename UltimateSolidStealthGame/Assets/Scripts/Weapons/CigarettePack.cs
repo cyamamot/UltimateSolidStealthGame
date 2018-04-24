@@ -4,33 +4,31 @@ using UnityEngine;
 
 public class CigarettePack : MonoBehaviour {
 
-	SphereCollider collider;
+	BoxCollider collider;
 	Graph graph;
+	[SerializeField]
 	int location;
-	HashSet<EnemyDistraction> affectedEnemies;
 
 	public int Location {
+		get { return location; }
 		set { location = value; }
 	}
 
 	void Start () {
-		affectedEnemies = new HashSet<EnemyDistraction> ();
-		collider = GetComponent<SphereCollider> ();
 		transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
 		graph = GameObject.FindGameObjectWithTag ("Graph").GetComponent<Graph> ();
+		location = graph.GetIndexFromPosition (transform.position);
+		collider = GetComponent<BoxCollider> ();
 	}
 
-	void OnTriggerStay (Collider other) {
-		EnemyDistraction edm = other.gameObject.GetComponent<EnemyDistraction> ();
-		if (edm) {
-			affectedEnemies.Add (edm);
-			edm.SetDistraction (location);
+	void OnTriggerEnter (Collider other) {
+		SmokeDistraction sd = other.gameObject.GetComponent<SmokeDistraction> ();
+		if (sd && sd.Distracted) {
+			Invoke ("DestroyCig", 0.25f);
 		}
 	}
 
-	void OnDestroy() {
-		foreach (EnemyDistraction ed in affectedEnemies) {
-			ed.ClearDistraction ();
-		}
+	void DestroyCig() {
+		Destroy (gameObject);
 	}
 }

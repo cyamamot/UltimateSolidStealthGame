@@ -65,6 +65,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
 
 	public void AddEquipment(GameObject newPrefab) {
 		GameObject temp = GameObject.Instantiate (newPrefab, transform);
+		temp.layer = LayerMask.NameToLayer ("PlayerWeapon");
 		temp.gameObject.SetActive (false);
 		equipmentInstances.Add (temp);
 		manager.Ui.AddEquipment (ref temp);

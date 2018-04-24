@@ -21,6 +21,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		if (gunPrefab) {
 			gunInstance = GameObject.Instantiate (gunPrefab, transform);
 			if (gunInstance != null) {
+				gunInstance.layer = LayerMask.NameToLayer ("EnemyWeapon");
 				gunInstance.transform.localPosition = Vector3.zero;
 				gunInstance.transform.localRotation = Quaternion.identity;
 				gunInstance.transform.localScale = Vector3.one;

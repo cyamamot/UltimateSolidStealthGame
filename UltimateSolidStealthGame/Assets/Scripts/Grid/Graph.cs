@@ -102,7 +102,7 @@ public class Graph : MonoBehaviour{
 				}
 			}
 		}
-		return null;
+		return new List<int> ();
 	}
 
 	public int GetIndexFromPosition(Vector3 pos) {
