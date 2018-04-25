@@ -163,6 +163,7 @@ MonoBehaviour:
   FOV: 45
   alertedFOV: 90
   numFramesToResetPath: 10
+  alerted: 0
 --- !u!114 &114142440486111570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -202,7 +203,7 @@ MonoBehaviour:
   checkRadius: 4
   timeBetweenChecks: 0.1
   distraction: {fileID: 0}
-  distToDistraction: 0
+  distracted: 0
   smokeTime: 2
 --- !u!114 &114657280994964830
 MonoBehaviour:

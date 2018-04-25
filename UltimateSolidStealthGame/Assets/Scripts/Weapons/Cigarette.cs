@@ -37,8 +37,6 @@ public class Cigarette : Equipment {
 			//end smoke animation
 			//Drop smoke
 			GameObject smokes = Instantiate (cigarettePackPrefab, transform.position, Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up));
-			//smokes.transform.Rotate (new Vector3(0, Random.Range(0, 360), 0));
-			//smokes.GetComponent<CigarettePack> ().Location = manager.Movement.CurrVertexIndex;
 			Destroy (smokes, packLifetime);
 			count--;
 		}

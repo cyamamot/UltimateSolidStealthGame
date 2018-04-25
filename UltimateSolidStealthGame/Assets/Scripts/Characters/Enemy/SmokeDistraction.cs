@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class SmokeDistraction : EnemyDistraction {
 
-	[SerializeField]
-	float smokeTime;
+	float distToDistraction;
 
 	public override void Start () {
 		base.Start ();
+		distToDistraction = Mathf.Infinity;
 		nonDistractionLayers = 1 << LayerMask.NameToLayer ("Smoke");
+	}
+
+	protected override void LateUpdate() {
+		base.LateUpdate ();
+		if (distracted) {
+			if (!distraction) {
+				distToDistraction = Mathf.Infinity;
+			}
+		}
 	}
 
 	protected override void CheckForDistraction () {
@@ -29,13 +38,28 @@ public class SmokeDistraction : EnemyDistraction {
 		}
 	}
 
+	public override void SetDistraction (int vertex, ref GameObject obj) {
+		if (!manager.Sight.Alerted) {
+			distraction = obj;
+			distToDistraction = Vector3.Distance (transform.position, obj.transform.position);
+			distracted = true;
+			pathToDistraction = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, vertex);
+			if (pathToDistraction.Count > 0) {
+				manager.Movement.Path = pathToDistraction;
+			}
+		}
+	}
+
 	protected override IEnumerator AtDistraction () {
 		//smoking animation
-		yield return new WaitForSeconds (smokeTime);
-		CheckForDistraction ();
+		Destroy(distraction);
+		yield return new WaitForSeconds (distractionTime);
+		distracted = false;
+		distToDistraction = Mathf.Infinity;
 		enabled = true;
 		manager.Movement.enabled = true;
 		manager.Sight.enabled = true;
 		manager.WeaponSystem.enabled = true;
+		CheckForDistraction ();
 	}
 }

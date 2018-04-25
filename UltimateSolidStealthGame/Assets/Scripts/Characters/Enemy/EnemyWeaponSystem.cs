@@ -41,7 +41,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		if (!firing) {
 			if (manager.Sight && manager.Player && manager.Movement && gun) {
 				Vector3 zeroAngleVec = new Vector3 (1.0f, 0.0f, 0.0f);
-				if (manager.Movement.Alerted == true) {
+				if (manager.Sight.Alerted) {
 					if (Vector3.Angle (transform.forward.normalized, zeroAngleVec) % 90.0f == 0.0f) {
 						RaycastHit hit;
 						if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, manager.Sight.IgnoreEnemiesLayer)) {

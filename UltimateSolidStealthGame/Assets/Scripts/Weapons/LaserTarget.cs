@@ -2,24 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CigarettePack : MonoBehaviour {
+public class LaserTarget : MonoBehaviour {
 
 	[SerializeField]
 	int location;
 
-	//BoxCollider collider;
 	Graph graph;
+	LaserPointer pointer;
 
 	public int Location {
 		get { return location; }
 		set { location = value; }
 	}
-
+	public LaserPointer Pointer {
+		set { pointer = value; }
+	}
+		
 	void Start () {
-		transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
-		transform.Rotate (new Vector3(0, Random.Range(0, 360), 0));
+		//transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
 		graph = GameObject.FindGameObjectWithTag ("Graph").GetComponent<Graph> ();
 		location = graph.GetIndexFromPosition (transform.position);
-		//collider = GetComponent<BoxCollider> ();
+	}
+
+	void OnDestroy() {
+		if (pointer) {
+			pointer.LaserInvestigated ();
+		}
 	}
 }

@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour {
 	public UnityEngine.AI.NavMeshAgent Nav {
 		get { return nav; }
 	}
+	public Enums.directions Direction {
+		get { return direction; }
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -38,6 +41,16 @@ public class PlayerMovement : MonoBehaviour {
 		playerName = gameObject.name;
 		manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
 		manager.Graph.vertices [currVertexIndex].occupied = true;
+		Vector3 forwardDir = transform.forward.normalized;
+		if (forwardDir == Vector3.forward) {
+			direction = Enums.directions.up;
+		} else if (forwardDir == Vector3.back) {
+			direction = Enums.directions.down;
+		} else if (forwardDir == Vector3.left) {
+			direction = Enums.directions.left;
+		} else if (forwardDir == Vector3.right) {
+			direction = Enums.directions.right;
+		}
 	}
 
 	void Update() {  

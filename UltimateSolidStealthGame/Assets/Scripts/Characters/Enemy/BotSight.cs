@@ -22,14 +22,14 @@ public class BotSight : EnemySight {
 				Vector3 toPlayer = playerMovement.transform.position - gameObject.transform.position;
 				Vector3 front = gameObject.transform.forward;
 				float angle = Vector3.Angle (front.normalized, toPlayer.normalized);
-				float fov = (manager.Movement.Alerted) ? alertedFOV : FOV;
+				float fov = (alerted) ? alertedFOV : FOV;
 				if (angle <= fov && toPlayer.magnitude <= sightDistance) {
 					RaycastHit hit;
 					if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
-						if (hit.transform.CompareTag ("Player") == true && (hit.transform.gameObject.layer != iceLayer)) {
-							List<int> pathToPlayer = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+						if (hit.transform.CompareTag ("Player") && (hit.transform.gameObject.layer != iceLayer)) {
+							pathToPlayer = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
 							if (pathToPlayer.Count > 0) {
-								manager.Movement.Alerted = true;
+								alerted = true;
 								manager.Movement.Path = pathToPlayer;
 							}
 						}

@@ -9,7 +9,7 @@ public abstract class EnemySight : MonoBehaviour {
 	[SerializeField]
 	protected int FOV = 45;
 	[SerializeField]
-	protected int alertedFOV = 90;
+	protected int alertedFOV = 150;
 	[SerializeField]
 	protected int numFramesToResetPath = 10;
 
@@ -17,9 +17,16 @@ public abstract class EnemySight : MonoBehaviour {
 	protected PlayerMovement playerMovement;
 	protected EnemyManager manager;
 	protected int ignoreEnemiesLayer;
+	protected List<int> pathToPlayer;
+	[SerializeField]
+	protected bool alerted;
 
 	public int IgnoreEnemiesLayer {
 		get { return ignoreEnemiesLayer; }
+	}
+	public bool Alerted {
+		get { return alerted; }
+		set { alerted = value; }
 	}
 		
 	protected virtual void Start () {
@@ -31,11 +38,17 @@ public abstract class EnemySight : MonoBehaviour {
 			playerMovement = temp.GetComponent<PlayerMovement> ();
 		}
 		manager = gameObject.GetComponent<EnemyManager> ();
+		pathToPlayer = new List<int> ();
 	}
 
 	protected virtual void Update() {
 		CheckSightline ();
+		if (alerted && pathToPlayer.Count == 0) {
+			alerted = false;
+			manager.Movement.PauseMovement ();
+		}
 	}
 
 	protected abstract void CheckSightline ();
+
 }
