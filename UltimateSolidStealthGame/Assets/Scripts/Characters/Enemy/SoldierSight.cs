@@ -27,7 +27,9 @@ public class SoldierSight : EnemySight{
 							pathToPlayer = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
 							if (pathToPlayer.Count > 0) {
 								alerted = true;
-								manager.Distraction.Distracted = false;
+								if (manager.Distraction) {
+									manager.Distraction.Distracted = false;
+								}
 								manager.Movement.Path = pathToPlayer;
 							}
 						}

@@ -11,6 +11,8 @@ public class PlayerUI : MonoBehaviour {
 	[SerializeField]
 	Text counter;
 	[SerializeField]
+	Slider slider;
+	[SerializeField]
 	GameObject weaponWheelPrefab;
 
 	WeaponSelectWheel weaponWheel;
@@ -42,10 +44,10 @@ public class PlayerUI : MonoBehaviour {
 
 	void Update () {
 		if (currEquipment) {
-			if (currEquipment.Count >= 0) {
+			if (counter.IsActive()) {
 				counter.text = "x" + currEquipment.Count.ToString ();
-			} else if (currEquipment.Count == -1) {
-				counter.text = "";
+			} else if (slider.IsActive()) {
+				slider.value = currEquipment.Count / 100.0f;
 			}
 			if (primaryPressed) {
 				float time = Time.time - pressTime;
@@ -96,5 +98,15 @@ public class PlayerUI : MonoBehaviour {
 		currEquipment = e;
 		weaponWheel.HideWheel ();
 		wheelDisplayed = false;
+		if (e.GetComponent<Gun>()) {
+			counter.gameObject.SetActive(true);
+			slider.gameObject.SetActive(false);
+		} else if (e.GetComponent<IceMachine>()) {
+			counter.gameObject.SetActive(false);
+			slider.gameObject.SetActive(true);
+		} else {
+			counter.gameObject.SetActive(false);
+			slider.gameObject.SetActive(false);
+		}
 	}
 }

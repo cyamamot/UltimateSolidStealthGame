@@ -16,7 +16,6 @@ public class EnemyMovement : MonoBehaviour {
 	Enums.directions direction;
 	string enemyName;
 	Vector3 lastMoveDir;
-	bool turning;
 
 	EnemyManager manager;
 	UnityEngine.AI.NavMeshAgent nav;
@@ -54,8 +53,12 @@ public class EnemyMovement : MonoBehaviour {
 
 	void Update() {
 		if (manager && manager.Graph.Ready) {
-			if (!manager.Sight.Alerted && !manager.Distraction.Distracted) {
-				BackToPatrol ();
+			if (!manager.Sight.Alerted) {
+				if (manager.Distraction && !manager.Distraction.Distracted) {
+					BackToPatrol ();
+				} else if (!manager.Distraction) {
+					BackToPatrol ();
+				}
 			}
 			TravelBetweenPathPoints ();
 			OnPatrol ();
@@ -78,7 +81,7 @@ public class EnemyMovement : MonoBehaviour {
 			float destZ = v.position.z;
 			if (Mathf.Approximately(currX, destX) && Mathf.Approximately(currZ, destZ)) {
 				destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
-				StartCoroutine ("Pause");
+				PauseMovement ();
 			}
 		}
 	}
@@ -104,7 +107,7 @@ public class EnemyMovement : MonoBehaviour {
 					if (manager.Graph.vertices [path [1]].occupied) { 
 						moveDir = manager.Graph.vertices [path [1]].position - manager.Graph.vertices [path [0]].position;
 						if (moveDir != lastMoveDir) {
-							StartCoroutine ("TurnDownPath", moveDir);
+							Turn (moveDir);
 							lastMoveDir = moveDir;
 						}
 						return;
@@ -115,7 +118,7 @@ public class EnemyMovement : MonoBehaviour {
 					lastVertexIndex = currVertexIndex;
 					moveDir = manager.Graph.vertices [path [0]].position - manager.Graph.vertices [currVertexIndex].position;
 					if (moveDir != lastMoveDir) {
-						StartCoroutine ("TurnDownPath", moveDir);
+						Turn (moveDir);
 					}
 					lastMoveDir = moveDir;
 					if (moveDir.x > 0) {
@@ -153,7 +156,7 @@ public class EnemyMovement : MonoBehaviour {
 		for (int i = 0; i < pauseLength; i++) {
 			if (!manager.Sight.Alerted) {
 				yield return new WaitForSeconds (0.1f);
-			} else if (manager.Sight.Alerted || manager.Distraction.Distracted || path.Count != 0){
+			} else if (manager.Sight.Alerted || (manager.Distraction && manager.Distraction.Distracted) || path.Count != 0){
 				enabled = true;
 				yield break;
 			}
@@ -165,25 +168,24 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public void Turn(Vector3 dir) {
-		StartCoroutine ("TurnDownPath", dir);
+		StopCoroutine ("TurnTowards");
+		StartCoroutine ("TurnTowards", dir);
 	}
 
-	IEnumerator TurnDownPath(Vector3 towards) {
-		if (!turning) {
-			turning = true;
+	IEnumerator TurnTowards(Vector3 towards) {
+		if (transform.forward.normalized != towards.normalized) {
 			int count = 0;
 			float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
-			while (Mathf.Abs(Vector3.Angle (transform.forward.normalized, towards.normalized)) >= 15.0f && count <= 8) {
+			while (Mathf.Abs (Vector3.Angle (transform.forward.normalized, towards.normalized)) >= 15.0f && count <= 6) {
 				if (angle < 0.0f) {
-					transform.rotation *= Quaternion.Euler (0.0f, -22.5f, 0.0f);
+					transform.rotation *= Quaternion.Euler (0.0f, -30.0f, 0.0f);
 				} else {
-					transform.rotation *= Quaternion.Euler (0.0f, 22.5f, 0.0f);
+					transform.rotation *= Quaternion.Euler (0.0f, 30.0f, 0.0f);
 				}
 				count++;
 				yield return null;
 			}
 			transform.rotation = Quaternion.LookRotation (towards);
-			turning = false;
 		}
 	}
 }

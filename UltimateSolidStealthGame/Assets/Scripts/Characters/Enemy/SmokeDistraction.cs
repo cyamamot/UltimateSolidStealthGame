@@ -9,7 +9,7 @@ public class SmokeDistraction : EnemyDistraction {
 	public override void Start () {
 		base.Start ();
 		distToDistraction = Mathf.Infinity;
-		nonDistractionLayers = 1 << LayerMask.NameToLayer ("Smoke");
+		distractionLayers = 1 << LayerMask.NameToLayer ("Smoke");
 	}
 
 	protected override void LateUpdate() {
@@ -22,7 +22,7 @@ public class SmokeDistraction : EnemyDistraction {
 	}
 
 	protected override void CheckForDistraction () {
-		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, nonDistractionLayers, QueryTriggerInteraction.Collide);
+		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, distractionLayers, QueryTriggerInteraction.Collide);
 		if (hits.Length == 0) {
 			distToDistraction = Mathf.Infinity;
 			return;

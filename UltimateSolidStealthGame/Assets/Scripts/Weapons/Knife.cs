@@ -10,7 +10,8 @@ public class Knife : Equipment {
 	float damage = 1.0f;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		base.Awake ();
 		count = -1;
 	}
 

@@ -11,6 +11,12 @@ public abstract class Equipment : MonoBehaviour {
 	[SerializeField]
 	Sprite icon;
 
+	protected Renderer render;
+
+	public virtual void Awake() {
+		render = GetComponent<Renderer> ();
+	}
+
 	public string EquipmentType {
 		get { return equipmentType; }
 	}
@@ -23,4 +29,10 @@ public abstract class Equipment : MonoBehaviour {
 	}
 	
 	public abstract void UseEquipment ();
+
+	public void EquipmentRender(bool enable) {
+		if (render) {
+			render.enabled = enable;
+		}
+	}
 }

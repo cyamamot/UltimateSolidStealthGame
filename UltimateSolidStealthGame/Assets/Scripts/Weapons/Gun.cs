@@ -30,7 +30,8 @@ public class Gun : Equipment {
 
 	bool firing = false;
 
-	void Start() {
+	void Awake() {
+		base.Awake ();
 		count = bulletsLeft;
 	}
 

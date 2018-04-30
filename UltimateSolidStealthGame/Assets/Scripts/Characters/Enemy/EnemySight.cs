@@ -9,17 +9,17 @@ public abstract class EnemySight : MonoBehaviour {
 	[SerializeField]
 	protected int FOV = 45;
 	[SerializeField]
-	protected int alertedFOV = 150;
+	protected int alertedFOV = 180;
 	[SerializeField]
 	protected int numFramesToResetPath = 10;
+	[SerializeField]
+	protected bool alerted;
 
 	protected int frames;
 	protected PlayerMovement playerMovement;
 	protected EnemyManager manager;
 	protected int ignoreEnemiesLayer;
 	protected List<int> pathToPlayer;
-	[SerializeField]
-	protected bool alerted;
 
 	public int IgnoreEnemiesLayer {
 		get { return ignoreEnemiesLayer; }

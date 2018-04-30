@@ -17,7 +17,7 @@ public abstract class EnemyDistraction : MonoBehaviour {
 
 	protected EnemyManager manager;
 	protected List<int> pathToDistraction;
-	protected int nonDistractionLayers;
+	protected int distractionLayers;
 
 	public EnemyManager Manager {
 		get { return manager; }

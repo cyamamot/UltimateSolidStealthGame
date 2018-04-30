@@ -33,17 +33,17 @@ public class SwipeManager : MonoBehaviour {
 					touchStart = touch.position;
 					MoveInDirection (moveDir);
 					break;
-				//case TouchPhase.Ended:
-					//moveDir = Vector2.zero;
-					//playerMovement.StopMoving ();
-					//break;
+				/*case TouchPhase.Ended:
+					moveDir = Vector2.zero;
+					playerMovement.StopMoving ();
+					break;*/
 				}
 			}
 		}
 	}
 
 	void MoveInDirection(Vector2 dir) {
-		if (moveDir.magnitude > 6.0f && playerMovement) {
+		if (moveDir.magnitude > 5.0f && playerMovement) {
 			float xDir = Mathf.Abs (dir.x);
 			float yDir = Mathf.Abs (dir.y);
 			if (xDir >= yDir) {
@@ -59,8 +59,6 @@ public class SwipeManager : MonoBehaviour {
 					playerMovement.MoveUntilStop (Enums.directions.down);
 				}
 			}
-		} else {
-			playerMovement.StopMoving ();
 		}
 	}
 }

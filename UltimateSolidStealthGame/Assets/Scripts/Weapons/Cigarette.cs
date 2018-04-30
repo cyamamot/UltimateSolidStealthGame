@@ -13,7 +13,8 @@ public class Cigarette : Equipment {
 
 	PlayerManager manager;
 
-	void Start () {
+	void Awake () {
+		base.Awake ();
 		manager = GetComponentInParent<PlayerManager> ();
 	}
 
@@ -29,7 +30,7 @@ public class Cigarette : Equipment {
 		if (count > 0) {
 			for (int i = 0; i < smokeBreakLength; i++) {
 				yield return new WaitForSeconds (0.1f);
-				if (manager.Movement.Movement != Vector3.zero) {
+				if (manager.Movement.Movement != Vector3.zero || (render && render.enabled == false)) {
 					//end smoke animation
 					StopCoroutine ("SmokeBreak");
 				}

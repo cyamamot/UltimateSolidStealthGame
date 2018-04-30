@@ -14,10 +14,12 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	EnemyManager manager;
 	GameObject gunInstance;
 	Gun gun;
+	Renderer renderer;
 
 	// Use this for initialization
 	void Start () {
 		manager = GetComponent<EnemyManager> ();
+		renderer = GetComponent<Renderer> ();
 		if (gunPrefab) {
 			gunInstance = GameObject.Instantiate (gunPrefab, transform);
 			if (gunInstance != null) {
@@ -38,7 +40,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	}
 
 	public void FireWeapon() {
-		if (!firing) {
+		if (!firing && renderer.isVisible) {
 			if (manager.Sight && manager.Player && manager.Movement && gun) {
 				Vector3 zeroAngleVec = new Vector3 (1.0f, 0.0f, 0.0f);
 				if (manager.Sight.Alerted) {

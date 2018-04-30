@@ -6,7 +6,7 @@ public class LaserDistraction : EnemyDistraction {
 
 	public override void Start () {
 		base.Start ();
-		nonDistractionLayers = 1 << LayerMask.NameToLayer ("Laser");
+		distractionLayers = 1 << LayerMask.NameToLayer ("Laser");
 	}
 
 	protected override void LateUpdate() {
@@ -14,7 +14,7 @@ public class LaserDistraction : EnemyDistraction {
 	}
 
 	protected override void CheckForDistraction () {
-		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, nonDistractionLayers, QueryTriggerInteraction.Collide);
+		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, distractionLayers, QueryTriggerInteraction.Collide);
 		foreach (Collider hit in hits) {
 			if (!Physics.Linecast (transform.position, hit.transform.position, manager.Sight.IgnoreEnemiesLayer, QueryTriggerInteraction.Ignore)) {
 				LaserTarget target = hit.GetComponent<LaserTarget> ();

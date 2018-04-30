@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4067517669131694}
   - component: {fileID: 114514337185759356}
+  - component: {fileID: 23695854548090098}
+  - component: {fileID: 33755467660128966}
   m_Layer: 0
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -40,6 +42,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23695854548090098
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1525503032586576}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33755467660128966
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1525503032586576}
+  m_Mesh: {fileID: 0}
 --- !u!114 &114514337185759356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipmentType: AssaultRifle
-  numberOf: 0
+  count: 0
   icon: {fileID: 21300000, guid: 5b560ff4520ceb64188ac885ed61e757, type: 3}
   bullet: {fileID: 1527509061895760, guid: 8943d1a2bc2b1c74ca43e5acf9591276, type: 2}
   roundsPerFire: 3
