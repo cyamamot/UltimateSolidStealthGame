@@ -11,11 +11,7 @@ public abstract class Equipment : MonoBehaviour {
 	[SerializeField]
 	Sprite icon;
 
-	protected Renderer render;
-
-	public virtual void Awake() {
-		render = GetComponent<Renderer> ();
-	}
+	protected MeshRenderer render;
 
 	public string EquipmentType {
 		get { return equipmentType; }
@@ -27,7 +23,11 @@ public abstract class Equipment : MonoBehaviour {
 	public Sprite Icon {
 		get { return icon; }
 	}
-	
+
+	public virtual void Awake() {
+		render = GetComponent<MeshRenderer> ();
+	}
+
 	public abstract void UseEquipment ();
 
 	public void EquipmentRender(bool enable) {

@@ -19,10 +19,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4713025590309628}
-  - component: {fileID: 120807337919615876}
-  - component: {fileID: 114920878709086092}
   - component: {fileID: 23047933092540204}
   - component: {fileID: 33802453308733366}
+  - component: {fileID: 120807337919615876}
+  - component: {fileID: 114920878709086092}
   m_Layer: 0
   m_Name: LaserPointer
   m_TagString: Untagged

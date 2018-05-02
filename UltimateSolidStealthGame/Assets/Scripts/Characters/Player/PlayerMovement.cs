@@ -28,8 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 	public Enums.directions Direction {
 		get { return direction; }
 	}
-
-	// Use this for initialization
+		
 	void Start () {
 		movement = Vector3.zero;
 		manager = GetComponent<PlayerManager> ();

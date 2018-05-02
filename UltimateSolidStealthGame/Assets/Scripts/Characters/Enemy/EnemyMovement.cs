@@ -141,9 +141,11 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	public void BackToPatrol() {
-		List<int> newPath = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices [destPatrolIndex]);
-		if (newPath.Count > 0) {
-			path = newPath;
+		if (patrolVertices.Count > 0) {
+			List<int> newPath = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices [destPatrolIndex]);
+			if (newPath.Count > 0) {
+				path = newPath;
+			}
 		}
 	}
 

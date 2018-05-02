@@ -9,12 +9,13 @@ public class Graph : MonoBehaviour{
 	[SerializeField]
 	int height;
 	[SerializeField]
-	float vertexDistance = 1.0f;
+	float vertexDistance;
 
 	int gridWidth;
 	bool ready = false;
 
 	public List<Vertex> vertices;
+
 	public int GridWidth {
 		get { return gridWidth; }
 	}
@@ -24,37 +25,40 @@ public class Graph : MonoBehaviour{
 	public float VertexDistance {
 		get { return vertexDistance; }
 	}
-
-	// Use this for initialization
+		
 	void Awake () {
+		gridWidth = width * (int) (1.0f / vertexDistance);
 		vertices = new List<Vertex> ();
 		if (vertices.Count == 0) { 
 			int count = 0;
 			Vector3 pos = new Vector3 ();
-			for (float i = vertexDistance; i < (float)height; i += vertexDistance) {                         
-				for (float j = vertexDistance; j < (float)width; j += vertexDistance) {
+			for (float i = vertexDistance; i <= (float)height; i += vertexDistance) {                         
+				for (float j = vertexDistance; j <= (float)width; j += vertexDistance) {
 					pos.Set (j, 0.5f, i);
 					if (!Physics.CheckSphere (pos, 0.125f)) {
-						Vertex vert = new Vertex ();
-						vert.position.Set (pos.x, 0.0f, pos.z);
-						vert.visited = false;
-						vert.occupied = false;
-						vert.index = count;
-						vertices.Add (vert);
+						if (Physics.Raycast (pos, Vector3.down, 5.0f)) {
+							Vertex vert = new Vertex ();
+							vert.position.Set (pos.x, 0.0f, pos.z);
+							vert.visited = false;
+							vert.occupied = false;
+							vert.index = count;
+							vertices.Add (vert);
+							count++;
+						}
 					} else {
 						vertices.Add (null);
+						count++;
 					}
-					count++;
 				}
 			}
 		}
 		SetAdjacent ();
 		ready = true;
+		Debug.Log (vertices.Count);
 	}
 
 	void SetAdjacent() {
 		int numVertices = vertices.Count;
-		gridWidth = width * (int) (1.0f / vertexDistance) - 1;
 		for (int i = 0; i < numVertices; i++) {
 			if (vertices[i] != null && vertices[i].adjacentVertices.Count == 0) {
 				if ((i - 1) >= 0 && ((i - 1) % gridWidth) < (i % gridWidth) && vertices[i - 1] != null) {

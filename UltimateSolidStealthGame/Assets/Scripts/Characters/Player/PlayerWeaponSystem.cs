@@ -24,12 +24,10 @@ public class PlayerWeaponSystem : MonoBehaviour {
 	public Equipment Equipment {
 		get { return equipment; }
 	}
-
-	// Use this for initialization
+		
 	void Start () {
 		equipmentInstances = new List<GameObject> ();
 		manager = GetComponent<PlayerManager> ();
-		GameObject temp;
 		foreach (GameObject g in equipmentPrefabs) {
 			AddEquipment(g);
 		}
@@ -49,13 +47,11 @@ public class PlayerWeaponSystem : MonoBehaviour {
 	public void SwapEquipment(string eType) {
 		if (eType != CurrEquipmentType) {
 			if (currEquipment) {
-				//currEquipment.gameObject.SetActive (false);
 				currEquipment.GetComponent<Equipment>().EquipmentRender(false);
 			}
 			foreach (GameObject g in equipmentInstances) {
 				Equipment e = g.GetComponent<Equipment> ();
 				if (e.EquipmentType == eType) {
-					//g.SetActive (true);
 					e.EquipmentRender(true);
 					currEquipment = g;
 					equipment = currEquipment.GetComponent<Equipment> ();
@@ -70,7 +66,6 @@ public class PlayerWeaponSystem : MonoBehaviour {
 	public void AddEquipment(GameObject newPrefab) {
 		GameObject temp = GameObject.Instantiate (newPrefab, transform);
 		temp.layer = LayerMask.NameToLayer ("PlayerWeapon");
-		//temp.gameObject.SetActive (false);
 		temp.GetComponent<Equipment>().EquipmentRender(false);
 		equipmentInstances.Add (temp);
 		manager.Ui.AddEquipment (ref temp);

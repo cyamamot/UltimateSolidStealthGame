@@ -32,8 +32,8 @@ public class BotSight : EnemySight {
 				Vector3 toPlayer = playerMovement.transform.position - gameObject.transform.position;
 				Vector3 front = gameObject.transform.forward;
 				float angle = Vector3.Angle (front.normalized, toPlayer.normalized);
-				float fov = (alerted) ? alertedFOV : FOV;
-				if (angle <= fov && toPlayer.magnitude <= sightDistance) {
+				currentFOV = (alerted) ? alertedFOV : FOV;
+				if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
 					RaycastHit hit;
 					if (Physics.Raycast (transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
 						if (hit.transform.CompareTag ("Player") && (hit.transform.gameObject.layer != iceLayer)) {

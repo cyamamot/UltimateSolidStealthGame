@@ -8,6 +8,7 @@ public class EnemyManager : CharacterManager {
 	EnemySight sight;
 	EnemyWeaponSystem weaponSystem;
 	EnemyDistraction distraction;
+	EnemySightPlane plane;
 	GameObject player;
 
 	public EnemyMovement Movement {
@@ -33,6 +34,7 @@ public class EnemyManager : CharacterManager {
 		sight = GetComponent<EnemySight> ();
 		weaponSystem = GetComponent<EnemyWeaponSystem> ();
 		distraction = GetComponent<EnemyDistraction>();
+		plane = GetComponent<EnemySightPlane> ();
 		player = GameObject.FindGameObjectWithTag ("Player");
 	}
 	
@@ -48,6 +50,7 @@ public class EnemyManager : CharacterManager {
 		health.enabled = false;
 		distraction.enabled = false;
 		movement.Nav.enabled = false;
+		Destroy (plane);
 		GetComponent<Collider> ().enabled = false;
 	}
 }

@@ -13,7 +13,7 @@ public class Cigarette : Equipment {
 
 	PlayerManager manager;
 
-	void Awake () {
+	public virtual void Awake () {
 		base.Awake ();
 		manager = GetComponentInParent<PlayerManager> ();
 	}

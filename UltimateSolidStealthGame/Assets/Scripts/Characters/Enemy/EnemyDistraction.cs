@@ -9,12 +9,11 @@ public abstract class EnemyDistraction : MonoBehaviour {
 	[SerializeField]
 	protected float timeBetweenChecks;
 	[SerializeField]
-	protected GameObject distraction;
-	[SerializeField]
-	protected bool distracted;
-	[SerializeField]
 	protected float distractionTime;
 
+
+	protected GameObject distraction;
+	protected bool distracted;
 	protected EnemyManager manager;
 	protected List<int> pathToDistraction;
 	protected int distractionLayers;

@@ -30,8 +30,6 @@ public class PlayerUI : MonoBehaviour {
 		if (player) {
 			manager = player.GetComponent<PlayerManager> ();
 			if (manager) {
-				currEquipmentType = manager.WeaponSystem.CurrEquipmentType;
-				currEquipment = manager.WeaponSystem.Equipment;
 				GameObject temp = GameObject.Instantiate (weaponWheelPrefab);
 				temp.transform.SetParent(gameObject.transform, false);
 				RectTransform rect = temp.GetComponent<RectTransform> ();
@@ -98,7 +96,7 @@ public class PlayerUI : MonoBehaviour {
 		currEquipment = e;
 		weaponWheel.HideWheel ();
 		wheelDisplayed = false;
-		if (e.GetComponent<Gun>()) {
+		if (e.GetComponent<Gun>() || e.GetComponent<Cigarette>()) {
 			counter.gameObject.SetActive(true);
 			slider.gameObject.SetActive(false);
 		} else if (e.GetComponent<IceMachine>()) {

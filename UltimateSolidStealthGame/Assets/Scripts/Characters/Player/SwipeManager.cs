@@ -10,13 +10,11 @@ public class SwipeManager : MonoBehaviour {
 	Vector2 touchStart;
 	Vector2 touchEnd;
 
-	// Use this for initialization
 	void Start () {
 		moveDir = Vector2.zero;
 		playerMovement = GetComponent<PlayerMovement> ();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		if (Input.touchCount > 0) {
 			int id = Input.GetTouch (0).fingerId;

@@ -8,7 +8,6 @@ public class GraphDebugger : MonoBehaviour {
 
 	Graph graph;
 
-	// Use this for initialization
 	void Start () {
 		graph = GetComponent<Graph> ();
 		Vector3 offset = new Vector3 (0.0f, 1.5f, 0.0f);
@@ -28,8 +27,7 @@ public class GraphDebugger : MonoBehaviour {
 			}
 		}
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		
 	}

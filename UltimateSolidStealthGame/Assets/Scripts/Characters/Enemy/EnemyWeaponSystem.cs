@@ -14,12 +14,12 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	EnemyManager manager;
 	GameObject gunInstance;
 	Gun gun;
-	Renderer renderer;
+	MeshRenderer renderer;
 
 	// Use this for initialization
 	void Start () {
 		manager = GetComponent<EnemyManager> ();
-		renderer = GetComponent<Renderer> ();
+		renderer = GetComponent<MeshRenderer> ();
 		if (gunPrefab) {
 			gunInstance = GameObject.Instantiate (gunPrefab, transform);
 			if (gunInstance != null) {
