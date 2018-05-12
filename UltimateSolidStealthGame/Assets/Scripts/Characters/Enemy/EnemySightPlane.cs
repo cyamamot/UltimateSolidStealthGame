@@ -2,20 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+	Class used to alter shape of mesh into one that reflects enemy's sight cone
+*/
 public class EnemySightPlane : MonoBehaviour {
 
-	[SerializeField]
-	int numRays;
-	[SerializeField]
-	int alertedNumRays;
+	/*
+		prefab of plane mesh
+	*/
 	[SerializeField]
 	GameObject planePrefab;
 
+	/*
+		instance of planePrefab
+	*/
 	GameObject sightPlane;
+	/*
+		mesh component of sightPlane
+	*/
 	Mesh sightPlaneMesh;
+	/*
+		layer defining all items in "Default" layer (Walls)
+	*/
 	int defaultLayer;
+	/*
+		reference to EnemyManager component
+	*/
 	EnemyManager manager;
+	/*
+		vertices that define shape of new mesh
+	*/
 	List<Vector3> newVerts;
+	/*
+		indices of triangles in new mesh shape
+	*/
 	List<int> newIndices;
 
 	void Start () {
@@ -25,7 +45,6 @@ public class EnemySightPlane : MonoBehaviour {
 		defaultLayer = 1 << LayerMask.NameToLayer ("Default");
 		sightPlane = Instantiate (planePrefab);
 		sightPlane.transform.position = Vector3.zero;
-		Destroy(sightPlane.GetComponent<MeshCollider> ());
 		sightPlaneMesh = sightPlane.GetComponent<MeshFilter> ().mesh;
 		sightPlaneMesh.Clear ();
 	}
@@ -34,16 +53,20 @@ public class EnemySightPlane : MonoBehaviour {
 		CreatePlane ();
 	}
 
+	/*
+		Raycasts at certain angles in enemy's line of sight
+		points of ray intersection determine vertices of sight mesh shape
+		goes from -fov to fov in equal angular increments
+	*/
 	void CreatePlane() {
 		sightPlaneMesh.Clear ();
 		newIndices.Clear ();
 		newVerts.Clear ();
 		newVerts.Add (transform.position);
 		int fov = manager.Sight.CurrentFOV;
-		int rays = (manager.Sight.Alerted) ? alertedNumRays : numRays;
 		float currAngle = -fov;
-		float deltaAngle = (fov * 2.0f) / (rays - 1);
-		for (int i = 0; i < rays; i++) {
+		float deltaAngle = (fov * 2.0f) / (fov - 1);
+		for (int i = 0; i < fov; i++) {
 			Vector3 dir = Quaternion.AngleAxis (currAngle, Vector3.up) * transform.forward;
 			RaycastHit hit;
 			if (Physics.Raycast (transform.position, dir, out hit, manager.Sight.SightDistance, defaultLayer)) {
@@ -53,7 +76,7 @@ public class EnemySightPlane : MonoBehaviour {
 			}
 			if (i == 0) {
 				newIndices.Add (i);
-			} else if (i != rays - 1) {
+			} else if (i != fov - 1) {
 				newIndices.Add (i);
 				newIndices.Add (0);
 				newIndices.Add (i);

@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+	Class that stores all of the player's equipment and allows them to swap and use the current weapon
+*/
 public class PlayerWeaponSystem : MonoBehaviour {
-
-	[SerializeField]
-	List<GameObject> equipmentPrefabs;
-
+	/*
+		list of all weapon instances
+	*/
 	List<GameObject> equipmentInstances;
+	/*
+		type of weapon currently equipped
+	*/
 	string currEquipmentType;
+	/*
+		reference to current equipment object
+	*/
 	GameObject currEquipment;
+	/*
+		reference to Equipment component of currEquipment
+	*/
 	Equipment equipment;
 
+	/*
+		reference to PlayerManager component
+	*/
 	PlayerManager manager;
 
 	public string CurrEquipmentType {
@@ -25,25 +39,37 @@ public class PlayerWeaponSystem : MonoBehaviour {
 		get { return equipment; }
 	}
 		
-	void Start () {
+	void Awake() {
 		equipmentInstances = new List<GameObject> ();
 		manager = GetComponent<PlayerManager> ();
-		foreach (GameObject g in equipmentPrefabs) {
-			AddEquipment(g);
-		}
+	}
+
+	void Start() {
 		SwapEquipment ("Knife");
 	}
 
+	/*
+		Used to detect collision with other collider
+		if collider has component that can be picked up, add to equipment
+		@param collision - info on collider that was collided with
+	*/
 	void OnCollisionEnter(Collision collision) {
 		//use for gun pickup
 	}
-	
+
+	/*
+		use current equipment
+	*/
 	public void UseEquipped() {
 		if (equipment) {
 			equipment.UseEquipment ();
 		}
 	}
 
+	/*
+		swaps to equipment in list of type eType
+		@param eType - type of equipment to switch to
+	*/
 	public void SwapEquipment(string eType) {
 		if (eType != CurrEquipmentType) {
 			if (currEquipment) {
@@ -63,6 +89,10 @@ public class PlayerWeaponSystem : MonoBehaviour {
 		}
 	}
 
+	/*
+		add instance of equipment to list of available equipment
+		@param newPrefab - prefab of equipment to be instantiated and added
+	*/
 	public void AddEquipment(GameObject newPrefab) {
 		GameObject temp = GameObject.Instantiate (newPrefab, transform);
 		temp.layer = LayerMask.NameToLayer ("PlayerWeapon");

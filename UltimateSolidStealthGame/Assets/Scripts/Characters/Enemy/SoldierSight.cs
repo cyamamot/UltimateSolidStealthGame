@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+	Subclass of EnemySight component used by Soldier type enemies
+*/
 public class SoldierSight : EnemySight{
 
 	protected override void Start() {
@@ -12,6 +15,9 @@ public class SoldierSight : EnemySight{
 		base.Update ();
 	}
 
+	/*
+		Soldier implementation of base class function
+	*/
 	protected override void CheckSightline () {
 		frames = (frames + 1) % numFramesToResetPath;
 		if (playerMovement != null && manager.Movement != null) {

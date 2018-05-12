@@ -2,8 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+	Subclass of EnemyDistraction class
+	Used to detect whether a cigarette distraction is in range
+	If one is found, set path to it
+*/
 public class SmokeDistraction : EnemyDistraction {
 
+	/*
+		distance to cigarette distraction used to focus on closest distraction
+	*/
 	float distToDistraction;
 
 	public override void Start () {
@@ -21,6 +29,10 @@ public class SmokeDistraction : EnemyDistraction {
 		}
 	}
 
+	/*
+		uses Physics.CheckSphere to find any cigarettes in range
+		if found, set the closest pack as the distraction
+	*/
 	protected override void CheckForDistraction () {
 		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, distractionLayers, QueryTriggerInteraction.Collide);
 		if (hits.Length == 0) {
@@ -39,14 +51,9 @@ public class SmokeDistraction : EnemyDistraction {
 	}
 
 	public override void SetDistraction (int vertex, ref GameObject obj) {
-		if (!manager.Sight.Alerted) {
-			distraction = obj;
+		base.SetDistraction (vertex, ref obj);
+		if (!manager.Sight.Alerted && vertex >= 0) {
 			distToDistraction = Vector3.Distance (transform.position, obj.transform.position);
-			distracted = true;
-			pathToDistraction = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, vertex);
-			if (pathToDistraction.Count > 0) {
-				manager.Movement.Path = pathToDistraction;
-			}
 		}
 	}
 

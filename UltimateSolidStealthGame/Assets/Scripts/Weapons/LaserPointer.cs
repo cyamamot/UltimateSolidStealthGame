@@ -52,6 +52,7 @@ public class LaserPointer : Equipment {
 					GameObject temp = Instantiate (targetPrefab, hit.point + offset, Quaternion.identity);
 					temp.transform.forward = manager.transform.forward;
 					target = temp.GetComponent<LaserTarget> ();
+					target.Location = manager.Graph.GetIndexFromPosition (hit.point + offset);
 					target.Pointer = this;
 					LaserUninvestigated ();
 					StartCoroutine ("ShootRay", hit.point);

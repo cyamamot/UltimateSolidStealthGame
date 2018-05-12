@@ -2,13 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+	Subclass of EnemySight component used by Bot type enemies
+	Ignores player if they are in the "IcePlayer" layer
+*/
 public class BotSight : EnemySight {
 
 	[SerializeField]
 	float botPauseTime;
 
+	/*
+	 	layer that defines which layer to ignore
+	*/
 	int iceLayer;
+	/*
+	 	whether the bot is currently paused
+	*/
 	bool paused;
+
 
 	protected override void Start() {
 		base.Start();
@@ -25,6 +36,9 @@ public class BotSight : EnemySight {
 		}
 	}
 
+	/*
+		Bot implementation of base class function
+	*/
 	protected override void CheckSightline () {
 		frames = (frames + 1) % numFramesToResetPath;
 		if (playerMovement != null && manager.Movement != null) {

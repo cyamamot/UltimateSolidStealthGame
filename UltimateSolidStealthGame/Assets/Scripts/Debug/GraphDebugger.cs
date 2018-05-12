@@ -10,12 +10,11 @@ public class GraphDebugger : MonoBehaviour {
 
 	void Start () {
 		graph = GetComponent<Graph> ();
-		Vector3 offset = new Vector3 (0.0f, 1.5f, 0.0f);
 		if (sphere != null && graph != null) {
 			int count = 0;
 			foreach (Vertex v in graph.vertices) {
 				if (v != null) {
-					GameObject temp = GameObject.Instantiate (sphere, v.position + offset, Quaternion.identity);
+					GameObject temp = GameObject.Instantiate (sphere, v.position, Quaternion.identity);
 					if (temp != null) {
 						VertexDisplay vertDisplay = temp.GetComponent<VertexDisplay> ();
 						if (vertDisplay) {
