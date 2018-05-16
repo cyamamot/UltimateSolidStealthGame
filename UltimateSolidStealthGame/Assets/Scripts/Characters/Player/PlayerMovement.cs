@@ -98,10 +98,12 @@ public class PlayerMovement : MonoBehaviour {
 					if (manager.Graph.vertices[lastVertexIndex].occupiedBy == playerName) {
 						manager.Graph.vertices [lastVertexIndex].occupied = false;
 						manager.Graph.vertices [lastVertexIndex].occupiedBy = "";
-					}
+                        manager.Graph.vertices[lastVertexIndex].NotifyParentOrchild();
+                    }
 					manager.Graph.vertices [currVertexIndex].occupied = true;
 					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
-				}
+                    manager.Graph.vertices[currVertexIndex].NotifyParentOrchild();
+                }
 				if (movement != Vector3.zero) {
 					transform.rotation = Quaternion.LookRotation(movement);
 					switch (direction) {
@@ -157,9 +159,11 @@ public class PlayerMovement : MonoBehaviour {
 					}
 					manager.Graph.vertices [lastVertexIndex].occupied = true;
 					manager.Graph.vertices [lastVertexIndex].occupiedBy = playerName;
-					manager.Graph.vertices [currVertexIndex].occupied = true;
+                    manager.Graph.vertices[lastVertexIndex].NotifyParentOrchild();
+                    manager.Graph.vertices [currVertexIndex].occupied = true;
 					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
-					nav.SetDestination (manager.Graph.vertices [currVertexIndex].position);
+                    manager.Graph.vertices[currVertexIndex].NotifyParentOrchild();
+                    nav.SetDestination (manager.Graph.vertices [currVertexIndex].position);
 				} 
 			}
 		}

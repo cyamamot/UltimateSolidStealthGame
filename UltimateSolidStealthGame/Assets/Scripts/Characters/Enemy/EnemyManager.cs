@@ -63,7 +63,7 @@ public class EnemyManager : CharacterManager {
 		health.enabled = false;
 		distraction.enabled = false;
 		movement.Nav.enabled = false;
-		Destroy (plane);
+        plane.enabled = false;
 		GetComponent<Collider> ().enabled = false;
 	}
 }
