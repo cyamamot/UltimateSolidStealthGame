@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class LaserTarget : MonoBehaviour {
 
-	[SerializeField]
-	int location;
-
+    Vertex vertex;
 	LaserPointer pointer;
 
+    public Vertex Vertex {
+        set { vertex = value; }
+    }
 	public int Location {
-		get { return location; }
-		set { location = value; }
+		get {
+            if (vertex.parentVertex != null) {
+                return vertex.parentVertex.index;
+            } else {
+                return vertex.index;
+            }
+        }
 	}
 	public LaserPointer Pointer {
 		set { pointer = value; }

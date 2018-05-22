@@ -40,12 +40,13 @@ public class EnemyManager : CharacterManager {
 
 	protected override void Awake () {
 		base.Awake ();
-		sight = GetComponent<EnemySight> ();
-		movement = GetComponent<EnemyMovement> ();
-		weaponSystem = GetComponent<EnemyWeaponSystem> ();
-		distraction = GetComponent<EnemyDistraction>();
-		plane = GetComponent<EnemySightPlane> ();
-		player = GameObject.FindGameObjectWithTag ("Player");
+        GameObject parent = transform.parent.gameObject;
+		sight = (parent != null) ? parent.GetComponentInChildren<EnemySight> () : GetComponent<EnemySight>();
+		movement = (parent != null) ? parent.GetComponentInChildren<EnemyMovement>() : GetComponent<EnemyMovement>(); ;
+		weaponSystem = (parent != null) ? parent.GetComponentInChildren<EnemyWeaponSystem>() : GetComponent<EnemyWeaponSystem>();
+        distraction = (parent != null) ? parent.GetComponentInChildren<EnemyDistraction>() : GetComponent<EnemyDistraction>();
+        plane = (parent != null) ? parent.GetComponentInChildren<EnemySightPlane>() : GetComponent<EnemySightPlane>();
+        player = GameObject.FindGameObjectWithTag ("Player");
 	}
 
 	/*

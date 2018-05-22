@@ -666,6 +666,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114442771499906476, guid: dcdc545fc6f586c468a5043915f62696,
+        type: 2}
+      propertyPath: graphObject
+      value: 
+      objectReference: {fileID: 1690358732}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dcdc545fc6f586c468a5043915f62696, type: 2}
   m_IsPrefabParent: 0
@@ -1111,6 +1116,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114932887620849840, guid: d8b75783d715e714c985120d2c78d86f,
+        type: 2}
+      propertyPath: graphObject
+      value: 
+      objectReference: {fileID: 1690358732}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d8b75783d715e714c985120d2c78d86f, type: 2}
   m_IsPrefabParent: 0
@@ -5525,6 +5535,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1d676aae6691274408c45956e7e01196, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1690358732 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1161423652488148, guid: 1d676aae6691274408c45956e7e01196,
+    type: 2}
+  m_PrefabInternal: {fileID: 1690358731}
 --- !u!1 &1785955228
 GameObject:
   m_ObjectHideFlags: 0

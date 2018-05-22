@@ -47,6 +47,9 @@ public class PlayerMovement : MonoBehaviour {
 	public int CurrVertexIndex {
 		get { return currVertexIndex; }
 	}
+    public Vector3 CurrLocation {
+        get { return manager.Graph.vertices[currVertexIndex].position; }
+    }
 	public Vector3 Movement {
 		get { return movement; }
 	}
@@ -56,19 +59,29 @@ public class PlayerMovement : MonoBehaviour {
 	public Enums.directions Direction {
 		get { return direction; }
 	}
+    public int ParentVertexIndex {
+        get {
+            Vertex parentVertex = manager.Graph.vertices[currVertexIndex].parentVertex;
+            if (parentVertex != null) {
+                return parentVertex.index;
+            } else {
+                return -1;
+            }
+        }
+    }
 		
 	void Start () {
 		movement = Vector3.zero;
 		manager = GetComponent<PlayerManager> ();
 		moveAmount = manager.Graph.VertexDistance;
 		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
-		//transform.position = new Vector3(transform.position.x, 1.0f, transform.position.z);
 		currVertexIndex = manager.Graph.GetIndexFromPosition(transform.position);
 		lastVertexIndex = currVertexIndex;
 		playerName = gameObject.name;
 		manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
 		manager.Graph.vertices [currVertexIndex].occupied = true;
-		Vector3 forwardDir = transform.forward.normalized;
+        manager.Graph.vertices[currVertexIndex].NotifyParentOrChild();
+        Vector3 forwardDir = transform.forward.normalized;
 		if (forwardDir == Vector3.forward) {
 			direction = Enums.directions.up;
 		} else if (forwardDir == Vector3.back) {
@@ -98,11 +111,11 @@ public class PlayerMovement : MonoBehaviour {
 					if (manager.Graph.vertices[lastVertexIndex].occupiedBy == playerName) {
 						manager.Graph.vertices [lastVertexIndex].occupied = false;
 						manager.Graph.vertices [lastVertexIndex].occupiedBy = "";
-                        manager.Graph.vertices[lastVertexIndex].NotifyParentOrchild();
+                        manager.Graph.vertices[lastVertexIndex].NotifyParentOrChild();
                     }
 					manager.Graph.vertices [currVertexIndex].occupied = true;
 					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
-                    manager.Graph.vertices[currVertexIndex].NotifyParentOrchild();
+                    manager.Graph.vertices[currVertexIndex].NotifyParentOrChild();
                 }
 				if (movement != Vector3.zero) {
 					transform.rotation = Quaternion.LookRotation(movement);
@@ -110,7 +123,7 @@ public class PlayerMovement : MonoBehaviour {
 					case Enums.directions.left:
 						if (manager.Graph.vertices [currVertexIndex - 1] != null) {
 							if (manager.Graph.vertices [currVertexIndex - 1].occupied == true) {
-								StopMoving ();
+								//StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
@@ -122,7 +135,7 @@ public class PlayerMovement : MonoBehaviour {
 					case Enums.directions.right:
 						if (manager.Graph.vertices [currVertexIndex + 1] != null) {
 							if (manager.Graph.vertices [currVertexIndex + 1].occupied == true) {
-								StopMoving ();
+								//StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
@@ -134,7 +147,7 @@ public class PlayerMovement : MonoBehaviour {
 					case Enums.directions.up:
 						if (manager.Graph.vertices [currVertexIndex + manager.Graph.GridWidth] != null) {
 							if (manager.Graph.vertices [currVertexIndex + manager.Graph.GridWidth].occupied == true) {
-								StopMoving ();
+								//StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
@@ -146,7 +159,7 @@ public class PlayerMovement : MonoBehaviour {
 					case Enums.directions.down:
 						if (manager.Graph.vertices [currVertexIndex - manager.Graph.GridWidth] != null) {
 							if (manager.Graph.vertices [currVertexIndex - manager.Graph.GridWidth].occupied == true) {
-								StopMoving ();
+								//StopMoving ();
 								return;
 							}
 							lastVertexIndex = currVertexIndex;
@@ -159,10 +172,10 @@ public class PlayerMovement : MonoBehaviour {
 					}
 					manager.Graph.vertices [lastVertexIndex].occupied = true;
 					manager.Graph.vertices [lastVertexIndex].occupiedBy = playerName;
-                    manager.Graph.vertices[lastVertexIndex].NotifyParentOrchild();
+                    manager.Graph.vertices[lastVertexIndex].NotifyParentOrChild();
                     manager.Graph.vertices [currVertexIndex].occupied = true;
 					manager.Graph.vertices [currVertexIndex].occupiedBy = playerName;
-                    manager.Graph.vertices[currVertexIndex].NotifyParentOrchild();
+                    manager.Graph.vertices[currVertexIndex].NotifyParentOrChild();
                     nav.SetDestination (manager.Graph.vertices [currVertexIndex].position);
 				} 
 			}

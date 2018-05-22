@@ -29,6 +29,9 @@ public abstract class EnemySight : MonoBehaviour {
 	[SerializeField]
 	protected int numFramesToResetPath;
 
+    [SerializeField]
+    protected float alertedPauseLength;
+
 	/*
 	 	whether the enemy is currently alerted
 	*/
@@ -71,6 +74,9 @@ public abstract class EnemySight : MonoBehaviour {
 	public int SightDistance {
 		get { return sightDistance; }
 	}
+    public float AlertedPauseLength {
+        get { return alertedPauseLength; }
+    }
 		
 	protected virtual void Start () {
 		ignoreEnemiesLayer = 1 << LayerMask.NameToLayer ("Enemy");
@@ -80,15 +86,16 @@ public abstract class EnemySight : MonoBehaviour {
 			playerMovement = temp.GetComponent<PlayerMovement> ();
 		}
 		currentFOV = FOV;
-		manager = gameObject.GetComponent<EnemyManager> ();
-		pathToPlayer = new List<int> ();
+        GameObject parent = transform.parent.gameObject;
+		manager = (parent != null) ? parent.GetComponentInChildren<EnemyManager>() : GetComponent<EnemyManager>();
+        pathToPlayer = new List<int> ();
 	}
 
 	protected virtual void Update() {
 		CheckSightline ();
 		if (alerted && pathToPlayer.Count == 0) {
 			alerted = false;
-			manager.Movement.PauseMovement ();
+			manager.Movement.PauseMovement (alertedPauseLength);
 		}
 	}
 
@@ -97,4 +104,6 @@ public abstract class EnemySight : MonoBehaviour {
 		If they are, set the enemy's path to the player
 	*/
 	protected abstract void CheckSightline ();
+
+
 }

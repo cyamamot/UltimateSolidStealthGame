@@ -45,6 +45,9 @@ public abstract class EnemyDistraction : MonoBehaviour {
 	*/
 	protected int distractionLayers;
 
+    public GameObject Distraction {
+        get { return distraction; }
+    }
 	public EnemyManager Manager {
 		get { return manager; }
 	}
@@ -68,11 +71,12 @@ public abstract class EnemyDistraction : MonoBehaviour {
 		if (distracted) {
 			if (distraction && pathToDistraction.Count == 0) { 
 				Vector3 pos = distraction.transform.position;
-				if (Mathf.Approximately(transform.position.x, pos.x) && Mathf.Approximately(transform.position.z, pos.z)) {
+				if (Mathf.Approximately(transform.position.x, pos.x) && Mathf.Approximately(transform.position.z, pos.z)
+                        || Vector3.Distance(transform.position, pos) <= manager.Graph.VertexDistance) {
 					enabled = false;
 					manager.Movement.enabled = false;
-					manager.Sight.enabled = false;
-					manager.WeaponSystem.enabled = false;
+					if (manager.Sight) manager.Sight.enabled = false;
+					if (manager.WeaponSystem) manager.WeaponSystem.enabled = false;
 					StartCoroutine ("AtDistraction");
 				}
 			} else if (!distraction) {

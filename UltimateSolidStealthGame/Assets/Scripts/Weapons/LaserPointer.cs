@@ -16,6 +16,7 @@ public class LaserPointer : Equipment {
 	PlayerManager manager;
 	LineRenderer laser;
 	bool turnedOn;
+    Camera cam;
 
 	void Awake () {
 		base.Awake ();
@@ -24,38 +25,44 @@ public class LaserPointer : Equipment {
 		laser = GetComponent<LineRenderer> ();
 		laser.enabled = false;
 		manager = GetComponentInParent<PlayerManager> ();
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 	}
 
 	public override void UseEquipment() {
 		if (manager.Movement) {
 			if (!turnedOn) {
-				turnedOn = true;
-				manager.Movement.StopMoving ();
 				RaycastHit hit;
 				if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, ignoreLayers, QueryTriggerInteraction.Collide)) {
-					Vector3 offset = new Vector3 ();
-					float offsetAmount = manager.Graph.VertexDistance;
-					switch (manager.Movement.Direction) {
-					case Enums.directions.up:
-						offset.Set (0.0f, 0.0f, -offsetAmount);
-						break;
-					case Enums.directions.down:
-						offset.Set (0.0f, 0.0f, offsetAmount);
-						break;
-					case Enums.directions.left:
-						offset.Set (offsetAmount, 0.0f, 0.0f);
-						break;
-					case Enums.directions.right:
-						offset.Set (-offsetAmount, 0.0f, 0.0f);
-						break;
-					}
-					GameObject temp = Instantiate (targetPrefab, hit.point + offset, Quaternion.identity);
-					temp.transform.forward = manager.transform.forward;
-					target = temp.GetComponent<LaserTarget> ();
-					target.Location = manager.Graph.GetIndexFromPosition (hit.point + offset);
-					target.Pointer = this;
-					LaserUninvestigated ();
-					StartCoroutine ("ShootRay", hit.point);
+                    Vector3 pointInCameraSpace = cam.WorldToViewportPoint(hit.point);
+                    if (pointInCameraSpace[0] >= 0.0f && pointInCameraSpace[0] <= 1.0f
+                            && pointInCameraSpace[1] >= 0.0f && pointInCameraSpace[1] <= 1.0f
+                                && pointInCameraSpace[2] > 0.0f) {
+                        turnedOn = true;
+                        manager.Movement.StopMoving();
+                        Vector3 offset = new Vector3();
+                        float offsetAmount = manager.Graph.VertexDistance / 2.0f;
+                        switch (manager.Movement.Direction) {
+                            case Enums.directions.up:
+                                offset.Set(0.0f, 0.0f, -offsetAmount);
+                                break;
+                            case Enums.directions.down:
+                                offset.Set(0.0f, 0.0f, offsetAmount);
+                                break;
+                            case Enums.directions.left:
+                                offset.Set(offsetAmount, 0.0f, 0.0f);
+                                break;
+                            case Enums.directions.right:
+                                offset.Set(-offsetAmount, 0.0f, 0.0f);
+                                break;
+                        }
+                        GameObject temp = Instantiate(targetPrefab, hit.point + offset, Quaternion.identity);
+                        temp.transform.forward = manager.transform.forward;
+                        target = temp.GetComponent<LaserTarget>();
+                        target.Vertex = manager.Graph.vertices[manager.Graph.GetIndexFromPosition(hit.point + offset)];
+                        target.Pointer = this;
+                        LaserUninvestigated();
+                        StartCoroutine("ShootRay", hit.point);
+                    }
 				}
 			} else {
 				turnedOn = false;

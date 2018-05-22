@@ -24,13 +24,18 @@ public class SnakeGraph : Graph {
         if (bottomLeftMapping != -1) {
             for (int i = 0; i < gridHeight; i++) {
                 for (int j = 0; j < gridWidth; j++) {
+                    // for each parentGraph vertex, link parentVertex to all childVertices it overlaps and vice versa
                     for (int k = 0; k < ratio; k++) {
                         for (int l = 0; l < ratio; l++) {
-                            int currChildIndex = bottomLeftMapping + (j * ratio) + (i * ratio * childGraph.GridWidth) + l + (k * childGraph.GridWidth);
-                            vertices[currParentIndex].childVertices.Add(childGraph.vertices[currChildIndex]);
-                            Vertex temp = childGraph.vertices[currChildIndex];
-                            if (temp != null) {
-                                temp.parentVertex = vertices[currParentIndex];
+                            if (vertices[currParentIndex] != null) {
+                                int currChildIndex = bottomLeftMapping + (j * ratio) + (i * ratio * childGraph.GridWidth) + l + (k * childGraph.GridWidth);
+                                Vertex temp = childGraph.vertices[currChildIndex];
+                                vertices[currParentIndex].childVertices.Add(temp);
+                                if (temp != null) {
+                                    temp.parentVertex = vertices[currParentIndex];
+                                } else {
+                                    vertices[currParentIndex] = null;
+                                }
                             }
                         }
                     }
@@ -50,7 +55,7 @@ public class SnakeGraph : Graph {
         return childGraph.GetIndexFromPosition(bottomLeft);
     }
 
-    void LateUpdate() {
+    void Update() {
 
     }
 }

@@ -13,7 +13,7 @@ public class Vertex {
 	public bool occupied;
 	public string occupiedBy;
 
-    public void NotifyParentOrchild() {
+    public void NotifyParentOrChild() {
         if (childVertices.Count > 0) {
             foreach (Vertex v in childVertices) {
                 v.occupied = occupied;

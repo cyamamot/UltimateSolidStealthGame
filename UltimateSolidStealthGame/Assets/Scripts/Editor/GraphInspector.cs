@@ -18,16 +18,21 @@ public class GraphInspector : EditorWindow {
         GraphInspector gi = (GraphInspector)EditorWindow.GetWindow(typeof(GraphInspector));
         gi.Show();
     }
-	
-	void OnGUI() {
+
+    public void OnInspectorUpdate() {
+        Repaint();
+    }
+
+    void OnGUI() {
         GUILayout.BeginHorizontal();
         SetButtons();
-        GUILayout.BeginVertical();
         GUI.color = Color.white;
+        GUILayout.BeginVertical("Box");
         clickedVertIndex = EditorGUILayout.IntField("Index", clickedVertIndex);
         clickedVertPos = EditorGUILayout.Vector3Field("Position", clickedVertPos);
         clickedVertOccuppiedBy = EditorGUILayout.TextField("Occupied By", clickedVertOccuppiedBy);
         clickedVertParentVert = EditorGUILayout.IntField("Parent Vertex", clickedVertParentVert);
+        EditorGUILayout.PrefixLabel("Children Vertices");
         clickedVertChildVerts = EditorGUILayout.TextArea(clickedVertChildVerts);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
@@ -45,10 +50,14 @@ public class GraphInspector : EditorWindow {
                         GUILayout.BeginHorizontal();
                         for (int j = 0; j < graph.GridWidth; j++) {
                             if (graph.vertices[i + j] != null) {
-                                GUI.color = Color.green;
+                                if (!graph.vertices[i + j].occupied) {
+                                    GUI.color = Color.green;
+                                } else {
+                                    GUI.color = Color.red;
+                                }
                             }
                             else {
-                                GUI.color = Color.red;
+                                GUI.color = Color.gray;
                             }
                             if (GUILayout.Button(" ", GUILayout.Width(7.0f), GUILayout.Height(7.0f))) {
                                 DisplayVertexData(i + j);

@@ -48,8 +48,8 @@ public class LaserDistraction : EnemyDistraction {
 		distracted = false;
 		enabled = true;
 		manager.Movement.enabled = true;
-		manager.Sight.enabled = true;
-		manager.WeaponSystem.enabled = true;
+		if (manager.Sight) manager.Sight.enabled = true;
+		if (manager.WeaponSystem) manager.WeaponSystem.enabled = true;
 		pathToDistraction.Clear ();
 	}
 }
