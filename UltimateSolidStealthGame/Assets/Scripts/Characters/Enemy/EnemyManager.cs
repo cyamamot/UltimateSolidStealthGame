@@ -40,7 +40,7 @@ public class EnemyManager : CharacterManager {
 
 	protected override void Awake () {
 		base.Awake ();
-        GameObject parent = transform.parent.gameObject;
+        GameObject parent = (transform.parent != null) ? transform.parent.gameObject : null;
 		sight = (parent != null) ? parent.GetComponentInChildren<EnemySight> () : GetComponent<EnemySight>();
 		movement = (parent != null) ? parent.GetComponentInChildren<EnemyMovement>() : GetComponent<EnemyMovement>(); ;
 		weaponSystem = (parent != null) ? parent.GetComponentInChildren<EnemyWeaponSystem>() : GetComponent<EnemyWeaponSystem>();

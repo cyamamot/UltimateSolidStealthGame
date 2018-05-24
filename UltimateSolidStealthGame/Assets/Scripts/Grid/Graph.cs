@@ -58,6 +58,7 @@ public class Graph : MonoBehaviour{
             gridHeight = (int)(height * (1.0f / vertexDistance));
             box.enabled = false;
 			vertices = new List<Vertex> ();
+            int defaultLayer = 1 << LayerMask.NameToLayer("Default");
 			if (vertices.Count == 0) { 
 				int count = 0;
 				Vector3 pos = new Vector3 ();
@@ -65,7 +66,7 @@ public class Graph : MonoBehaviour{
 					for (float j = (vertexDistance / 2.0f); j < (float)width; j += vertexDistance) {
 						pos.Set (j, 0, i);
 						pos += floorBottomLeft;
-						if (!Physics.CheckSphere (pos, 0.125f, ~0, QueryTriggerInteraction.Ignore)) {
+						if (!Physics.CheckSphere (pos, 0.125f, defaultLayer, QueryTriggerInteraction.Ignore)) {
 							Vertex vert = new Vertex ();
 							vert.position.Set (pos.x, floorTop, pos.z);
 							vert.visited = false;

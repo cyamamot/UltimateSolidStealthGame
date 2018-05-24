@@ -31,13 +31,14 @@ public class SnakeSight : EnemySight {
         frames = (frames + 1) % numFramesToResetPath;
         if (playerMovement != null && manager.Movement != null) {
             if (frames == (numFramesToResetPath - 1)) {
-                Vector3 toPlayer = playerMovement.transform.position - gameObject.transform.position;
+                Vector3 toPlayer = playerMovement.transform.position - manager.transform.position;
                 Vector3 front = gameObject.transform.forward;
                 float angle = Vector3.Angle(front.normalized, toPlayer.normalized);
                 currentFOV = (alerted) ? alertedFOV : FOV;
                 if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
                     RaycastHit hit;
-                    if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
+                    if (Physics.Raycast(manager.transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
+                        //Debug.Log(angle + " : " + hit.transform.name);
                         if (hit.transform.CompareTag("Player")) {
                             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
                             if (pathToPlayer.Count > 0) {

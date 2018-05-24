@@ -86,8 +86,8 @@ public abstract class EnemySight : MonoBehaviour {
 			playerMovement = temp.GetComponent<PlayerMovement> ();
 		}
 		currentFOV = FOV;
-        GameObject parent = transform.parent.gameObject;
-		manager = (parent != null) ? parent.GetComponentInChildren<EnemyManager>() : GetComponent<EnemyManager>();
+        GameObject parent = (transform.parent != null) ? transform.parent.gameObject : null;
+        manager = (parent != null) ? parent.GetComponentInChildren<EnemyManager>() : GetComponent<EnemyManager>();
         pathToPlayer = new List<int> ();
 	}
 

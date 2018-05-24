@@ -21,8 +21,8 @@ public class GridDisplay : MonoBehaviour {
             Debug.DrawLine(bottom, top, lineColor, 0.0f);
         }
         for (float j = 0.0f; j <= graph.Height; j += graph.VertexDistance) {
-            Vector3 left = graph.FloorBottomLeft + new Vector3(0, 0.1f, j);
-            Vector3 right = graph.FloorBottomLeft + new Vector3(graph.Width, 0.1f, j);
+            Vector3 left = graph.FloorBottomLeft + new Vector3(0, 0.0f, j);
+            Vector3 right = graph.FloorBottomLeft + new Vector3(graph.Width, 0.0f, j);
             Debug.DrawLine(left, right, lineColor, 0.0f);
         }
     }
