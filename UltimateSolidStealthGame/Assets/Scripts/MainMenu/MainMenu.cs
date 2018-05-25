@@ -19,8 +19,7 @@ public class MainMenu : MonoBehaviour {
     }
 
 	void Awake () {
-        currLevel = PlayerPrefs.GetInt("CurrentLevel", -1);
-        Debug.Log(currLevel);
+        currLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
         newGameScreen.SetActive(false);
         optionsScreen.SetActive(false);
 	}

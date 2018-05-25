@@ -112,6 +112,9 @@ public class EnemyMovement : MonoBehaviour {
 		if showDebug == true, show path enemy is on
 	*/
 	protected void Update() {
+        if (enabled == false) {
+            Debug.Log("ervrgvd");
+        }
 		if (manager && manager.Graph.Ready) {
 			if (manager.Sight && !manager.Sight.Alerted) {
 				if (manager.Distraction && !manager.Distraction.Distracted) {
@@ -146,7 +149,6 @@ public class EnemyMovement : MonoBehaviour {
                         float currZ = transform.position.z;
                         float destX = v.position.x;
                         float destZ = v.position.z;
-                        //if (Mathf.Approximately(currX, destX) && Mathf.Approximately(currZ, destZ)) {
                         if ((Mathf.Abs(destX - currX) <= nav.stoppingDistance) && (Mathf.Abs(destZ - currZ) <= nav.stoppingDistance)) {
                             destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
                             PauseMovement(pauseLength);

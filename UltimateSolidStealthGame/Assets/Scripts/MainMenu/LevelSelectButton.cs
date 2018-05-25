@@ -22,7 +22,7 @@ public class LevelSelectButton : MonoBehaviour {
         fillCircleImage = transform.parent.GetComponent<Image>();
         fillCircleImage.fillAmount = 0.0f;
         buttonImage = GetComponent<Image>();
-        currLevel = PlayerPrefs.GetInt("CurrentLevel", -1);
+        currLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
         if (level <= (currLevel + 1)) {
             levelAvailable = true;
         } else {
@@ -35,7 +35,7 @@ public class LevelSelectButton : MonoBehaviour {
         if (levelAvailable) {
             fillCircleImage.fillAmount = fillAmount;
             if (pressed) {
-                fillAmount += 0.025f;
+                fillAmount += 0.05f;
             }
             if (fillAmount >= 1.0f) {
                 SceneManager.LoadScene(levelName);

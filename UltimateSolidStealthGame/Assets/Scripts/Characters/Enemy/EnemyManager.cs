@@ -56,9 +56,14 @@ public class EnemyManager : CharacterManager {
 		Debug.Log ("Enemy Dead");
 		graph.vertices[movement.CurrVertexIndex].occupied = false;
 		graph.vertices[movement.CurrVertexIndex].occupiedBy = "";
-		graph.vertices[movement.LastVertexIndex].occupied = false;
-		graph.vertices[movement.LastVertexIndex].occupiedBy = "";
-		movement.enabled = false;
+        if (graph.vertices[movement.LastVertexIndex].occupiedBy == name) {
+            graph.vertices[movement.LastVertexIndex].occupied = false;
+            graph.vertices[movement.LastVertexIndex].occupiedBy = "";
+        }
+        movement.StopAllCoroutines();
+        weaponSystem.StopAllCoroutines();
+        distraction.StopAllCoroutines();
+        movement.enabled = false;
 		sight.enabled = false;
 		weaponSystem.enabled = false;
 		health.enabled = false;

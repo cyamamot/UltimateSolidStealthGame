@@ -29,6 +29,12 @@ public class PlayerUI : MonoBehaviour {
 	*/
 	[SerializeField]
 	GameObject weaponWheelPrefab;
+    [SerializeField]
+    GameObject mainButtonObject;
+    [SerializeField]
+    GameObject optionsButtonObject;
+    [SerializeField]
+    GameObject optionsScreenObject;
 
 	/*
 		reference to WeaponSelectWheel component of weaponwheel object
@@ -77,23 +83,30 @@ public class PlayerUI : MonoBehaviour {
 				weaponWheel = temp.GetComponent<WeaponSelectWheel> ();
 			}
 		}
+        optionsScreenObject.SetActive(false);
 	}
 
 	void Update () {
 		if (currEquipment) {
-			if (counter.IsActive()) {
-				counter.text = "x" + currEquipment.Count.ToString ();
-			} else if (slider.IsActive()) {
-				slider.value = currEquipment.Count / 100.0f;
-			}
-			if (primaryPressed) {
-				float time = Time.time - pressTime;
-				if (time > 0.5f) {
-					primaryPressed = false;
-					weaponWheel.DisplayWheel();
-					wheelDisplayed = true;
-				}
-			}
+            if (!optionsScreenObject.activeSelf) {
+                Time.timeScale = 1.0f;
+                mainButtonObject.SetActive(true);
+                optionsButtonObject.SetActive(true);
+                if (counter.IsActive()) {
+                    counter.text = "x" + currEquipment.Count.ToString();
+                }
+                else if (slider.IsActive()) {
+                    slider.value = currEquipment.Count / 100.0f;
+                }
+                if (primaryPressed) {
+                    float time = Time.time - pressTime;
+                    if (time > 0.5f) {
+                        primaryPressed = false;
+                        weaponWheel.DisplayWheel();
+                        wheelDisplayed = true;
+                    }
+                }
+            }
 		}
 	}
 
@@ -159,4 +172,11 @@ public class PlayerUI : MonoBehaviour {
 			slider.gameObject.SetActive(false);
 		}
 	}
+
+    public void DisplayOptions() {
+        Time.timeScale = 0.0f;
+        mainButtonObject.SetActive(false);
+        optionsButtonObject.SetActive(false);
+        optionsScreenObject.SetActive(true);
+    }
 }
