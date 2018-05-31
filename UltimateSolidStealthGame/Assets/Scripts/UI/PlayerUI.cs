@@ -35,6 +35,8 @@ public class PlayerUI : MonoBehaviour {
     GameObject optionsButtonObject;
     [SerializeField]
     GameObject optionsScreenObject;
+    [SerializeField]
+    GameObject healthBarObject;
 
 	/*
 		reference to WeaponSelectWheel component of weaponwheel object
@@ -69,6 +71,8 @@ public class PlayerUI : MonoBehaviour {
 	*/
 	bool primaryPressed;
 
+    Slider healthBar;
+
 	void Awake () {
 		equipmentInstanceList = new List<GameObject> ();
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
@@ -83,10 +87,12 @@ public class PlayerUI : MonoBehaviour {
 				weaponWheel = temp.GetComponent<WeaponSelectWheel> ();
 			}
 		}
+        healthBar = healthBarObject.GetComponent<Slider>();
         optionsScreenObject.SetActive(false);
 	}
 
 	void Update () {
+        healthBar.value = manager.Health.HealthRatio;
 		if (currEquipment) {
             if (!optionsScreenObject.activeSelf) {
                 Time.timeScale = 1.0f;

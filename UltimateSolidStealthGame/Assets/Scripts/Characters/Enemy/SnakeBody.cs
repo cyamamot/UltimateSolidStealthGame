@@ -9,6 +9,10 @@ public class SnakeBody : MonoBehaviour {
     GameObject graphObject;
     [SerializeField]
     GameObject nextSegment;
+    [SerializeField]
+    Material brokenMaterial;
+    [SerializeField]
+    Mesh brokenMesh;
 
     SnakeBody nextSegmentBody;
     Graph graph;
@@ -62,5 +66,16 @@ public class SnakeBody : MonoBehaviour {
         graph.vertices[index].occupied = false;
         graph.vertices[index].occupiedBy = "";
         graph.vertices[index].NotifyParentOrChild();
+    }
+
+    public void KillSegment() {
+        MeshFilter filter = GetComponent<MeshFilter>();
+        if (filter) {
+            filter.mesh = brokenMesh;
+            Renderer rend = GetComponent<Renderer>();
+            if (rend) {
+                rend.material = brokenMaterial;
+            }
+        }
     }
 }

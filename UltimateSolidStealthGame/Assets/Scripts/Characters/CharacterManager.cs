@@ -15,6 +15,7 @@ public class CharacterManager : MonoBehaviour {
 
 	protected HealthManager health;
 	protected Graph graph;
+    protected bool alive;
 
 	public HealthManager Health {
 		get { return health; }
@@ -22,6 +23,9 @@ public class CharacterManager : MonoBehaviour {
 	public Graph Graph {
 		get { return graph; }
 	}
+    public bool Alive {
+        get { return alive; }
+    }
 		
 	protected virtual void Awake () {
 		health = GetComponent<HealthManager> ();
@@ -31,4 +35,6 @@ public class CharacterManager : MonoBehaviour {
 	}
 	
 	public virtual void Kill() {}
+
+    public virtual void OnTakeDamage() {}
 }

@@ -20,7 +20,8 @@ public class SnakeGraph : Graph {
     void SetChildrenAndParent() {
         int ratio = (int)(vertexDistance / childGraph.VertexDistance);
         int currParentIndex = 0;
-        bottomLeftMapping = GetBottomLeftMapping();
+        int bottomLeftTemp = GetBottomLeftMapping();
+        bottomLeftMapping = (bottomLeftTemp != -1) ? bottomLeftTemp : bottomLeftMapping;
         if (bottomLeftMapping != -1) {
             for (int i = 0; i < gridHeight; i++) {
                 for (int j = 0; j < gridWidth; j++) {

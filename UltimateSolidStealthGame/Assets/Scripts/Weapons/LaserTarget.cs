@@ -8,17 +8,9 @@ public class LaserTarget : MonoBehaviour {
 	LaserPointer pointer;
 
     public Vertex Vertex {
+        get { return vertex; }
         set { vertex = value; }
     }
-	public int Location {
-		get {
-            if (vertex.parentVertex != null) {
-                return vertex.parentVertex.index;
-            } else {
-                return vertex.index;
-            }
-        }
-	}
 	public LaserPointer Pointer {
 		set { pointer = value; }
 	}

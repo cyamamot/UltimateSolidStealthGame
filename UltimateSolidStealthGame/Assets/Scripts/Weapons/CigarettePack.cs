@@ -8,21 +8,15 @@ using UnityEngine;
 */
 public class CigarettePack : MonoBehaviour {
 
-	/*
-		index of vertex this pack is at
+    /*
+		vertex this pack is at
 	*/
-	[SerializeField]
-	int location;
+    Vertex vertex;
 
-	/*
-		Reference to Graph component of Graph gameobject in scene
-	*/
-	//Graph graph;
-
-	public int Location {
-		get { return location; }
-		set { location = value; }
-	}
+    public Vertex Vertex {
+        get { return vertex; }
+        set { vertex = value; }
+    }
 
 	void Start () {
 		//transform.position = new Vector3(transform.position.x, 1.0f, transform.position.z);

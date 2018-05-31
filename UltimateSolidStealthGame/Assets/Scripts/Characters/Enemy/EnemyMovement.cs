@@ -112,9 +112,6 @@ public class EnemyMovement : MonoBehaviour {
 		if showDebug == true, show path enemy is on
 	*/
 	protected void Update() {
-        if (enabled == false) {
-            Debug.Log("ervrgvd");
-        }
 		if (manager && manager.Graph.Ready) {
 			if (manager.Sight && !manager.Sight.Alerted) {
 				if (manager.Distraction && !manager.Distraction.Distracted) {

@@ -105,5 +105,9 @@ public abstract class EnemySight : MonoBehaviour {
 	*/
 	protected abstract void CheckSightline ();
 
-
+    public virtual void SetSightOnPlayer() {
+        alerted = true;
+        pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
+        manager.Movement.Path = pathToPlayer;
+    }
 }

@@ -30,7 +30,11 @@ public class SoldierSight : EnemySight{
 					RaycastHit hit;
 					if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
 						if (hit.transform.CompareTag ("Player")) {
-							pathToPlayer = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+                            if (manager.IsBoss) {
+                                pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
+                            } else {
+                                pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+                            }
 							if (pathToPlayer.Count > 0) {
 								alerted = true;
 								if (manager.Distraction) {

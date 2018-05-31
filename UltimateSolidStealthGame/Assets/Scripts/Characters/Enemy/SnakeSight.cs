@@ -20,6 +20,7 @@ public class SnakeSight : EnemySight {
         if (alerted && pathToPlayer.Count == 0) {
             if (!FinalSightCheck()) {
                 alerted = false;
+                //((SnakeManager)manager).SetCurrHealthAttackable(true);
                 manager.Movement.PauseMovement(alertedPauseLength);
             } else {
                 manager.Movement.Path.Add(manager.Movement.CurrVertexIndex);
@@ -38,11 +39,11 @@ public class SnakeSight : EnemySight {
                 if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
                     RaycastHit hit;
                     if (Physics.Raycast(manager.transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
-                        //Debug.Log(angle + " : " + hit.transform.name);
                         if (hit.transform.CompareTag("Player")) {
                             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
                             if (pathToPlayer.Count > 0) {
                                 alerted = true;
+                                //((SnakeManager)manager).SetCurrHealthAttackable(false);
                                 playerLastSeenLoc = playerMovement.CurrLocation;
                                 if (manager.Distraction) {
                                     manager.Distraction.Distracted = false;
@@ -73,5 +74,10 @@ public class SnakeSight : EnemySight {
             }
         }
         return false;
+    }
+
+    public override void SetSightOnPlayer() {
+        //((SnakeManager)manager).SetCurrHealthAttackable(false);
+        base.SetSightOnPlayer();
     }
 }

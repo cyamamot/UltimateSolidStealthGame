@@ -21,12 +21,12 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	/*
 		whether weapon is currently being fired
 	*/
-	bool firing;
+	protected bool firing;
 
 	/*
 		reference to EnemyManager component
 	*/
-	EnemyManager manager;
+	protected EnemyManager manager;
 	/*
 		instance of gunPrefab
 	*/
@@ -38,9 +38,9 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	/*
 		reference to enemy' MeshRenderer component
 	*/
-	MeshRenderer renderer;
+	protected MeshRenderer renderer;
 
-	void Start () {
+	protected virtual void Start () {
 		manager = GetComponent<EnemyManager> ();
 		renderer = GetComponent<MeshRenderer> ();
 		if (gunPrefab) {
@@ -58,7 +58,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		}
 	}
 
-	void Update() {
+	protected virtual void Update() {
 		FireWeapon ();
 	}
 
@@ -66,7 +66,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		fires weapon if specified time had passed, weapon is not currently firing, and the enemy is visible in the camera
 		if player is directly in front of enemy and enemy is looking in one of the cardinal directions, fire weapon
 	*/
-	public void FireWeapon() {
+	public virtual void FireWeapon() {
 		if (!firing && renderer.isVisible) {
 			if (manager.Sight && manager.Player && manager.Movement && gun) {
 				Vector3 zeroAngleVec = new Vector3 (1.0f, 0.0f, 0.0f);
@@ -89,7 +89,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	/*
 		coroutine to prevent enemy from firing for specified time
 	*/
-	IEnumerator FirePause() {
+	protected IEnumerator FirePause() {
 		yield return new WaitForSeconds (fireWaitTime);
 		firing = false;
 		yield return null;

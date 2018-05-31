@@ -113,5 +113,7 @@ public abstract class EnemyDistraction : MonoBehaviour {
 	/*
 	 	coroutine that defines what enemy should do once they reach the distraction
 	*/
-	protected abstract IEnumerator AtDistraction () ;
+	protected abstract IEnumerator AtDistraction() ;
+
+    public abstract void ResetDistraction();
 }

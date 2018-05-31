@@ -20,17 +20,20 @@ public class SnakeHead : MonoBehaviour {
 	
 	void LateUpdate () {
         transform.position = manager.transform.position + posYOffset;
-        if (manager.Sight.Alerted) {
-            StopAllCoroutines();
-            Vector3 toPlayer = sight.PlayerLastSeenLoc - manager.transform.position;
-            toPlayer[1] = transform.forward[1];
-            transform.forward = Vector3.RotateTowards(transform.forward, toPlayer, 0.05f, 0.0f);
-        } else if (manager.Distraction.Distracted) {
-            if (manager.Distraction.Distraction) {
+        if (manager.Alive) {
+            if (manager.Sight.Alerted) {
                 StopAllCoroutines();
-                Vector3 toDistraction = manager.Distraction.Distraction.transform.position - manager.transform.position;
-                toDistraction[1] = transform.forward[1];
-                transform.forward = Vector3.RotateTowards(transform.forward, toDistraction, 0.05f, 0.0f);
+                Vector3 toPlayer = sight.PlayerLastSeenLoc - manager.transform.position;
+                toPlayer[1] = transform.forward[1];
+                transform.forward = Vector3.RotateTowards(transform.forward, toPlayer, 0.05f, 0.0f);
+            }
+            else if (manager.Distraction.Distracted) {
+                if (manager.Distraction.Distraction) {
+                    StopAllCoroutines();
+                    Vector3 toDistraction = manager.Distraction.Distraction.transform.position - manager.transform.position;
+                    toDistraction[1] = transform.forward[1];
+                    transform.forward = Vector3.RotateTowards(transform.forward, toDistraction, 0.05f, 0.0f);
+                }
             }
         }
 	}

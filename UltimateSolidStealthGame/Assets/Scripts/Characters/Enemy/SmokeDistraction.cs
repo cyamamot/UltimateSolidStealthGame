@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,7 +45,11 @@ public class SmokeDistraction : EnemyDistraction {
 			if (cig) {
 				if (Vector3.Distance (transform.position, hit.transform.position) < distToDistraction) {
 					GameObject obj = hit.gameObject;
-					SetDistraction (cig.Location, ref obj);
+                    if (manager.IsBoss) {
+                        SetDistraction(cig.Vertex.parentVertex.index, ref obj);
+                    } else {
+                        SetDistraction(cig.Vertex.index, ref obj);
+                    }
 				}
 			}
 		}
@@ -61,12 +66,17 @@ public class SmokeDistraction : EnemyDistraction {
 		//smoking animation
 		Destroy(distraction);
 		yield return new WaitForSeconds (distractionTime);
-		distracted = false;
-		distToDistraction = Mathf.Infinity;
-		enabled = true;
-		manager.Movement.enabled = true;
-		manager.Sight.enabled = true;
-		manager.WeaponSystem.enabled = true;
+		ResetDistraction();
 		CheckForDistraction ();
 	}
+
+    public override void ResetDistraction() {
+        StopAllCoroutines();
+        distToDistraction = Mathf.Infinity;
+        if (manager.Movement) manager.Movement.enabled = true;
+        if (manager.Sight) manager.Sight.enabled = true;
+        if (manager.WeaponSystem) manager.WeaponSystem.enabled = true;
+        enabled = true;
+        distracted = false;
+    }
 }

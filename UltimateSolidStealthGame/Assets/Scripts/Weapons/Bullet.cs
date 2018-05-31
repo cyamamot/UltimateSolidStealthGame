@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
 	/*
 		Amount of damage bullet does
 	*/
-	float damage;
+	protected float damage;
 
 	public float Damage {
 		get { return damage; }

@@ -61,7 +61,7 @@ public class Cigarette : Equipment {
 			//end smoke animation
 			Vector3 dropPoint = new Vector3(transform.position.x, manager.Graph.FloorTop, transform.position.z);
 			GameObject smokes = Instantiate (cigarettePackPrefab, dropPoint, Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up));
-			smokes.GetComponent<CigarettePack> ().Location = manager.Movement.CurrVertexIndex;
+			smokes.GetComponent<CigarettePack> ().Vertex = manager.Graph.vertices[manager.Movement.CurrVertexIndex];
 			Destroy (smokes, packLifetime);
 			count--;
 		}

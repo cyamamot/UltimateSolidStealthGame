@@ -8,19 +8,26 @@ using UnityEngine;
 */
 public class EnemyManager : CharacterManager {
 
-	/*
+    [SerializeField]
+    bool isBoss;
+
+    /*
 		references to major Enemy components
 	*/
-	EnemyMovement movement;
-	EnemySight sight;
-	EnemyWeaponSystem weaponSystem;
-	EnemyDistraction distraction;
-	EnemySightPlane plane;
-	/*
+    protected EnemyMovement movement;
+    protected EnemySight sight;
+    protected EnemyWeaponSystem weaponSystem;
+    protected EnemyDistraction distraction;
+    protected EnemySightPlane plane;
+    /*
 		reference to player GameObject
 	*/
-	GameObject player;
+    protected GameObject player;
+    protected PlayerMovement playerMovement;
 
+    public bool IsBoss {
+        get { return isBoss; }
+    }
 	public EnemyMovement Movement {
 		get { return movement; }
 	}
@@ -35,7 +42,6 @@ public class EnemyManager : CharacterManager {
 	}
 	public EnemyDistraction Distraction {
 		get { return distraction; }
-
 	}
 
 	protected override void Awake () {
@@ -47,7 +53,21 @@ public class EnemyManager : CharacterManager {
         distraction = (parent != null) ? parent.GetComponentInChildren<EnemyDistraction>() : GetComponent<EnemyDistraction>();
         plane = (parent != null) ? parent.GetComponentInChildren<EnemySightPlane>() : GetComponent<EnemySightPlane>();
         player = GameObject.FindGameObjectWithTag ("Player");
+        playerMovement = player.GetComponent<PlayerMovement>();
 	}
+
+    protected virtual void DisableComponents() {
+        movement.StopAllCoroutines();
+        if (distraction) distraction.StopAllCoroutines();
+        if (movement) movement.enabled = false;
+        if (sight) sight.enabled = false;
+        if (weaponSystem) weaponSystem.enabled = false;
+        if (health) health.enabled = false;
+        if (distraction) distraction.enabled = false;
+        movement.Nav.isStopped = true;
+        movement.Nav.ResetPath();
+        if (plane) plane.enabled = false;
+    }
 
 	/*
 		Called to turn off all components when enemy is killed
@@ -60,16 +80,12 @@ public class EnemyManager : CharacterManager {
             graph.vertices[movement.LastVertexIndex].occupied = false;
             graph.vertices[movement.LastVertexIndex].occupiedBy = "";
         }
-        movement.StopAllCoroutines();
-        weaponSystem.StopAllCoroutines();
-        distraction.StopAllCoroutines();
-        movement.enabled = false;
-		sight.enabled = false;
-		weaponSystem.enabled = false;
-		health.enabled = false;
-		distraction.enabled = false;
-		movement.Nav.enabled = false;
-        plane.enabled = false;
+        DisableComponents();
 		GetComponent<Collider> ().enabled = false;
 	}
+
+    public override void OnTakeDamage() {
+        distraction.ResetDistraction();
+        sight.SetSightOnPlayer();
+    }
 }
