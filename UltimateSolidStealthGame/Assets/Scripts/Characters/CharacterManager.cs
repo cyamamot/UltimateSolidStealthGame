@@ -36,5 +36,5 @@ public class CharacterManager : MonoBehaviour {
 	
 	public virtual void Kill() {}
 
-    public virtual void OnTakeDamage() {}
+    public virtual void OnTakeDamage(float damage) {}
 }

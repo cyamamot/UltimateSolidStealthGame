@@ -49,7 +49,7 @@ public class BotSight : EnemySight {
 				currentFOV = (alerted) ? alertedFOV : FOV;
 				if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
 					RaycastHit hit;
-					if (Physics.Raycast (transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
+					if (Physics.Raycast (transform.position, toPlayer, out hit, Mathf.Infinity, sightLayer)) {
 						if (hit.transform.CompareTag ("Player") && (hit.transform.gameObject.layer != iceLayer)) {
 							pathToPlayer = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
 							if (pathToPlayer.Count > 0) {

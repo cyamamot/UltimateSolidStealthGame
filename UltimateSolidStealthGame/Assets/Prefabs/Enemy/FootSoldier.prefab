@@ -164,6 +164,7 @@ MonoBehaviour:
   FOV: 45
   alertedFOV: 135
   numFramesToResetPath: 10
+  alertedPauseLength: 0
 --- !u!114 &114053515198700496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,6 +204,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 3
+  healthBarObject: {fileID: 0}
+  healthBarYOffset: 0
 --- !u!114 &114746596493559624
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -229,6 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f419da13ab2e3b04e9b793fa5b69ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphObject: {fileID: 0}
+  isBoss: 0
 --- !u!114 &114940583329685248
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,8 +245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af87019ce628e6f41bda9eceaa1c7305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numRays: 45
-  alertedNumRays: 135
   planePrefab: {fileID: 1565033896758522, guid: ea80e243f5b984c44bf0edf2c87d477c,
     type: 2}
 --- !u!120 &120731366598823584
@@ -352,4 +355,4 @@ NavMeshAgent:
   m_Height: 0.99999994
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0

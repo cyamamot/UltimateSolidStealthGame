@@ -27,7 +27,7 @@ public class LaserDistraction : EnemyDistraction {
 	protected override void CheckForDistraction () {
 		Collider[] hits = Physics.OverlapSphere (transform.position, checkRadius, distractionLayers, QueryTriggerInteraction.Collide);
 		foreach (Collider hit in hits) {
-			if (!Physics.Linecast (transform.position, hit.transform.position, manager.Sight.IgnoreEnemiesLayer, QueryTriggerInteraction.Ignore)) {
+			if (!Physics.Linecast (transform.position, hit.transform.position, manager.Sight.SightLayer, QueryTriggerInteraction.Ignore)) {
 				LaserTarget target = hit.GetComponent<LaserTarget> ();
 				if (target) {
 					GameObject obj = hit.gameObject;

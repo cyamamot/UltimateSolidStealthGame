@@ -82,10 +82,13 @@ public class EnemyManager : CharacterManager {
         }
         DisableComponents();
 		GetComponent<Collider> ().enabled = false;
+        alive = false;
 	}
 
-    public override void OnTakeDamage() {
-        distraction.ResetDistraction();
-        sight.SetSightOnPlayer();
+    public override void OnTakeDamage(float damage) {
+        if (alive) {
+            distraction.ResetDistraction();
+            sight.SetSightOnPlayer();
+        }
     }
 }

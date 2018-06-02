@@ -9,10 +9,6 @@ using UnityEngine.EventSystems;
 public class SwipeManager : MonoBehaviour {
 
 	/*
-		reference to PlayerMovement component
-	*/
-	PlayerMovement playerMovement;
-	/*
 		direction player will move in
 	*/
 	Vector2 moveDir;
@@ -24,12 +20,13 @@ public class SwipeManager : MonoBehaviour {
 		location of touch end on screen
 	*/
 	Vector2 touchEnd;
+    PlayerManager manager;
 
     int swipeType;
 
 	void Start () {
 		moveDir = Vector2.zero;
-		playerMovement = GetComponent<PlayerMovement> ();
+        manager = GetComponent<PlayerManager>();
 	}
 
 	/*
@@ -43,7 +40,7 @@ public class SwipeManager : MonoBehaviour {
             if (!EventSystem.current.IsPointerOverGameObject(id)) {
                 switch (touch.phase) {
                     case TouchPhase.Began:
-                        playerMovement.StopMoving();
+                        manager.Movement.StopMoving();
                         touchStart = touch.position;
                         moveDir = Vector2.zero;
                         break;
@@ -51,6 +48,11 @@ public class SwipeManager : MonoBehaviour {
                         moveDir = touch.position - touchStart;
                         touchStart = touch.position;
                         MoveInDirection(moveDir);
+                        break;
+                    case TouchPhase.Ended:
+                        if (moveDir.magnitude < 5.0f) {
+                            manager.Interact.TryInteract();
+                        }
                         break;
                 }
             }
@@ -62,20 +64,20 @@ public class SwipeManager : MonoBehaviour {
 		@param dir - direction of swipe
 	*/
 	void MoveInDirection(Vector2 dir) {
-		if (moveDir.magnitude > 5.0f && playerMovement) {
+		if (moveDir.magnitude > 5.0f && manager.Movement) {
 			float xDir = Mathf.Abs (dir.x);
 			float yDir = Mathf.Abs (dir.y);
 			if (xDir >= yDir) {
 				if (moveDir.x > 0) {
-					playerMovement.MoveUntilStop (Enums.directions.right);
+                    manager.Movement.MoveUntilStop (Enums.directions.right);
 				} else if (moveDir.x < 0) {
-					playerMovement.MoveUntilStop (Enums.directions.left);
+                    manager.Movement.MoveUntilStop (Enums.directions.left);
 				}
 			} else if (xDir < yDir) {
 				if (moveDir.y > 0) {
-					playerMovement.MoveUntilStop (Enums.directions.up);
+                    manager.Movement.MoveUntilStop (Enums.directions.up);
 				} else if (moveDir.y < 0) {
-					playerMovement.MoveUntilStop (Enums.directions.down);
+                    manager.Movement.MoveUntilStop (Enums.directions.down);
 				}
 			}
 		}

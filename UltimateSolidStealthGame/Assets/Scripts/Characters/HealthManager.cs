@@ -11,19 +11,19 @@ public class HealthManager : MonoBehaviour {
 		current health of character
 	*/
 	[SerializeField]
-	float health;
+	protected float health;
     [SerializeField]
-    GameObject healthBarObject;
+    protected GameObject healthBarObject;
     [SerializeField]
-    float healthBarYOffset;
+    protected float healthBarYOffset;
 
-	/*
+    /*
 		reference to CharacterManager component of gameObject, either Enemy or Player
 	*/
-	CharacterManager manager;
-    HealthBar healthBar;
-    float maxHealth;
-    bool playerHealth;
+    protected CharacterManager manager;
+    protected HealthBar healthBar;
+    protected float maxHealth;
+    protected bool playerHealth;
     
 
 	public float Health {
@@ -32,8 +32,8 @@ public class HealthManager : MonoBehaviour {
     public float HealthRatio {
         get { return (health / maxHealth); }
     }
-		
-	void Awake () {
+
+    protected virtual void Awake () {
 		manager = (transform.parent != null) ? transform.parent.GetComponentInChildren<CharacterManager> () : GetComponent<CharacterManager>();
         maxHealth = health;
         if (healthBarObject) {
@@ -53,17 +53,17 @@ public class HealthManager : MonoBehaviour {
         }
 	}
 
-	/*
+    /*
 		Registers bullet damage
 		@param collision - info on colliding object
 	*/
-	void OnCollisionEnter(Collision collision) {
+    protected void OnCollisionEnter(Collision collision) {
         Bullet bullet = collision.gameObject.GetComponent<Bullet>();
         if (bullet != null) {
             if (enabled) {
                 Attack(bullet.Damage);
             } else {
-                manager.OnTakeDamage();
+                manager.OnTakeDamage(0.0f);
             }
         }
 	}
@@ -72,16 +72,17 @@ public class HealthManager : MonoBehaviour {
 		causes damage to character
 		@param damage - amount of damage to take
 	*/
-	public void Attack(float damage) {
+	public virtual void Attack(float damage, string damager = "Normal") {
         if (enabled) {
             if (playerHealth && PlayerPrefs.GetInt("Vibration", 1) == 1) {
                 Handheld.Vibrate();
             }
+            damage = (damage > health) ? health : damage;
             health = (health > 0.0f) ? health - damage : 0.0f;
             if (healthBar) {
                 healthBar.MinusHealth(health);
             }
-            manager.OnTakeDamage();
+            manager.OnTakeDamage(damage);
             if (health <= 0.0f) {
                 manager.Kill();
                 enabled = false;
@@ -89,13 +90,13 @@ public class HealthManager : MonoBehaviour {
         }
 	}
 
-    private void OnDisable() {
+    void OnDisable() {
         if (healthBar && healthBar.gameObject) {
             healthBar.gameObject.SetActive(false);
         }
     }
 
-    private void OnEnable() {
+    void OnEnable() {
         if (healthBar && healthBar.gameObject) {
             healthBar.gameObject.SetActive(true);
         }

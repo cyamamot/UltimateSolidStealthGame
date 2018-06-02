@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionFXObject: {fileID: 1086638015370322, guid: fd5392a483d25d24980867d7046e5342,
     type: 2}
-  explosionRadius: 2
+  explosionRadius: 1.25
 --- !u!198 &198550809328824300
 ParticleSystem:
   m_ObjectHideFlags: 1

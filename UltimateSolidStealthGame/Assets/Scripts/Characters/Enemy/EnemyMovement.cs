@@ -166,7 +166,7 @@ public class EnemyMovement : MonoBehaviour {
 	protected virtual void TravelBetweenPathPoints() {
         if (moving) {
             if (path.Count > 0) {
-                if (nav.remainingDistance <= 0.1f) {
+                if (nav.remainingDistance <= nav.stoppingDistance) {
                     if (lastVertexIndex != currVertexIndex) {
                         if (manager.Graph.vertices[lastVertexIndex].occupiedBy == enemyName) {
                             manager.Graph.vertices[lastVertexIndex].occupied = false;

@@ -174,6 +174,7 @@ MonoBehaviour:
   FOV: 45
   alertedFOV: 180
   numFramesToResetPath: 10
+  alertedPauseLength: 0
   botPauseTime: 0
 --- !u!114 &114554497007011502
 MonoBehaviour:
@@ -186,6 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f419da13ab2e3b04e9b793fa5b69ae13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphObject: {fileID: 0}
+  isBoss: 0
 --- !u!114 &114844994617619768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -309,4 +312,4 @@ NavMeshAgent:
   m_Height: 0.99999994
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0

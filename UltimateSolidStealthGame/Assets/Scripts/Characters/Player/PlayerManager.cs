@@ -13,6 +13,7 @@ public class PlayerManager : CharacterManager {
 	PlayerMovement movement;
 	PlayerWeaponSystem weaponSystem;
 	PlayerUI ui;
+    InteractSystem interact;
 	SwipeManager swipe;
 
 	public PlayerMovement Movement {
@@ -24,6 +25,9 @@ public class PlayerManager : CharacterManager {
 	public PlayerUI Ui {
 		get { return ui; }
 	}
+    public InteractSystem Interact {
+        get { return interact; }
+    }
 
 	protected override void Awake () {
 		base.Awake ();
@@ -34,6 +38,7 @@ public class PlayerManager : CharacterManager {
 		if (tempUI) {
 			ui = tempUI.GetComponent<PlayerUI> ();
 		}
+        interact = GetComponent<InteractSystem>();
 	}
 
 	/*

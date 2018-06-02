@@ -38,7 +38,7 @@ public class SnakeSight : EnemySight {
                 currentFOV = (alerted) ? alertedFOV : FOV;
                 if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
                     RaycastHit hit;
-                    if (Physics.Raycast(manager.transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
+                    if (Physics.Raycast(manager.transform.position, toPlayer, out hit, Mathf.Infinity, sightLayer)) {
                         if (hit.transform.CompareTag("Player")) {
                             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
                             if (pathToPlayer.Count > 0) {
@@ -66,7 +66,7 @@ public class SnakeSight : EnemySight {
             currentFOV = (alerted) ? alertedFOV : FOV;
             if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) {
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, ignoreEnemiesLayer)) {
+                if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, sightLayer)) {
                     if (hit.transform.CompareTag("Player")) {
                         return true;
                     }

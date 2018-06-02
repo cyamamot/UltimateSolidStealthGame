@@ -49,9 +49,9 @@ public abstract class EnemySight : MonoBehaviour {
 	*/
 	protected EnemyManager manager;
 	/*
-	 	layer that defines all non "Enemy" layers
+	 	layer that defines all non layers in sight
 	*/
-	protected int ignoreEnemiesLayer;
+	protected int sightLayer;
 	/*
 	 	list used to store indices of vertices that make up path to player
 	*/
@@ -61,8 +61,8 @@ public abstract class EnemySight : MonoBehaviour {
 	*/
 	protected int currentFOV;
 
-	public int IgnoreEnemiesLayer {
-		get { return ignoreEnemiesLayer; }
+	public int SightLayer {
+		get { return sightLayer; }
 	}
 	public bool Alerted {
 		get { return alerted; }
@@ -79,8 +79,9 @@ public abstract class EnemySight : MonoBehaviour {
     }
 		
 	protected virtual void Start () {
-		ignoreEnemiesLayer = 1 << LayerMask.NameToLayer ("Enemy");
-		ignoreEnemiesLayer = ~ignoreEnemiesLayer;
+		sightLayer = 1 << LayerMask.NameToLayer ("Enemy");
+        sightLayer += (1 << LayerMask.NameToLayer("Ignore Raycast"));
+		sightLayer = ~sightLayer;
 		GameObject temp = GameObject.FindGameObjectWithTag ("Player");
 		if (temp) {
 			playerMovement = temp.GetComponent<PlayerMovement> ();

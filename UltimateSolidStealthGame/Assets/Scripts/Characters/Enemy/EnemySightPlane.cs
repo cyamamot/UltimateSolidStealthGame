@@ -37,6 +37,7 @@ public class EnemySightPlane : MonoBehaviour {
 		indices of triangles in new mesh shape
 	*/
 	List<int> newIndices;
+    Vector3 startPosition;
 
 	void Start () {
 		manager = GetComponent<EnemyManager> ();
@@ -47,10 +48,14 @@ public class EnemySightPlane : MonoBehaviour {
 		sightPlane.transform.position = Vector3.zero;
 		sightPlaneMesh = sightPlane.GetComponent<MeshFilter> ().mesh;
 		sightPlaneMesh.Clear ();
+        startPosition = transform.position;
+        startPosition[1] = manager.Graph.FloorTop + 0.01f;
 	}
 
 	void Update () {
-		CreatePlane ();
+        startPosition = transform.position;
+        startPosition[1] = manager.Graph.FloorTop + 0.01f;
+        CreatePlane ();
 	}
 
 	/*
@@ -62,17 +67,17 @@ public class EnemySightPlane : MonoBehaviour {
 		sightPlaneMesh.Clear ();
 		newIndices.Clear ();
 		newVerts.Clear ();
-		newVerts.Add (transform.position);
+		newVerts.Add (startPosition);
 		int fov = manager.Sight.CurrentFOV;
 		float currAngle = -fov;
 		float deltaAngle = (fov * 2.0f) / (fov - 1);
 		for (int i = 0; i < fov; i++) {
 			Vector3 dir = Quaternion.AngleAxis (currAngle, Vector3.up) * transform.forward;
 			RaycastHit hit;
-			if (Physics.Raycast (transform.position, dir, out hit, manager.Sight.SightDistance, defaultLayer)) {
+			if (Physics.Raycast (startPosition, dir, out hit, manager.Sight.SightDistance, defaultLayer)) {
 				newVerts.Add (hit.point);
 			} else {
-				newVerts.Add (transform.position + (manager.Sight.SightDistance * dir));
+				newVerts.Add (startPosition + (manager.Sight.SightDistance * dir));
 			}
 			if (i == 0) {
 				newIndices.Add (i);
