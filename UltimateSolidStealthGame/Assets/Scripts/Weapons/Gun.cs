@@ -13,37 +13,37 @@ public class Gun : Equipment {
 		prefab of Bullet gameobject
 	*/
 	[SerializeField]
-	GameObject bullet;
+	protected GameObject bullet;
 	/*
 		number of bullets to fire per call
 	*/
 	[SerializeField]
-	int roundsPerFire = 1;
+    protected int roundsPerFire = 1;
 	/*
 		speed of bullet
 	*/
 	[SerializeField]
-	int bulletSpeed = 20;
+    protected int bulletSpeed = 20;
 	/*
 		distance in front of component owner to instantiate bullet
 	*/
 	[SerializeField]
-	float barrelDist= 0.25f;
+    protected float barrelDist = 0.25f;
 	/*
 		damage done by bullet
 	*/
 	[SerializeField]
-	float damage = 1.0f;
+    protected float damage = 1.0f;
 	/*
 		time to wait between each fired bullet
 	*/
 	[SerializeField]
-	float timeBetweenRounds = 0.125f;
+    protected float timeBetweenRounds = 0.125f;
 	/*
 		number of bullets left
 	*/
 	[SerializeField]
-	int bulletsLeft;
+    protected int bulletsLeft;
 
 	public float Damage {
 		get { return damage; }
@@ -53,12 +53,12 @@ public class Gun : Equipment {
 		set { bulletsLeft = value; }
 	}
 
-	/*
+    /*
 		whether the gun is currently firing
 	*/
-	bool firing = false;
+    protected bool firing = false;
 
-	void Awake() {
+	protected virtual void Awake() {
 		base.Awake ();
 		count = bulletsLeft;
 	}
@@ -81,7 +81,7 @@ public class Gun : Equipment {
 		fires in bursts based on roundsPerFire
 		once done, gun can be fired again
 	*/
-	IEnumerator Shoot() {
+	protected virtual IEnumerator Shoot() {
 		for (int i = 0; i < roundsPerFire; i++) {
 			if (bulletsLeft > 0 || bulletsLeft == -1) {
 				Transform parent = transform.parent.gameObject.transform;
@@ -93,6 +93,9 @@ public class Gun : Equipment {
 					b.Damage = damage;
 					firedBullet.layer = gameObject.layer;
 					rb.velocity = parent.forward * bulletSpeed;
+                    sfxGod.volume = 0.02f * PlayerPrefs.GetFloat("SFX", 1.0f);
+                    sfxGod.pitch = 3.0f;
+                    sfxGod.PlayOneShot(sfx);
 					if (bulletsLeft > 0) {
 						bulletsLeft--;
 						count = bulletsLeft;

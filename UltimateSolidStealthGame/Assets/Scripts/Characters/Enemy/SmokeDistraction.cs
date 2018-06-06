@@ -63,6 +63,7 @@ public class SmokeDistraction : EnemyDistraction {
 	}
 
 	protected override IEnumerator AtDistraction () {
+        isAtDistraction = true;
 		//smoking animation
 		Destroy(distraction);
 		yield return new WaitForSeconds (distractionTime);
@@ -71,6 +72,7 @@ public class SmokeDistraction : EnemyDistraction {
 	}
 
     public override void ResetDistraction() {
+        isAtDistraction = false;
         StopAllCoroutines();
         distToDistraction = Mathf.Infinity;
         if (manager.Movement) manager.Movement.enabled = true;

@@ -97,6 +97,7 @@ MonoBehaviour:
   equipmentType: Handgun
   count: 0
   icon: {fileID: 21300000, guid: 6f7c645471f7f8345a52d0e7dacc775a, type: 3}
+  sfx: {fileID: 8300000, guid: a9a6ccda61b03e340942952cbc11d7cd, type: 3}
   bullet: {fileID: 1527509061895760, guid: 8943d1a2bc2b1c74ca43e5acf9591276, type: 2}
   roundsPerFire: 1
   bulletSpeed: 15

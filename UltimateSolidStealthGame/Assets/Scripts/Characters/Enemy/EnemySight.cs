@@ -108,7 +108,13 @@ public abstract class EnemySight : MonoBehaviour {
 
     public virtual void SetSightOnPlayer() {
         alerted = true;
-        pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
-        manager.Movement.Path = pathToPlayer;
+        if (manager.IsBoss) {
+            pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
+        } else {
+            pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+        }
+        if (pathToPlayer.Count > 0) {
+            manager.Movement.Path = pathToPlayer;
+        }
     }
 }

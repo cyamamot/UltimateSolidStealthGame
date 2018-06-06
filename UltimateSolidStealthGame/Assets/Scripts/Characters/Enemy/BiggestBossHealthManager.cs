@@ -5,20 +5,26 @@ using UnityEngine;
 public class BiggestBossHealthManager : HealthManager {
 
     [SerializeField]
-    List<string> damagerOrder;
-    [SerializeField]
-    List<float> damageAmounts;
-    [SerializeField]
     GameObject bossUIObject;
 
+    [SerializeField]
+    List<string> specialDamagers;
+
+    float specialDamage;
+    int normalDamageCount;
+    float normalDamage;
     string currDamager;
     float currDamageAmount;
     BossHealthUI bossUI;
 
     protected override void Awake () {
         base.Awake();
-        currDamager = damagerOrder[0];
-        currDamageAmount = damageAmounts[0];
+        specialDamage = 1.0f;
+        normalDamageCount = specialDamagers.Count + 1;
+        normalDamage = health / normalDamageCount;
+        specialDamagers.Shuffle();
+        currDamager = "Normal";
+        currDamageAmount = normalDamage;
         bossUI = bossUIObject.GetComponent<BossHealthUI>();
         bossUI.SetMaxHealth(health);
 	}
@@ -34,13 +40,18 @@ public class BiggestBossHealthManager : HealthManager {
                 bossUI.SpecialDamage();
             }
             if (currDamageAmount <= 0.0f) {
-                damagerOrder.RemoveAt(0);
-                damageAmounts.RemoveAt(0);
-                if (damagerOrder.Count > 0) {
-                    currDamager = damagerOrder[0];
-                    currDamageAmount = damageAmounts[0];
+                if (currDamager == "Normal") {
+                    if (specialDamagers.Count > 0) {
+                        currDamager = specialDamagers[0];
+                        bossUI.SetSpecial(currDamager);
+                        specialDamagers.RemoveAt(0);
+                        currDamageAmount = specialDamage;
+                    } else {
+                        manager.Kill();
+                    }
                 } else {
-                    manager.Kill();
+                    currDamager = "Normal";
+                    currDamageAmount = normalDamage;
                 }
             }
         }

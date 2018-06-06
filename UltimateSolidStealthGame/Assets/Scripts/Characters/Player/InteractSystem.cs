@@ -11,6 +11,7 @@ public class InteractSystem : MonoBehaviour {
 
 	void Start () {
         manager = GetComponent<PlayerManager>();
+        enabled = false;
 	}
 	
 	public void TryInteract() {

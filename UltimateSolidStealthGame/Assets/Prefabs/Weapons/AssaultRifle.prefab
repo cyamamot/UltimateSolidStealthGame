@@ -97,6 +97,7 @@ MonoBehaviour:
   equipmentType: AssaultRifle
   count: 0
   icon: {fileID: 21300000, guid: 5b560ff4520ceb64188ac885ed61e757, type: 3}
+  sfx: {fileID: 8300000, guid: a9a6ccda61b03e340942952cbc11d7cd, type: 3}
   bullet: {fileID: 1527509061895760, guid: 8943d1a2bc2b1c74ca43e5acf9591276, type: 2}
   roundsPerFire: 3
   bulletSpeed: 15

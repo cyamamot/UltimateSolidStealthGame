@@ -39,7 +39,7 @@ public class RocketLauncherInteractable : Interactable {
         yield return new WaitForSeconds(2.0f);
         launcher.FireMissile();
         yield return new WaitForSeconds(0.5f);
-        zone.ThrustZoneDamage();
+        zone.ThrustZoneDamage(thrustOnTime - 2.0f);
         yield return new WaitForSeconds(thrustOnTime - 2.0f);
         rocketAnimator.SetTrigger("MoveToBase");
         yield return new WaitForSeconds(2.0f);

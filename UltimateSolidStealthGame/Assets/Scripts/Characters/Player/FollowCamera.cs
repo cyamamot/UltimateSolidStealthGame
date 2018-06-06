@@ -23,7 +23,7 @@ public class FollowCamera : MonoBehaviour {
         if (player != null) {
             if (otherRenderer && otherRenderer.isVisible) {
                 Vector3 toOther = (otherRenderer.transform.position - player.transform.position);
-                Vector3 offsetPos = player.transform.position + (0.375f * toOther);
+                Vector3 offsetPos = player.transform.position + (0.25f * toOther);
                 transform.position = player.transform.position + offsetPos;
             }
             else {
@@ -36,7 +36,7 @@ public class FollowCamera : MonoBehaviour {
 		if (player != null) {
             if (otherRenderer && otherRenderer.isVisible) {
                 Vector3 toOther = (otherRenderer.transform.position - player.transform.position);
-                Vector3 offsetPos = player.transform.position + (0.375f * toOther);
+                Vector3 offsetPos = player.transform.position + (0.25f * toOther);
                 transform.position = Vector3.MoveTowards(transform.position, offsetPos, 0.1f);
                 if (!zoomedOut) {
                     zoomedOut = true;

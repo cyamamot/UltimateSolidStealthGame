@@ -11,7 +11,7 @@ public abstract class Equipment : MonoBehaviour {
 		name of type of equipment
 	*/
 	[SerializeField]
-	string equipmentType;
+	protected string equipmentType;
 	/*
 		initial number of Equipment
 	*/
@@ -21,12 +21,17 @@ public abstract class Equipment : MonoBehaviour {
 		icon used to display in weapon wheel
 	*/
 	[SerializeField]
-	Sprite icon;
+	protected Sprite icon;
+
+    [SerializeField]
+    protected AudioClip sfx;
 
 	/*
 		reference to MeshRenderer component
 	*/
 	protected MeshRenderer render;
+
+    protected AudioSource sfxGod;
 
 	public string EquipmentType {
 		get { return equipmentType; }
@@ -40,7 +45,9 @@ public abstract class Equipment : MonoBehaviour {
 	}
 
 	public virtual void Awake() {
+        enabled = false;
 		render = GetComponent<MeshRenderer> ();
+        sfxGod = GameObject.FindGameObjectWithTag("SFXGod").GetComponent<AudioSource>();
 	}
 
 	public abstract void UseEquipment ();

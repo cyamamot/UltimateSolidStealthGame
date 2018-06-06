@@ -20,7 +20,6 @@ public class SnakeSight : EnemySight {
         if (alerted && pathToPlayer.Count == 0) {
             if (!FinalSightCheck()) {
                 alerted = false;
-                //((SnakeManager)manager).SetCurrHealthAttackable(true);
                 manager.Movement.PauseMovement(alertedPauseLength);
             } else {
                 manager.Movement.Path.Add(manager.Movement.CurrVertexIndex);

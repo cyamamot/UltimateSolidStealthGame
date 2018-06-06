@@ -7,11 +7,11 @@ using UnityEngine;
 */
 public class HealthManager : MonoBehaviour {
 
-	/*
+    /*
 		current health of character
 	*/
-	[SerializeField]
-	protected float health;
+    [SerializeField]
+    protected float health;
     [SerializeField]
     protected GameObject healthBarObject;
     [SerializeField]
@@ -24,17 +24,17 @@ public class HealthManager : MonoBehaviour {
     protected HealthBar healthBar;
     protected float maxHealth;
     protected bool playerHealth;
-    
 
-	public float Health {
-		get { return health; }
-	}
+
+    public float Health {
+        get { return health; }
+    }
     public float HealthRatio {
         get { return (health / maxHealth); }
     }
 
-    protected virtual void Awake () {
-		manager = (transform.parent != null) ? transform.parent.GetComponentInChildren<CharacterManager> () : GetComponent<CharacterManager>();
+    protected virtual void Awake() {
+        manager = (transform.parent != null) ? transform.parent.GetComponentInChildren<CharacterManager>() : GetComponent<CharacterManager>();
         maxHealth = health;
         if (healthBarObject) {
             Vector3 loc = transform.position;
@@ -51,7 +51,7 @@ public class HealthManager : MonoBehaviour {
         if (manager.GetType() == typeof(PlayerManager)) {
             playerHealth = true;
         }
-	}
+    }
 
     /*
 		Registers bullet damage
@@ -62,17 +62,18 @@ public class HealthManager : MonoBehaviour {
         if (bullet != null) {
             if (enabled) {
                 Attack(bullet.Damage);
-            } else {
+            }
+            else {
                 manager.OnTakeDamage(0.0f);
             }
         }
-	}
+    }
 
-	/*
+    /*
 		causes damage to character
 		@param damage - amount of damage to take
 	*/
-	public virtual void Attack(float damage, string damager = "Normal") {
+    public virtual void Attack(float damage, string damager = "Normal") {
         if (enabled) {
             if (playerHealth && PlayerPrefs.GetInt("Vibration", 1) == 1) {
                 Handheld.Vibrate();
@@ -88,7 +89,7 @@ public class HealthManager : MonoBehaviour {
                 enabled = false;
             }
         }
-	}
+    }
 
     void OnDisable() {
         if (healthBar && healthBar.gameObject) {

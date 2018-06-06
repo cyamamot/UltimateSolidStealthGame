@@ -31,7 +31,7 @@ public class ShockZone : MonoBehaviour {
     }
 
     IEnumerator Shock() {
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(1.0f);
         particles.Play();
         while (numConditionsMet == 2) {
             Collider[] hits = Physics.OverlapBox(transform.position, overlapExtents);

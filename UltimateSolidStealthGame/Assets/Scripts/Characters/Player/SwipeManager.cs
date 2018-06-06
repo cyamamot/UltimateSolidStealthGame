@@ -34,29 +34,31 @@ public class SwipeManager : MonoBehaviour {
 		detects touches and swipes and moves player based on swipe direction
 	*/
 	void Update () {
-		if (Input.touchCount > 0) {
-			int id = Input.GetTouch (0).fingerId;
-            Touch touch = Input.GetTouch(0);
-            if (!EventSystem.current.IsPointerOverGameObject(id)) {
-                switch (touch.phase) {
-                    case TouchPhase.Began:
-                        manager.Movement.StopMoving();
-                        touchStart = touch.position;
-                        moveDir = Vector2.zero;
-                        break;
-                    case TouchPhase.Moved:
-                        moveDir = touch.position - touchStart;
-                        touchStart = touch.position;
-                        MoveInDirection(moveDir);
-                        break;
-                    case TouchPhase.Ended:
-                        if (moveDir.magnitude < 5.0f) {
-                            manager.Interact.TryInteract();
-                        }
-                        break;
+        if (Time.timeScale > 0.0f) {
+            if (Input.touchCount > 0) {
+                int id = Input.GetTouch(0).fingerId;
+                Touch touch = Input.GetTouch(0);
+                if (!EventSystem.current.IsPointerOverGameObject(id)) {
+                    switch (touch.phase) {
+                        case TouchPhase.Began:
+                            manager.Movement.StopMoving();
+                            touchStart = touch.position;
+                            moveDir = Vector2.zero;
+                            break;
+                        case TouchPhase.Moved:
+                            moveDir = touch.position - touchStart;
+                            touchStart = touch.position;
+                            MoveInDirection(moveDir);
+                            break;
+                        case TouchPhase.Ended:
+                            if (moveDir.magnitude < 5.0f) {
+                                manager.Interact.TryInteract();
+                            }
+                            break;
+                    }
                 }
             }
-		}
+        }
 	}
 
 	/*

@@ -19,6 +19,8 @@ public class EnemyManager : CharacterManager {
     protected EnemyWeaponSystem weaponSystem;
     protected EnemyDistraction distraction;
     protected EnemySightPlane plane;
+    protected MeshRenderer renderer;
+
     /*
 		reference to player GameObject
 	*/
@@ -43,6 +45,10 @@ public class EnemyManager : CharacterManager {
 	public EnemyDistraction Distraction {
 		get { return distraction; }
 	}
+    public MeshRenderer Renderer {
+        get { return renderer; }
+        set { renderer = value; }
+    }
 
 	protected override void Awake () {
 		base.Awake ();
@@ -52,6 +58,7 @@ public class EnemyManager : CharacterManager {
 		weaponSystem = (parent != null) ? parent.GetComponentInChildren<EnemyWeaponSystem>() : GetComponent<EnemyWeaponSystem>();
         distraction = (parent != null) ? parent.GetComponentInChildren<EnemyDistraction>() : GetComponent<EnemyDistraction>();
         plane = (parent != null) ? parent.GetComponentInChildren<EnemySightPlane>() : GetComponent<EnemySightPlane>();
+        renderer = GetComponent<MeshRenderer>();
         player = GameObject.FindGameObjectWithTag ("Player");
         playerMovement = player.GetComponent<PlayerMovement>();
 	}

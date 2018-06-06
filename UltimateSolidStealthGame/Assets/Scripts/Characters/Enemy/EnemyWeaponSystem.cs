@@ -11,12 +11,16 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		prefab of weapon object
 	*/
 	[SerializeField]
-	GameObject gunPrefab;
+	protected GameObject gunPrefab;
 	/*
 		time between calls of fire to wait before calling fire again
 	*/
 	[SerializeField]
-	float fireWaitTime = 2.0f;
+	protected float fireWaitTime = 2.0f;
+
+    [SerializeField]
+    protected float range;
+
 
 	/*
 		whether weapon is currently being fired
@@ -30,19 +34,14 @@ public class EnemyWeaponSystem : MonoBehaviour {
 	/*
 		instance of gunPrefab
 	*/
-	GameObject gunInstance;
+	protected GameObject gunInstance;
 	/*
 		reference to Gun component of gunInstance
 	*/
-	Gun gun;
-	/*
-		reference to enemy' MeshRenderer component
-	*/
-	protected MeshRenderer renderer;
+	protected Gun gun;
 
 	protected virtual void Start () {
 		manager = GetComponent<EnemyManager> ();
-		renderer = GetComponent<MeshRenderer> ();
 		if (gunPrefab) {
 			gunInstance = GameObject.Instantiate (gunPrefab, transform);
 			if (gunInstance != null) {
@@ -67,18 +66,19 @@ public class EnemyWeaponSystem : MonoBehaviour {
 		if player is directly in front of enemy and enemy is looking in one of the cardinal directions, fire weapon
 	*/
 	public virtual void FireWeapon() {
-		if (!firing && renderer.isVisible) {
+		if (!firing && manager.Renderer.isVisible) {
 			if (manager.Sight && manager.Player && manager.Movement && gun) {
-				Vector3 zeroAngleVec = new Vector3 (1.0f, 0.0f, 0.0f);
 				if (manager.Sight.Alerted) {
-					if (Vector3.Angle (transform.forward.normalized, zeroAngleVec) % 90.0f == 0.0f) {
+					if (Vector3.Angle (transform.forward.normalized, Vector3.right) % 90.0f == 0.0f) {
 						RaycastHit hit;
 						if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, manager.Sight.SightLayer)) {
-							if (hit.transform.CompareTag ("Player") == true) {
-								firing = true;
-								gun.UseEquipment ();
-								StartCoroutine ("FirePause");
-							}
+                            if (range == 0 || range <= hit.distance) {
+                                if (hit.transform.CompareTag("Player") == true) {
+                                    firing = true;
+                                    gun.UseEquipment();
+                                    StartCoroutine("FirePause");
+                                }
+                            }
 						}
 					}
 				}

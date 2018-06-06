@@ -15,7 +15,7 @@ public class SnakeWeaponSystem : EnemyWeaponSystem {
 
     protected override void Start() {
         manager = (transform.parent != null) ? transform.parent.GetComponentInChildren<EnemyManager>() : GetComponent<EnemyManager>();
-        renderer = GetComponentInChildren<MeshRenderer>();
+        manager.Renderer = GetComponentInChildren<MeshRenderer>();
     }
 
     protected override void Update() {
@@ -23,7 +23,7 @@ public class SnakeWeaponSystem : EnemyWeaponSystem {
     }
 
     public override void FireWeapon() {
-        if (!firing && renderer.isVisible && manager.Sight.Alerted) {
+        if (!firing && manager.Renderer.isVisible && manager.Sight.Alerted) {
             Vector3 spawnLoc = projectileSpawnLoc.transform.position;
             Vector3 toPlayer = (manager.Player.transform.position - spawnLoc).normalized;
             Vector3 ignoreYToPlayer = new Vector3(toPlayer[0], 0.0f, toPlayer[2]);

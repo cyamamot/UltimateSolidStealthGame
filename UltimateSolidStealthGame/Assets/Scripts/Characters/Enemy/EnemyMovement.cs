@@ -2,16 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /*
 	Class that allows enemies to move between points on graph
 */
 public class EnemyMovement : MonoBehaviour {
 
-	/*
+    [System.Serializable]
+    public class PairStruct {
+        public int index;
+        public bool patrolHere;
+    }
+
+#if UNITY_EDITOR
+    [CustomPropertyDrawer(typeof(PairStruct))]
+    public class PairStructDrawer : PropertyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            EditorGUI.BeginProperty(position, label, property);
+            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            var indent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+            var indexRect = new Rect(position.x, position.y, 75, position.height);
+            var patrolHereRect = new Rect(position.x + 80, position.y, 50, position.height);
+            EditorGUI.PropertyField(indexRect, property.FindPropertyRelative("index"), GUIContent.none);
+            EditorGUI.PropertyField(patrolHereRect, property.FindPropertyRelative("patrolHere"), GUIContent.none);
+            EditorGUI.indentLevel = indent;
+            EditorGUI.EndProperty();
+        }
+    }
+#endif
+
+    /*
 		time enemy should pause when they reach patrol point
 	*/
-	[SerializeField]
+    [SerializeField]
 	protected int pauseLength;
 	/*
 		current vertex in graph that enemy is at
@@ -22,7 +49,7 @@ public class EnemyMovement : MonoBehaviour {
 		list of indices of vertices that the enemy should patrol between
 	*/
 	[SerializeField]
-    protected List<int> patrolVertices = new List<int> ();
+    protected List<PairStruct> patrolVertices = new List<PairStruct> ();
 	/*
 		used for debugging, shows path enemy is currently traveling along
 	*/
@@ -63,6 +90,8 @@ public class EnemyMovement : MonoBehaviour {
 		reference to NavMeshAgent component
 	*/
     protected UnityEngine.AI.NavMeshAgent nav;
+
+    protected AudioSource audioSource;
     /*
         number of times attempts to go to next patrol point should be made before changing patrol points
     */
@@ -92,6 +121,8 @@ public class EnemyMovement : MonoBehaviour {
 	protected void Start() {
 		manager = GetComponent<EnemyManager> ();
 		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
 		path = new List<int> ();
 		currVertexIndex = manager.Graph.GetIndexFromPosition (transform.position);
 		lastVertexIndex = currVertexIndex;
@@ -101,7 +132,7 @@ public class EnemyMovement : MonoBehaviour {
 		manager.Graph.vertices [currVertexIndex].occupied = true;
         manager.Graph.vertices[currVertexIndex].NotifyParentOrChild();
         if (patrolVertices.Count > 0) {
-			path = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices [0]);
+			path = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices[0].index);
 		}
         moving = true;
 	}
@@ -122,7 +153,6 @@ public class EnemyMovement : MonoBehaviour {
 			}
 			TravelBetweenPathPoints ();
 			OnPatrol ();
-
 			if (showDebug) {
 				foreach (int i in path) {
 					Vector3 pos = manager.Graph.vertices [i].position;
@@ -140,15 +170,15 @@ public class EnemyMovement : MonoBehaviour {
             if (patrolVertices.Count > 1) {
                 if ((manager.Sight && !manager.Sight.Alerted) || !manager.Sight) {
                     if ((manager.Distraction && !manager.Distraction.Distracted) || !manager.Distraction) {
-                        int patrolIndexInGraph = patrolVertices[destPatrolIndex];
+                        int patrolIndexInGraph = patrolVertices[destPatrolIndex].index;
                         Vertex v = manager.Graph.vertices[patrolIndexInGraph];
                         float currX = transform.position.x;
                         float currZ = transform.position.z;
                         float destX = v.position.x;
                         float destZ = v.position.z;
                         if ((Mathf.Abs(destX - currX) <= nav.stoppingDistance) && (Mathf.Abs(destZ - currZ) <= nav.stoppingDistance)) {
+                            if (patrolVertices[destPatrolIndex].patrolHere) PauseMovement(pauseLength);
                             destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
-                            PauseMovement(pauseLength);
                         }
                     }
                 }
@@ -167,6 +197,7 @@ public class EnemyMovement : MonoBehaviour {
         if (moving) {
             if (path.Count > 0) {
                 if (nav.remainingDistance <= nav.stoppingDistance) {
+                    if (!audioSource.isPlaying) audioSource.Play();
                     if (lastVertexIndex != currVertexIndex) {
                         if (manager.Graph.vertices[lastVertexIndex].occupiedBy == enemyName) {
                             manager.Graph.vertices[lastVertexIndex].occupied = false;
@@ -181,6 +212,7 @@ public class EnemyMovement : MonoBehaviour {
                     if (path.Count >= 2) {
                         if (manager.Graph.vertices[path[1]].occupied) {
                             moveDir = manager.Graph.vertices[path[1]].position - manager.Graph.vertices[path[0]].position;
+                            audioSource.Stop();
                             if (moveDir != lastMoveDir) {
                                 Turn(moveDir);
                                 lastMoveDir = moveDir;
@@ -228,7 +260,7 @@ public class EnemyMovement : MonoBehaviour {
 	*/
 	public void BackToPatrol() {
 		if (patrolVertices.Count > 0) {
-			List<int> newPath = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices [destPatrolIndex]);
+			List<int> newPath = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices[destPatrolIndex].index);
 			if (newPath.Count > 0) {
                 numPatrolTries = 0;
                 path = newPath;
@@ -247,6 +279,7 @@ public class EnemyMovement : MonoBehaviour {
 		if they are alerted or distracted during this time, coroutine ends
 	*/
 	public void PauseMovement(float length) {
+        audioSource.Stop();
 		StartCoroutine ("Pause", length);
 	}
 

@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour {
 		reference to NavMeshAgent component
 	*/
 	UnityEngine.AI.NavMeshAgent nav;
+    AudioSource audioSource;
 
 	public int CurrVertexIndex {
 		get { return currVertexIndex; }
@@ -75,6 +76,8 @@ public class PlayerMovement : MonoBehaviour {
 		manager = GetComponent<PlayerManager> ();
 		moveAmount = manager.Graph.VertexDistance;
 		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
 		currVertexIndex = manager.Graph.GetIndexFromPosition(transform.position);
 		lastVertexIndex = currVertexIndex;
 		playerName = gameObject.name;
@@ -125,8 +128,8 @@ public class PlayerMovement : MonoBehaviour {
                         nextVertex = currVertexIndex - 1;
                         if (nextVertex >= 0 && nextVertex < manager.Graph.GraphCount) {
                             if (manager.Graph.vertices[currVertexIndex - 1] != null) {
+                                if (!audioSource.isPlaying) audioSource.Play();
                                 if (manager.Graph.vertices[currVertexIndex - 1].occupied == true) {
-                                    //StopMoving ();
                                     return;
                                 }
                                 lastVertexIndex = currVertexIndex;
@@ -143,8 +146,8 @@ public class PlayerMovement : MonoBehaviour {
                         nextVertex = currVertexIndex + 1;
                         if (nextVertex >= 0 && nextVertex < manager.Graph.GraphCount) {
                             if (manager.Graph.vertices[currVertexIndex + 1] != null) {
+                                if (!audioSource.isPlaying) audioSource.Play();
                                 if (manager.Graph.vertices[currVertexIndex + 1].occupied == true) {
-                                    //StopMoving ();
                                     return;
                                 }
                                 lastVertexIndex = currVertexIndex;
@@ -159,9 +162,9 @@ public class PlayerMovement : MonoBehaviour {
 					case Enums.directions.up:
                         nextVertex = currVertexIndex + manager.Graph.GridWidth;
                         if (nextVertex >= 0 && nextVertex < manager.Graph.GraphCount) {
+                            if (!audioSource.isPlaying) audioSource.Play();
                             if (manager.Graph.vertices[nextVertex] != null) {
                                 if (manager.Graph.vertices[nextVertex].occupied == true) {
-                                    //StopMoving ();
                                     return;
                                 }
                                 lastVertexIndex = currVertexIndex;
@@ -178,6 +181,7 @@ public class PlayerMovement : MonoBehaviour {
                         nextVertex = currVertexIndex - manager.Graph.GridWidth;
                         if (nextVertex >= 0 && nextVertex < manager.Graph.GraphCount) {
                             if (manager.Graph.vertices[nextVertex] != null) {
+                                if (!audioSource.isPlaying) audioSource.Play();
                                 if (manager.Graph.vertices[nextVertex].occupied == true) {
                                     return;
                                 }
@@ -231,5 +235,6 @@ public class PlayerMovement : MonoBehaviour {
 	*/
 	public void StopMoving() {
 		movement = Vector3.zero;
-	}
+        if (audioSource.isPlaying) audioSource.Stop() ;
+    }
 }

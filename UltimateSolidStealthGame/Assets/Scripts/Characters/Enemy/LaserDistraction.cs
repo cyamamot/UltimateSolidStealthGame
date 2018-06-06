@@ -47,6 +47,7 @@ public class LaserDistraction : EnemyDistraction {
 
 	protected override IEnumerator AtDistraction () {
 		manager.Movement.Turn(distraction.transform.forward);
+        isAtDistraction = true;
 		//laser animation
 		Destroy(distraction);
 		yield return new WaitForSeconds (distractionTime);
@@ -54,6 +55,7 @@ public class LaserDistraction : EnemyDistraction {
 	}
 
     public override void ResetDistraction() {
+        isAtDistraction = false;
         StopAllCoroutines();
         if (manager.Movement) manager.Movement.enabled = true;
         if (manager.Sight) manager.Sight.enabled = true;

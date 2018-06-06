@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4819751550113616}
   - component: {fileID: 65388023677610710}
   - component: {fileID: 114118948866974346}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EndLevelZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

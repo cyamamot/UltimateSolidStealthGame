@@ -10,6 +10,7 @@ TagManager:
   - UI
   - Floor
   - LevelManager
+  - SFXGod
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - IcePlayer
   - Smoke
   - Laser
-  - 
+  - Bullet
   - 
   - 
   - 

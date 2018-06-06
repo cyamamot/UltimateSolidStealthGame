@@ -28,6 +28,7 @@ public class CharacterManager : MonoBehaviour {
     }
 		
 	protected virtual void Awake () {
+        alive = true;
 		health = GetComponent<HealthManager> ();
 		if (graphObject) {
 			graph = graphObject.GetComponent<Graph> ();

@@ -30,7 +30,6 @@ public class SnakeManager : EnemyManager {
         maxTotalHealth = killsTillDeath * healthList[0].Health;
         currTotalHealth = maxTotalHealth;
         healthUI.SetMaxHealth(maxTotalHealth);
-        alive = true;
 	}
 
     private void Start() {
@@ -51,6 +50,8 @@ public class SnakeManager : EnemyManager {
         killsTillDeath--;
         SnakeBody segment = healthList[currHealthIndex].gameObject.GetComponent<SnakeBody>();
         segment.KillSegment();
+        distraction.ResetDistraction();
+        sight.SetSightOnPlayer();
         healthList.RemoveAt(currHealthIndex);
         if (killsTillDeath <= 0) {
             Debug.Log("Enemy Dead");
@@ -64,8 +65,10 @@ public class SnakeManager : EnemyManager {
 
     public override void OnTakeDamage(float damage) {
         if (alive) {
-            distraction.ResetDistraction();
-            sight.SetSightOnPlayer();
+            if (!distraction.IsAtDistraction) {
+                distraction.ResetDistraction();
+                sight.SetSightOnPlayer();
+            }
             currTotalHealth -= damage;
             healthUI.SetHealth(currTotalHealth);
         }
