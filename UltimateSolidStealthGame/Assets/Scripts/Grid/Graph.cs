@@ -10,8 +10,8 @@ public class Graph : MonoBehaviour{
     protected int graphCount;
 
     protected BoxCollider box;
-	protected int width;
-    protected int height;
+	protected float width;
+    protected float height;
     protected int gridWidth;
     protected int gridHeight;
     protected int floorTop;
@@ -20,10 +20,10 @@ public class Graph : MonoBehaviour{
 
 	public List<Vertex> vertices;
 
-    public int Width {
+    public float Width {
         get { return width; }
     }
-    public int Height {
+    public float Height {
         get { return height; }
     }
 	public int GridWidth {
@@ -53,8 +53,8 @@ public class Graph : MonoBehaviour{
 		if (box) {
             box.enabled = true;
 			Vector3 size = box.bounds.size;
-			width = (int)size [0];
-			height = (int)size [2];
+			width = size [0];
+			height = size [2];
             floorTop = (int)(box.bounds.center[1] - (size[1] / 2.0f));
             floorBottomLeft = new Vector3(box.bounds.center[0] - (width / 2.0f), box.bounds.center[1], box.bounds.center[2] - (height / 2.0f));
 			gridWidth = (int)(width * (1.0f / vertexDistance));
@@ -67,8 +67,8 @@ public class Graph : MonoBehaviour{
 			if (vertices.Count == 0) { 
 				int count = 0;
 				Vector3 pos = new Vector3 ();
-				for (float i = (vertexDistance / 2.0f); i < (float)height; i += vertexDistance) {                         
-					for (float j = (vertexDistance / 2.0f); j < (float)width; j += vertexDistance) {
+				for (float i = (vertexDistance / 2.0f); i < height; i += vertexDistance) {                         
+					for (float j = (vertexDistance / 2.0f); j < width; j += vertexDistance) {
 						pos.Set (j, 0, i);
 						pos += floorBottomLeft;
 						if (!Physics.CheckSphere (pos, 0.125f, checkLayer, QueryTriggerInteraction.Ignore)) {
@@ -153,7 +153,7 @@ public class Graph : MonoBehaviour{
 	public int GetIndexFromPosition(Vector3 pos) {
 		foreach (Vertex v in vertices) {
 			if (v != null) {
-				if (Mathf.Approximately(v.position.x, pos.x) && Mathf.Approximately(v.position.z, pos.z)) {
+				if (Mathf.Abs(v.position.x - pos.x) <= 0.005f && Mathf.Abs(v.position.z - pos.z) <= 0.005f) {
 					return v.index;
 				}
 			}

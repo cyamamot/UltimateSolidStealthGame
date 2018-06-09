@@ -19,23 +19,21 @@ public class OptionsScreen : MonoBehaviour {
 
     bool changeReady;
     LevelManager levelManager;
-    float initialBGMVolume;
 
-	void Awake() {
-        gameObject.SetActive(false);
+
+	void Start() {
         Slider musicSlider = musicSliderObject.GetComponent<Slider>();
         Slider sfxSlider = sfxSliderObject.GetComponent<Slider>();
-        levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
         Toggle vibrationToggle = vibrationToggleObject.GetComponent<Toggle>();
         if (inGameOptions) {
             backToMainObject.SetActive(true);
+            levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
         } else {
             backToMainObject.SetActive(false);
         }
+
         musicSlider.value = PlayerPrefs.GetFloat("Music", 1.0f);
         sfxSlider.value = PlayerPrefs.GetFloat("SFX", 1.0f);
-        initialBGMVolume = levelManager.BGMSource.volume;
-        levelManager.BGMSource.volume = initialBGMVolume * musicSlider.value;
         vibrationToggle.isOn = (PlayerPrefs.GetInt("Vibration", 1) == 1) ? true : false;
         changeReady = true;
 	}
@@ -43,13 +41,14 @@ public class OptionsScreen : MonoBehaviour {
 	public void OnMusicSliderChange(float value) {
         if (changeReady) {
             PlayerPrefs.SetFloat("Music", value);
-            levelManager.BGMSource.volume = (initialBGMVolume * value) / 2.0f;
+            if (levelManager) levelManager.BGMSource.volume = (levelManager.InitialBGMVolume * value) / 2.0f;
         }
     }
 
     public void OnSFXSliderChange(float value) {
         if (changeReady) {
             PlayerPrefs.SetFloat("SFX", value);
+            if (levelManager) levelManager.SFXGod.volume = levelManager.InitialSFXVolume * value;
         }
     }
 
@@ -73,12 +72,14 @@ public class OptionsScreen : MonoBehaviour {
     }
 
     void OnEnable() {
+        Time.timeScale = 0.0f;
         AudioListener.pause = true;
         if (levelManager) levelManager.BGMSource.volume = levelManager.BGMSource.volume / 2.0f;
     }
 
     void OnDisable() {
+        Time.timeScale = 1.0f;
         AudioListener.pause = false;
-        if (levelManager) levelManager.BGMSource.volume = initialBGMVolume * PlayerPrefs.GetFloat("Music", 1.0f);
+        if (levelManager) levelManager.BGMSource.volume = levelManager.InitialBGMVolume * PlayerPrefs.GetFloat("Music", 1.0f);
     }
 }

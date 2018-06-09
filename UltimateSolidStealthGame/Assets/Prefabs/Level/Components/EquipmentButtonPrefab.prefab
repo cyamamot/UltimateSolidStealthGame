@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 222786513666150976}
   - component: {fileID: 114749715090827306}
   - component: {fileID: 114328348849929456}
+  - component: {fileID: 114035519875772372}
   m_Layer: 5
   m_Name: EquipmentButtonPrefab
   m_TagString: Untagged
@@ -29,6 +30,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114035519875772372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1549841768190818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65a5e418abec3294f88e52d06a85af40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114328348849929456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,5 +131,5 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -755.30804, y: 42.169495}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}

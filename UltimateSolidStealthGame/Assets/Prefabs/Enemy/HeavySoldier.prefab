@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 114079080778985748}
   - component: {fileID: 114095934123944858}
   - component: {fileID: 114647397231428726}
+  - component: {fileID: 82262154298771354}
   m_Layer: 8
   m_Name: HeavySoldier
   m_TagString: Enemy
@@ -149,6 +150,86 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &82262154298771354
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1128498781022090}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 01ee647ef3afa534d819338333ce20d6, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.0125
+  m_Pitch: 1.25
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 10
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114079080778985748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunPrefab: {fileID: 1525503032586576, guid: ebff82aa87b2c334aa795587b9574878, type: 2}
   fireWaitTime: 2
+  range: 0
 --- !u!114 &114943726642438126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -230,8 +312,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 6
-  healthBarObject: {fileID: 0}
-  healthBarYOffset: 0
+  healthBarObject: {fileID: 1014649235011940, guid: a5b658abbb6983c4c9825da1c189905f,
+    type: 2}
+  healthBarYOffset: 1
 --- !u!114 &114963246262835904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -245,7 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseLength: 10
   currVertexIndex: 0
-  patrolVertices: b50c0000a80c0000c20c0000b50c0000a510000098100000b2100000ed130000
+  patrolVertices: []
   showDebug: 0
 --- !u!120 &120065064226128042
 LineRenderer:

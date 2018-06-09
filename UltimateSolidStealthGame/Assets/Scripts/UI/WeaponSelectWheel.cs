@@ -16,11 +16,13 @@ public class WeaponSelectWheel : MonoBehaviour {
 	/*
 		reference to background circle image
 	*/
-	Image bgCircle;
+	//Image bgCircle;
 	/*
 		list of references to Button gameobjects
 	*/
 	List<GameObject> buttonList;
+
+    List<EquipmentButton> equipmentButtonList;
 	/*
 		number of buttons in list when last displayed
 	*/
@@ -32,14 +34,13 @@ public class WeaponSelectWheel : MonoBehaviour {
 	float midY;
 
 	void Awake () {
-		bgCircle = GetComponent<Image> ();
-		bgCircle.gameObject.SetActive (false);
-		buttonList = new List<GameObject> ();
-		wheelRadius = Screen.height / 3.0f;
-	}
-
-	void Update () {
-		
+		//bgCircle = GetComponent<Image> ();
+		//bgCircle.gameObject.SetActive (false);
+		if (buttonList == null) buttonList = new List<GameObject> ();
+        if (equipmentButtonList == null) equipmentButtonList = new List<EquipmentButton>();
+        //wheelRadius = Screen.height / 4.75f;
+        wheelRadius = (transform.parent.parent.localScale.x * GetComponent<RectTransform>().rect.width) / 2.0f;
+        enabled = false;
 	}
 
 	/*
@@ -47,7 +48,10 @@ public class WeaponSelectWheel : MonoBehaviour {
 		@param newButton - reference to Button gameobject
 	*/
 	public void AddButton(GameObject newButton) {
-		buttonList.Add (newButton);
+        if (buttonList == null) buttonList = new List<GameObject>();
+        if (equipmentButtonList == null) equipmentButtonList = new List<EquipmentButton>();
+        buttonList.Add (newButton);
+        equipmentButtonList.Add(newButton.GetComponent<EquipmentButton>());
 		newButton.transform.SetParent(transform, false);
 		RectTransform rect = newButton.GetComponent<RectTransform> ();
 		rect.localPosition = Vector3.one;
@@ -61,29 +65,32 @@ public class WeaponSelectWheel : MonoBehaviour {
 	public void DisplayWheel() {
 		if (lastListSize != buttonList.Count) {
 			lastListSize = buttonList.Count;
-			float angle = (360.0f / buttonList.Count) * Mathf.Deg2Rad;
-			for (int i = 0; i < lastListSize; i++) {
+			float angle = (360.0f / buttonList.Count);
+            float angleRad = angle * Mathf.Deg2Rad;
+            for (int i = 0; i < lastListSize; i++) {
 				buttonList [i].SetActive (true);
-				float x = Mathf.Sin (angle * i) * wheelRadius;
-				float y = Mathf.Cos (angle * i) * wheelRadius;
+				float x = Mathf.Sin (angleRad * i) * wheelRadius;
+				float y = Mathf.Cos (angleRad * i) * wheelRadius;
 				Vector3 pos = new Vector3 (x, y, 0.0f) + transform.position;
-				RectTransform rect = buttonList [i].GetComponent<RectTransform> ();
+				RectTransform rect = buttonList[i].GetComponent<RectTransform> ();
 				rect.position = pos;
+                //pos.Set(0.0f, 0.0f, -angle * i);
+                //rect.Rotate(pos);
 			}
 		}
-		foreach (GameObject g in buttonList) {
-			g.SetActive (true);
+        for (int i = 0; i < buttonList.Count; i++) {
+            equipmentButtonList[i].Pop();
 		}
-		bgCircle.gameObject.SetActive (true);
+		//bgCircle.gameObject.SetActive (true);
 	}
 
 	/*
 		hides wheel
 	*/
 	public void HideWheel() {
-		foreach (GameObject g in buttonList) {
-			g.SetActive (false);
-		}
-		bgCircle.gameObject.SetActive (false);
-	}
+        for (int i = 0; i < buttonList.Count; i++) {
+            equipmentButtonList[i].Close();
+        }
+        //bgCircle.gameObject.SetActive (false);
+    }
 }

@@ -20,12 +20,23 @@ public class LevelManager : MonoBehaviour {
     int playerCurrLevel;
     AudioSource bgmSource;
     AudioSource sfxGod;
+    float initialBGMVolume;
+    float initialSFXVolume;
 
-	public string LevelName {
+    public string LevelName {
 		get { return LevelName; }
 	}
     public AudioSource BGMSource {
         get { return bgmSource; }
+    }
+    public AudioSource SFXGod {
+        get { return sfxGod; }
+    }
+    public float InitialBGMVolume {
+        get { return initialBGMVolume; }
+    }
+    public float InitialSFXVolume {
+        get { return initialSFXVolume; }
     }
 
 	void Awake () {
@@ -34,24 +45,22 @@ public class LevelManager : MonoBehaviour {
         bgmSource = GetComponent<AudioSource>();
         bgmSource.ignoreListenerPause = true;
         sfxGod = GameObject.FindGameObjectWithTag("SFXGod").GetComponent<AudioSource>();
-        if (ambientNoise) InvokeRepeating("MakeAmbientNoise", 0.0f, 7.0f);
-		foreach (GameObject e in equipmentForLevel) {
+        initialBGMVolume = bgmSource.volume;
+        initialSFXVolume = sfxGod.volume;
+        foreach (GameObject e in equipmentForLevel) {
 			manager.WeaponSystem.AddEquipment (e);
 		}
-		playerCurrLevel = PlayerPrefs.GetInt ("CurrentLevel", -1);
-		if (playerCurrLevel != -1) {
-			if (playerCurrLevel < level) {
-				
-
-				//Play level introduction ui animation
-			}
-		}
-        bgmSource.Play();
 	}
 
+    public void StartLevelMusic() {
+        bgmSource.volume = initialBGMVolume * PlayerPrefs.GetFloat("Music", 1.0f);
+        sfxGod.volume = initialSFXVolume * PlayerPrefs.GetFloat("SFX", 1.0f);
+        bgmSource.Play();
+        if (ambientNoise) InvokeRepeating("MakeAmbientNoise", 0.0f, ambientNoise.length * 1.2f);
+    }
+
     void MakeAmbientNoise() {
-        sfxGod.volume = 0.25f * PlayerPrefs.GetFloat("SFX", 1.0f);
-        sfxGod.PlayOneShot(ambientNoise);
+        sfxGod.PlayOneShot(ambientNoise, 0.125f * PlayerPrefs.GetFloat("Music", 1.0f));
     }
 
 	public void FinishLevel() {

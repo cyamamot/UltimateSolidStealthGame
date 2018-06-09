@@ -8,24 +8,24 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu/MainMenu.unity
     guid: 93f7da4bbe269b44a8db422da4257043
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu/LevelSelect.unity
     guid: eb1b4f7da1992ae409f429122e0b6d4e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu/Store.unity
     guid: f23660076be9bc242b31d79c69d16cf0
   - enabled: 1
     path: Assets/Scenes/Intro_Level/Intro_Level.unity
     guid: 02a1e18ba055f3a44ae39b80ea57e439
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Level_01/Level_01.unity
     guid: 0069ceab265ba8043ad35a50dea1595e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FinalBoss_Part01/FinalBoss_Part01.unity
     guid: d584677da10313b488d75b9f9c7aea8b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FinalBoss_Part02/FinalBoss_Part02.unity
     guid: 2216f919af4f26449a1d9bb9ec9a1910

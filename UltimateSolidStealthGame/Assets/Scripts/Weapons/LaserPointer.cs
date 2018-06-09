@@ -34,9 +34,9 @@ public class LaserPointer : Equipment {
 				RaycastHit hit;
 				if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, ignoreLayers, QueryTriggerInteraction.Collide)) {
                     Vector3 pointInCameraSpace = cam.WorldToViewportPoint(hit.point);
-                    if (pointInCameraSpace[0] >= 0.0f && pointInCameraSpace[0] <= 1.0f
+                    /*if (pointInCameraSpace[0] >= 0.0f && pointInCameraSpace[0] <= 1.0f
                             && pointInCameraSpace[1] >= 0.0f && pointInCameraSpace[1] <= 1.0f
-                                && pointInCameraSpace[2] > 0.0f) {
+                                && pointInCameraSpace[2] > 0.0f) {*/
                         turnedOn = true;
                         manager.Movement.StopMoving();
                         Vector3 offset = new Vector3();
@@ -62,7 +62,7 @@ public class LaserPointer : Equipment {
                         target.Pointer = this;
                         LaserUninvestigated();
                         StartCoroutine("ShootRay", hit.point);
-                    }
+                    //}
 				}
 			} else {
 				turnedOn = false;

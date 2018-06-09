@@ -93,9 +93,7 @@ public class Gun : Equipment {
 					b.Damage = damage;
 					firedBullet.layer = gameObject.layer;
 					rb.velocity = parent.forward * bulletSpeed;
-                    sfxGod.volume = 0.02f * PlayerPrefs.GetFloat("SFX", 1.0f);
-                    sfxGod.pitch = 3.0f;
-                    sfxGod.PlayOneShot(sfx);
+                    sfxGod.PlayOneShot(sfx, 0.02f * sfxMultiplier);
 					if (bulletsLeft > 0) {
 						bulletsLeft--;
 						count = bulletsLeft;

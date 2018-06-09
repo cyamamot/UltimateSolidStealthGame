@@ -33,6 +33,8 @@ public abstract class Equipment : MonoBehaviour {
 
     protected AudioSource sfxGod;
 
+    protected float sfxMultiplier;
+
 	public string EquipmentType {
 		get { return equipmentType; }
 	}
@@ -48,8 +50,9 @@ public abstract class Equipment : MonoBehaviour {
         enabled = false;
 		render = GetComponent<MeshRenderer> ();
         sfxGod = GameObject.FindGameObjectWithTag("SFXGod").GetComponent<AudioSource>();
+        sfxMultiplier = PlayerPrefs.GetFloat("SFX", 1.0f);
 	}
-
+    
 	public abstract void UseEquipment ();
 
 	/*

@@ -16,17 +16,19 @@ public class FaceTime : MonoBehaviour {
     RenderTexture text;
     Text callerTextBox;
     RawImage background;
+    LevelManager levelManager;
     bool runningText;                   //Whether text is currently running in TextBox
     bool canStartText;
     int currTextIndex;
 
     void Start() {
-        Time.timeScale = 0.0f;
+        AudioListener.pause = true;
         textBoxObject.transform.localScale = Vector3.zero;
         player = GetComponent<VideoPlayer>();
         image = GetComponent<RawImage>();
+        levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
         background = transform.parent.GetComponent<RawImage>();
-        callerTextBox = transform.parent.GetComponentInChildren<Text>();
+        callerTextBox = textBoxObject.GetComponentInChildren<Text>();
         image.transform.localScale = Vector3.zero;
         text = new RenderTexture((int)player.clip.width, (int)player.clip.height, 0);
         player.targetTexture = text;
@@ -101,30 +103,29 @@ public class FaceTime : MonoBehaviour {
             temp.a = i / 20.0f;
             yield return background.color = temp;
         }
-        Debug.Log(Time.timeScale);
+        AudioListener.pause = false;
+        levelManager.StartLevelMusic();
         background.gameObject.SetActive(false);
     }
 
     IEnumerator DisplayText(string text) {
         player.Play();
         callerTextBox.text = "";
-        //runningText = false;
         runningText = true;
         textBoxObject.transform.localScale = Vector3.zero;
         Vector3 newScale = new Vector3();
         float scale;
-        for (int i = 0; i <= 14; i += 2) {
+        for (int i = 0; i <= 12; i += 2) {
             scale = i / 10.0f;
             newScale.Set(scale, scale, scale);
             yield return textBoxObject.transform.localScale = newScale;
         }
-        for (int i = 14; i >= 10; i -= 2) {
+        for (int i = 12; i >= 10; i -= 2) {
             scale = i / 10.0f;
             newScale.Set(scale, scale, scale);
             yield return textBoxObject.transform.localScale = newScale;
         }
         yield return new WaitForSeconds(0.05f);
-        //runningText = true;
         foreach (char character in text) {
             yield return callerTextBox.text += character;
         }
@@ -134,9 +135,7 @@ public class FaceTime : MonoBehaviour {
     }
 
     void ResetCallerFace() {
-        Debug.Log(player.frame);
-        player.Stop();
-        player.frame = 1;
-        Debug.Log(player.frame);
+        player.Pause();
+        player.frame = 0;
     }
 }
