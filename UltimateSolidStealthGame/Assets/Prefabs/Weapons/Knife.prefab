@@ -97,5 +97,6 @@ MonoBehaviour:
   equipmentType: Knife
   count: -1
   icon: {fileID: 21300000, guid: 510d5c821954bdf4e9a8905ee5349111, type: 3}
+  sfx: {fileID: 0}
   knifeRange: 1
   damage: 1

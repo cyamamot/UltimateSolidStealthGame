@@ -241,11 +241,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8722cefe6db40504d91395afa2b0d8d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightDistance: 6
+  sightDistance: 4
   FOV: 45
   alertedFOV: 135
   numFramesToResetPath: 10
-  alertedPauseLength: 0
+  alertedPauseLength: 8
 --- !u!114 &114163932504070156
 MonoBehaviour:
   m_ObjectHideFlags: 1
