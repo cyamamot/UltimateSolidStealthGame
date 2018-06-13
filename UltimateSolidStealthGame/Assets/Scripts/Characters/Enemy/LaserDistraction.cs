@@ -60,6 +60,7 @@ public class LaserDistraction : EnemyDistraction {
         if (manager.Movement) manager.Movement.enabled = true;
         if (manager.Sight) manager.Sight.enabled = true;
         if (manager.WeaponSystem) manager.WeaponSystem.enabled = true;
+        if (pathToDistraction.Count == 0) manager.Movement.BackToPatrol();
         enabled = true;
         distracted = false;
         pathToDistraction.Clear();

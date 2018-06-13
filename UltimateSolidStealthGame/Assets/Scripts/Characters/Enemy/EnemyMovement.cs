@@ -15,9 +15,10 @@ public class EnemyMovement : MonoBehaviour {
     public class PairStruct {
         public int index;
         public bool patrolHere;
+        public Vector3 lookDir;
     }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(PairStruct))]
     public class PairStructDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
@@ -26,14 +27,16 @@ public class EnemyMovement : MonoBehaviour {
             var indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
             var indexRect = new Rect(position.x, position.y, 75, position.height);
-            var patrolHereRect = new Rect(position.x + 80, position.y, 50, position.height);
+            var patrolHereRect = new Rect(position.x + 80, position.y, 20, position.height);
+            var lookDirRect = new Rect(position.x + 105, position.y, 125, position.height);
             EditorGUI.PropertyField(indexRect, property.FindPropertyRelative("index"), GUIContent.none);
             EditorGUI.PropertyField(patrolHereRect, property.FindPropertyRelative("patrolHere"), GUIContent.none);
+            EditorGUI.PropertyField(lookDirRect, property.FindPropertyRelative("lookDir"), GUIContent.none);
             EditorGUI.indentLevel = indent;
             EditorGUI.EndProperty();
         }
     }
-#endif
+    #endif
 
     /*
 		time enemy should pause when they reach patrol point
@@ -118,9 +121,12 @@ public class EnemyMovement : MonoBehaviour {
         set { moving = value; }
     }
 
-	protected void Start() {
+    void Awake() {
+        nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
+    }
+
+    protected void Start() {
 		manager = GetComponent<EnemyManager> ();
-		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = true;
 		path = new List<int> ();
@@ -144,30 +150,32 @@ public class EnemyMovement : MonoBehaviour {
 	*/
 	protected void Update() {
 		if (manager && manager.Graph.Ready) {
-			if (manager.Sight && !manager.Sight.Alerted) {
+			/*if (manager.Sight && !manager.Sight.Alerted) {
 				if (manager.Distraction && !manager.Distraction.Distracted) {
 					BackToPatrol ();
 				} else if (!manager.Distraction) {
 					BackToPatrol ();
 				}
-			}
+			}*/
 			TravelBetweenPathPoints ();
 			OnPatrol ();
-			if (showDebug) {
-				foreach (int i in path) {
-					Vector3 pos = manager.Graph.vertices [i].position;
-					Debug.DrawLine (pos, pos + (Vector3.up * 5.0f), Color.red, 0.01f);
-				}
-			}
-		} 
-	}
+        }
+        #if UNITY_EDITOR
+        if (showDebug) {
+            foreach (int i in path) {
+                Vector3 pos = manager.Graph.vertices[i].position;
+                Debug.DrawLine(pos, pos + (Vector3.up * 5.0f), Color.red, 0.01f);
+            }
+        }
+        #endif
+    }
 
-	/*
+    /*
 		Sets new destination patrol vertex if enemy has reached current patrol
 	*/
-	protected void OnPatrol() {
+    protected void OnPatrol() {
         if (moving) {
-            if (patrolVertices.Count > 1) {
+            if (patrolVertices.Count >= 1) {
                 if ((manager.Sight && !manager.Sight.Alerted) || !manager.Sight) {
                     if ((manager.Distraction && !manager.Distraction.Distracted) || !manager.Distraction) {
                         int patrolIndexInGraph = patrolVertices[destPatrolIndex].index;
@@ -177,8 +185,11 @@ public class EnemyMovement : MonoBehaviour {
                         float destX = v.position.x;
                         float destZ = v.position.z;
                         if ((Mathf.Abs(destX - currX) <= nav.stoppingDistance) && (Mathf.Abs(destZ - currZ) <= nav.stoppingDistance)) {
-                            if (patrolVertices[destPatrolIndex].patrolHere) PauseMovement(pauseLength);
+                            PairStruct currPatrolStruct = patrolVertices[destPatrolIndex];
+                            if (currPatrolStruct.patrolHere) PauseMovement(pauseLength);
+                            if (currPatrolStruct.lookDir != Vector3.zero) Turn(currPatrolStruct.lookDir);
                             destPatrolIndex = (destPatrolIndex + 1) % patrolVertices.Count;
+                            BackToPatrol();
                         }
                     }
                 }
@@ -280,10 +291,22 @@ public class EnemyMovement : MonoBehaviour {
 	*/
 	public void PauseMovement(float length) {
         audioSource.Stop();
-		StartCoroutine ("Pause", length);
+		StartCoroutine (Pause(length));
 	}
 
-	IEnumerator Pause(float length) {
+    public void StopMovement(float time) {
+        audioSource.Stop();
+        StartCoroutine(Stop(time));
+    }
+
+    IEnumerator Stop(float time) {
+        moving = false;
+        yield return new WaitForSeconds(time);
+        moving = true;
+    }
+
+
+    IEnumerator Pause(float length) {
 		enabled = false;
 		for (int i = 0; i < length; i++) {
 			if (!manager.Sight.Alerted) {

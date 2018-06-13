@@ -245,7 +245,8 @@ MonoBehaviour:
   FOV: 45
   alertedFOV: 135
   numFramesToResetPath: 10
-  alertedPauseLength: 8
+  alertedPauseLength: 12
+  runSpeed: 2
 --- !u!114 &114163932504070156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -435,11 +436,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.75
-  m_Speed: 2.25
+  m_Speed: 1.25
   m_Acceleration: Infinity
   avoidancePriority: 50
   m_AngularSpeed: 0
-  m_StoppingDistance: 0.1
+  m_StoppingDistance: 0.15
   m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 1
   m_AutoRepath: 0

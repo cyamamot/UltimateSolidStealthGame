@@ -20,7 +20,6 @@ public class OptionsScreen : MonoBehaviour {
     bool changeReady;
     LevelManager levelManager;
 
-
 	void Start() {
         Slider musicSlider = musicSliderObject.GetComponent<Slider>();
         Slider sfxSlider = sfxSliderObject.GetComponent<Slider>();

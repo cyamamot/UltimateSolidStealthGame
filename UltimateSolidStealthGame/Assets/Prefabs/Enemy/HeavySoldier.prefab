@@ -241,11 +241,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8722cefe6db40504d91395afa2b0d8d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightDistance: 6
+  sightDistance: 4
   FOV: 45
   alertedFOV: 135
   numFramesToResetPath: 10
-  alertedPauseLength: 0
+  alertedPauseLength: 12
+  runSpeed: 1.5
 --- !u!114 &114095934123944858
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -427,11 +428,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.75
-  m_Speed: 1.5
+  m_Speed: 0.75
   m_Acceleration: Infinity
   avoidancePriority: 50
   m_AngularSpeed: 0
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.15
   m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 1
   m_AutoRepath: 0

@@ -75,6 +75,7 @@ public class EnemyWeaponSystem : MonoBehaviour {
                             if (range == 0 || range <= hit.distance) {
                                 if (hit.transform.CompareTag("Player") == true) {
                                     firing = true;
+                                    manager.Movement.StopMovement(0.5f);
                                     gun.UseEquipment();
                                     StartCoroutine("FirePause");
                                 }

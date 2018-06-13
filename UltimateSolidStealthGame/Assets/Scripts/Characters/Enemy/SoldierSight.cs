@@ -7,8 +7,12 @@ using UnityEngine;
 */
 public class SoldierSight : EnemySight{
 
+    int specialSightLayer;
+
 	protected override void Start() {
 		base.Start();
+        specialSightLayer = (~sightLayer) + (1 << LayerMask.NameToLayer("HidingPlace"));
+        specialSightLayer = ~specialSightLayer;
 	}
 
 	protected override void Update() {
@@ -28,24 +32,36 @@ public class SoldierSight : EnemySight{
 				currentFOV = (alerted) ? alertedFOV : FOV;
 				if (angle <= currentFOV && toPlayer.magnitude <= sightDistance) { 
 					RaycastHit hit;
-					if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, sightLayer)) {
-						if (hit.transform.CompareTag ("Player")) {
-                            if (manager.IsBoss) {
-                                pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
-                            } else {
-                                pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+                    if (!alerted) {
+                        if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, sightLayer)) {
+                            if (hit.transform.CompareTag("Player")) {
+                                SeePlayer();
                             }
-							if (pathToPlayer.Count > 0) {
-								alerted = true;
-								if (manager.Distraction) {
-									manager.Distraction.Distracted = false;
-								}
-								manager.Movement.Path = pathToPlayer;
-							}
-						}
-					}
+                        }
+					} else {
+                        if (Physics.Raycast(transform.position, toPlayer, out hit, Mathf.Infinity, specialSightLayer)) {
+                            if (hit.transform.CompareTag("Player")) {
+                                SeePlayer();
+                            }
+                        }
+                    }
 				}
 			}
 		}
 	}
+
+    void SeePlayer() {
+        if (manager.IsBoss) {
+            pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
+        } else {
+            pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+        }
+        if (pathToPlayer.Count > 0) {
+            Alerted = true;
+            if (manager.Distraction) {
+                manager.Distraction.Distracted = false;
+            }
+            manager.Movement.Path = pathToPlayer;
+        }
+    }
 }

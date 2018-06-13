@@ -32,10 +32,15 @@ public abstract class EnemySight : MonoBehaviour {
     [SerializeField]
     protected float alertedPauseLength;
 
-	/*
+    [SerializeField]
+    float runSpeed;
+
+    float walkSpeed;
+
+    /*
 	 	whether the enemy is currently alerted
 	*/
-	protected bool alerted;
+    protected bool alerted;
 	/*
 	 	current frame between 0 and numFramesToResetPath
 	*/
@@ -66,7 +71,14 @@ public abstract class EnemySight : MonoBehaviour {
 	}
 	public bool Alerted {
 		get { return alerted; }
-		set { alerted = value; }
+		set {
+            alerted = value;
+            if (alerted) {
+                manager.Movement.Nav.speed = runSpeed;
+            } else {
+                manager.Movement.Nav.speed = walkSpeed;
+            }
+        }
 	}
 	public int CurrentFOV {
 		get { return currentFOV; }
@@ -77,9 +89,9 @@ public abstract class EnemySight : MonoBehaviour {
     public float AlertedPauseLength {
         get { return alertedPauseLength; }
     }
-		
-	protected virtual void Start () {
-		sightLayer = 1 << LayerMask.NameToLayer ("Enemy");
+
+    protected virtual void Start () {
+        sightLayer = 1 << LayerMask.NameToLayer ("Enemy");
         sightLayer += (1 << LayerMask.NameToLayer("Ignore Raycast"));
 		sightLayer = ~sightLayer;
 		GameObject temp = GameObject.FindGameObjectWithTag ("Player");
@@ -89,13 +101,15 @@ public abstract class EnemySight : MonoBehaviour {
 		currentFOV = FOV;
         GameObject parent = (transform.parent != null) ? transform.parent.gameObject : null;
         manager = (parent != null) ? parent.GetComponentInChildren<EnemyManager>() : GetComponent<EnemyManager>();
+        walkSpeed = manager.Movement.Nav.speed;
+        runSpeed = (runSpeed >= 0.0f) ? runSpeed : walkSpeed;
         pathToPlayer = new List<int> ();
 	}
 
 	protected virtual void Update() {
 		CheckSightline ();
 		if (alerted && pathToPlayer.Count == 0) {
-			alerted = false;
+			Alerted = false;
 			manager.Movement.PauseMovement (alertedPauseLength);
 		}
 	}
@@ -107,7 +121,7 @@ public abstract class EnemySight : MonoBehaviour {
 	protected abstract void CheckSightline ();
 
     public virtual void SetSightOnPlayer() {
-        alerted = true;
+        Alerted = true;
         if (manager.IsBoss) {
             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
         } else {

@@ -90,6 +90,7 @@ public class PlayerUI : MonoBehaviour {
 				weaponWheel = temp.GetComponent<WeaponSelectWheel> ();
 			}
 		}
+        optionsScreenObject.SetActive(false);
         healthBar = healthBarObject.GetComponent<Slider>();
 	}
 

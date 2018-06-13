@@ -88,7 +88,7 @@ public class FaceTime : MonoBehaviour {
         incomingCallText.enabled = true;
         for (int i = 0; i < 50; i++) {
             if (i == 24) {
-                yield return new WaitForSeconds(1.0f);
+                yield return new WaitForSeconds(0.5f);
             } else {
                 if (i % 2 == 0) {
                     yield return phoneIcon.rectTransform.localPosition = leftPos;
@@ -99,7 +99,7 @@ public class FaceTime : MonoBehaviour {
             }
         }
         yield return phoneIcon.rectTransform.localPosition = startPos;
-        yield return new WaitForSeconds(0.5f);
+        /*yield return new WaitForSeconds(0.5f);
         incomingCallText.enabled = false;
         for (int i = 10; i <= 16; i += 2) {
             scale = i / 10.0f;
@@ -110,9 +110,10 @@ public class FaceTime : MonoBehaviour {
             scale = i / 10.0f;
             newScale.Set(scale, scale, scale);
             yield return phoneIcon.rectTransform.localScale = newScale;
-        }
-        incomingCallText.gameObject.SetActive(false);
+        }*/
         yield return new WaitForSeconds(0.5f);
+        incomingCallText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.25f);
         StartCoroutine("FaceTimePopUp");
     }
 
@@ -141,6 +142,7 @@ public class FaceTime : MonoBehaviour {
 
     IEnumerator FaceTimeClose() {
         Color temp = background.color;
+        Color red = Color.red;
         for (int i = 10; i <= 16; i += 2) {
             scale = i / 10.0f;
             newScale.Set(scale, scale, scale);
@@ -151,9 +153,19 @@ public class FaceTime : MonoBehaviour {
             newScale.Set(scale, scale, scale);
             yield return image.rectTransform.localScale = newScale;
         }
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.2f);
+        incomingCallText.gameObject.SetActive(true);
+        incomingCallText.enabled = true;
+        incomingCallText.text = "Call Ended";
+        phoneIcon.rectTransform.localScale = Vector3.one;
+        phoneIcon.color = red;
+        image.enabled = false;
+        yield return new WaitForSeconds(1.5f);
+        incomingCallText.enabled = false;
         for (int i = 20; i >= 0; i--) {
             temp.a = i / 20.0f;
+            red.a = i / 20.0f;
+            phoneIcon.color = red;
             yield return background.color = temp;
         }
         AudioListener.pause = false;
