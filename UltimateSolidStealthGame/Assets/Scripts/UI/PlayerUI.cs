@@ -40,6 +40,10 @@ public class PlayerUI : MonoBehaviour {
     GameObject optionsScreenObject;
     [SerializeField]
     GameObject healthBarObject;
+    [SerializeField]
+    GameObject crouchButtonObject;
+    [SerializeField]
+    Sprite[] crouchSprites;
 
 	/*
 		reference to WeaponSelectWheel component of weaponwheel object
@@ -75,10 +79,18 @@ public class PlayerUI : MonoBehaviour {
 	bool primaryPressed;
 
     Slider healthBar;
+    Button crouchButton;
+    RectTransform screenRect;
+    int screenWidth;
+
+    public int ScreenWidth {
+        get { return screenWidth; }
+    }
 
 	void Awake () {
 		if (equipmentInstanceList == null) equipmentInstanceList = new List<GameObject> ();
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+        screenRect = GetComponent<RectTransform>();
 		if (player) {
 			manager = player.GetComponent<PlayerManager> ();
 			if (manager) {
@@ -88,10 +100,11 @@ public class PlayerUI : MonoBehaviour {
                 rect.localPosition = Vector3.zero;
                 rect.localScale = Vector3.one;
 				weaponWheel = temp.GetComponent<WeaponSelectWheel> ();
-			}
+            }
 		}
-        optionsScreenObject.SetActive(false);
         healthBar = healthBarObject.GetComponent<Slider>();
+        crouchButton = crouchButtonObject.GetComponent<Button>();
+        screenWidth = (int)(screenRect.rect.width + 1);
 	}
 
     void Update () {
@@ -100,6 +113,7 @@ public class PlayerUI : MonoBehaviour {
             if (!optionsScreenObject.activeSelf) {
                 mainButtonObject.SetActive(true);
                 optionsButtonObject.SetActive(true);
+                crouchButtonObject.SetActive(true);
                 if (counter.IsActive()) {
                     counter.text = "x" + currEquipment.Count.ToString();
                 }
@@ -185,6 +199,16 @@ public class PlayerUI : MonoBehaviour {
     public void DisplayOptions() {
         mainButtonObject.SetActive(false);
         optionsButtonObject.SetActive(false);
+        crouchButtonObject.SetActive(false);
         optionsScreenObject.SetActive(true);
+    }
+
+    public void OnCrouchClick() {
+        if (manager.Movement.IsCrounching) {
+            crouchButton.image.sprite = crouchSprites[1];
+        } else {
+            crouchButton.image.sprite = crouchSprites[0];
+        }
+        manager.Movement.ToggleCrouch();
     }
 }

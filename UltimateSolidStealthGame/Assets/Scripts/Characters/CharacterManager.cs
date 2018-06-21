@@ -11,10 +11,9 @@ public class CharacterManager : MonoBehaviour {
 		reference to components necessary in all manager subclasses
 	*/
     [SerializeField]
-    GameObject graphObject;
+    protected Graph graph;
 
-	protected HealthManager health;
-	protected Graph graph;
+    protected HealthManager health;
     protected bool alive;
 
 	public HealthManager Health {
@@ -30,9 +29,6 @@ public class CharacterManager : MonoBehaviour {
 	protected virtual void Awake () {
         alive = true;
 		health = GetComponent<HealthManager> ();
-		if (graphObject) {
-			graph = graphObject.GetComponent<Graph> ();
-		}
 	}
 	
 	public virtual void Kill() {}

@@ -101,7 +101,7 @@ public class EnemyMovement : MonoBehaviour {
     int maxPatrolTries = 50;
     int numPatrolTries;
     bool moving;
-
+    bool heardSound;
 
     public int CurrVertexIndex {
 		get { return currVertexIndex; }
@@ -119,6 +119,10 @@ public class EnemyMovement : MonoBehaviour {
     public bool Moving {
         get { return moving; }
         set { moving = value; }
+    }
+    public bool HeardSound {
+        get { return heardSound; }
+        set { heardSound = value; }
     }
 
     void Awake() {
@@ -150,15 +154,12 @@ public class EnemyMovement : MonoBehaviour {
 	*/
 	protected void Update() {
 		if (manager && manager.Graph.Ready) {
-			/*if (manager.Sight && !manager.Sight.Alerted) {
-				if (manager.Distraction && !manager.Distraction.Distracted) {
-					BackToPatrol ();
-				} else if (!manager.Distraction) {
-					BackToPatrol ();
-				}
-			}*/
+            if (heardSound && path.Count == 0) {
+                heardSound = false;
+                PauseMovement(pauseLength);
+            }
 			TravelBetweenPathPoints ();
-			OnPatrol ();
+            if (path.Count == 0) OnPatrol();
         }
         #if UNITY_EDITOR
         if (showDebug) {
@@ -272,7 +273,7 @@ public class EnemyMovement : MonoBehaviour {
 	public void BackToPatrol() {
 		if (patrolVertices.Count > 0) {
 			List<int> newPath = manager.Graph.FindShortestPath (currVertexIndex, patrolVertices[destPatrolIndex].index);
-			if (newPath.Count > 0) {
+			if (newPath.Count > 1) {
                 numPatrolTries = 0;
                 path = newPath;
 			} else {
@@ -291,7 +292,8 @@ public class EnemyMovement : MonoBehaviour {
 	*/
 	public void PauseMovement(float length) {
         audioSource.Stop();
-		StartCoroutine (Pause(length));
+        StopCoroutine("Pause");
+        StartCoroutine(Pause(length));
 	}
 
     public void StopMovement(float time) {
@@ -305,15 +307,14 @@ public class EnemyMovement : MonoBehaviour {
         moving = true;
     }
 
-
     IEnumerator Pause(float length) {
 		enabled = false;
 		for (int i = 0; i < length; i++) {
-			if (!manager.Sight.Alerted) {
+            if (!manager.Sight.Alerted) {
 				yield return new WaitForSeconds (0.1f);
-			} else if (manager.Sight.Alerted || (manager.Distraction && manager.Distraction.Distracted) || path.Count != 0){
+			} else if (manager.Sight.Alerted ||manager.Distraction.Distracted || heardSound || path.Count != 0){
 				enabled = true;
-				yield break;
+                yield break;
 			}
 		}
 		if (path.Count == 0) {
@@ -335,11 +336,12 @@ public class EnemyMovement : MonoBehaviour {
 		if (transform.forward.normalized != towards.normalized) {
 			int count = 0;
 			float angle = Vector3.SignedAngle (transform.forward.normalized, towards.normalized, Vector3.up);
-			while (Mathf.Abs (Vector3.Angle (transform.forward.normalized, towards.normalized)) >= 15.0f && count <= 12) {
+            float turnSpeed = 10.0f;
+            while (Mathf.Abs(Vector3.SignedAngle(transform.forward.normalized, towards.normalized, Vector3.up)) >= turnSpeed && count <= (180.0f / turnSpeed)) {
 				if (angle < 0.0f) {
-					transform.rotation *= Quaternion.Euler (0.0f, -15.0f, 0.0f);
+					transform.rotation *= Quaternion.Euler (0.0f, -turnSpeed, 0.0f);
 				} else {
-					transform.rotation *= Quaternion.Euler (0.0f, 15.0f, 0.0f);
+					transform.rotation *= Quaternion.Euler (0.0f, turnSpeed, 0.0f);
 				}
 				count++;
 				yield return null;
@@ -347,4 +349,29 @@ public class EnemyMovement : MonoBehaviour {
 			transform.rotation = Quaternion.LookRotation(towards);
 		}
 	}
+
+    public void SetPathToSound(Vector3 loc) {
+        if (!manager.Sight.Alerted && !manager.Distraction.Distracted) {
+            if (!heardSound) {
+                if (SetPathToLocation(loc, 15)) {
+                    heardSound = true;
+                    manager.ShowMark("Question");
+                }
+            } else {
+                SetPathToLocation(loc, 10);
+            }
+        }
+    }
+
+    public bool SetPathToLocation(Vector3 loc, int maxLength = -1) {
+        int dest = manager.Graph.GetIndexFromPosition(loc);
+        List<int> temp = manager.Graph.FindShortestPath(currVertexIndex, dest);
+        if (temp.Count > 0) {
+            if ((maxLength == -1) || (maxLength != -1 && temp.Count <= maxLength)) {
+                path = temp;
+                return true;
+            }
+        }
+        return false;
+    }
 }

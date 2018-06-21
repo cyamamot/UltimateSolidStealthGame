@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
@@ -11,6 +12,8 @@ public class MainMenu : MonoBehaviour {
     GameObject optionsScreen;
     [SerializeField]
     string firstLevelName;
+    [SerializeField]
+    Button[] buttons;
 
     int currLevel;
 
@@ -21,10 +24,13 @@ public class MainMenu : MonoBehaviour {
 	void Awake () {
         currLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
         newGameScreen.SetActive(false);
-        optionsScreen.SetActive(false);
-	}
-	
-	public void NewGameClick() {
+    }
+
+    void Start() {
+        
+    }
+
+    public void NewGameClick() {
         if (currLevel <= 0) {
             SceneManager.LoadScene(firstLevelName);
         }
@@ -39,9 +45,18 @@ public class MainMenu : MonoBehaviour {
 
     public void OptionsClick() {
         optionsScreen.SetActive(true);
+        foreach (Button button in buttons) {
+            button.gameObject.SetActive(false);
+        }
     }
 
     public void StoreClick() {
         SceneManager.LoadScene("Store");
+    }
+
+    public void DisplayButtons() {
+        foreach (Button button in buttons) {
+            button.gameObject.SetActive(true);
+        }
     }
 }

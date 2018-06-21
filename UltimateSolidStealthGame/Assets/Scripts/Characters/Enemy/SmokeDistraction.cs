@@ -26,6 +26,9 @@ public class SmokeDistraction : EnemyDistraction {
 		if (distracted) {
 			if (!distraction) {
 				distToDistraction = Mathf.Infinity;
+                distracted = false;
+                pathToDistraction.Clear();
+                CheckForDistraction();
 			}
 		}
 	}
@@ -73,7 +76,7 @@ public class SmokeDistraction : EnemyDistraction {
 
     public override void ResetDistraction() {
         isAtDistraction = false;
-        StopAllCoroutines();
+        StopCoroutine(AtDistraction());
         distToDistraction = Mathf.Infinity;
         if (manager.Movement) manager.Movement.enabled = true;
         if (manager.Sight) manager.Sight.enabled = true;

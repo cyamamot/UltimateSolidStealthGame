@@ -6,6 +6,7 @@ public class HealthBar : MonoBehaviour {
 
     GameObject target;
     float maxHealth;
+    Vector3 loc;
 
     public GameObject Target {
         set { target = value; }
@@ -19,11 +20,8 @@ public class HealthBar : MonoBehaviour {
         }
     }
 
-	void Start () {
-	}
-
     void Update() {
-        Vector3 loc = target.transform.position;
+        loc = target.transform.position;
         loc[1] = transform.position[1];
         transform.position = loc;
     }

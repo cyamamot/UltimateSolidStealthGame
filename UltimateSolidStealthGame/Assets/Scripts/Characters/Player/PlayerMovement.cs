@@ -14,6 +14,11 @@ public class PlayerMovement : MonoBehaviour {
 	[SerializeField]
 	int currVertexIndex;
 
+    [SerializeField]
+    float crouchSpeed;
+
+    float standSpeed;
+    bool isCrouching;
 	/*
 		index of vertex player was last at
 	*/
@@ -70,12 +75,16 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
     }
+    public bool IsCrounching {
+        get { return isCrouching; }
+    }
 		
 	void Start () {
 		movement = Vector3.zero;
 		manager = GetComponent<PlayerManager> ();
 		moveAmount = manager.Graph.VertexDistance;
 		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+        standSpeed = nav.speed;
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = true;
 		currVertexIndex = manager.Graph.GetIndexFromPosition(transform.position);
@@ -109,7 +118,7 @@ public class PlayerMovement : MonoBehaviour {
 	*/
 	void SetNewDestination() {
 		if (nav && manager && manager.Graph) {
-			if (nav.remainingDistance <= 0.1f) {
+			if (nav.remainingDistance <= nav.stoppingDistance) {
                 int nextVertex;
 				if (lastVertexIndex != currVertexIndex) {
 					if (manager.Graph.vertices[lastVertexIndex].occupiedBy == playerName) {
@@ -235,6 +244,16 @@ public class PlayerMovement : MonoBehaviour {
 	*/
 	public void StopMoving() {
 		movement = Vector3.zero;
-        if (audioSource.isPlaying) audioSource.Stop() ;
+        if (audioSource.isPlaying) audioSource.Stop();
+    }
+
+    public void ToggleCrouch() {
+        if (!isCrouching) {
+            nav.speed = crouchSpeed;
+            isCrouching = true;
+        } else {
+            nav.speed = standSpeed;
+            isCrouching = false;
+        }
     }
 }

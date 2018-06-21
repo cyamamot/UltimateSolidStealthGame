@@ -10,6 +10,8 @@ public class EnemyManager : CharacterManager {
 
     [SerializeField]
     bool isBoss;
+    [SerializeField]
+    GameObject symbolObject;
 
     /*
 		references to major Enemy components
@@ -20,12 +22,15 @@ public class EnemyManager : CharacterManager {
     protected EnemyDistraction distraction;
     protected EnemySightPlane plane;
     protected MeshRenderer renderer;
+    protected KillReporter reporter;
 
     /*
 		reference to player GameObject
 	*/
     protected GameObject player;
     protected PlayerMovement playerMovement;
+
+    Symbol symbol;
 
     public bool IsBoss {
         get { return isBoss; }
@@ -53,6 +58,11 @@ public class EnemyManager : CharacterManager {
 	protected override void Awake () {
 		base.Awake ();
         GameObject parent = (transform.parent != null) ? transform.parent.gameObject : null;
+        GameObject temp = Instantiate(symbolObject, transform.position + new Vector3(0.0f, 1.25f, 0.0f), Quaternion.identity);
+        if (temp) {
+            symbol = temp.GetComponent<Symbol>();
+            symbol.Target = gameObject;
+        }
 		sight = (parent != null) ? parent.GetComponentInChildren<EnemySight> () : GetComponent<EnemySight>();
 		movement = (parent != null) ? parent.GetComponentInChildren<EnemyMovement>() : GetComponent<EnemyMovement>(); ;
 		weaponSystem = (parent != null) ? parent.GetComponentInChildren<EnemyWeaponSystem>() : GetComponent<EnemyWeaponSystem>();
@@ -61,6 +71,7 @@ public class EnemyManager : CharacterManager {
         renderer = GetComponent<MeshRenderer>();
         player = GameObject.FindGameObjectWithTag ("Player");
         playerMovement = player.GetComponent<PlayerMovement>();
+        reporter = GetComponent<KillReporter>();
 	}
 
     protected virtual void DisableComponents() {
@@ -89,6 +100,7 @@ public class EnemyManager : CharacterManager {
         }
         DisableComponents();
 		GetComponent<Collider> ().enabled = false;
+        if (reporter) reporter.ReportToManager();
         alive = false;
 	}
 
@@ -96,6 +108,12 @@ public class EnemyManager : CharacterManager {
         if (alive) {
             distraction.ResetDistraction();
             sight.SetSightOnPlayer();
+        }
+    }
+
+    public void ShowMark(string type) {
+        if (symbol) {
+            symbol.PopMark(type);
         }
     }
 }

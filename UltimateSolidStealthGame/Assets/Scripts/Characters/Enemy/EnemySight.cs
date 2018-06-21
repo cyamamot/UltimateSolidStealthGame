@@ -66,9 +66,16 @@ public abstract class EnemySight : MonoBehaviour {
 	*/
 	protected int currentFOV;
 
-	public int SightLayer {
+    protected int specialSightLayer;
+
+    protected AlertedReporter reporter;
+
+    public int SightLayer {
 		get { return sightLayer; }
 	}
+    public int SpecialSightLayer {
+        get { return specialSightLayer; }
+    }
 	public bool Alerted {
 		get { return alerted; }
 		set {
@@ -94,7 +101,9 @@ public abstract class EnemySight : MonoBehaviour {
         sightLayer = 1 << LayerMask.NameToLayer ("Enemy");
         sightLayer += (1 << LayerMask.NameToLayer("Ignore Raycast"));
 		sightLayer = ~sightLayer;
-		GameObject temp = GameObject.FindGameObjectWithTag ("Player");
+        specialSightLayer = (~sightLayer) + (1 << LayerMask.NameToLayer("HidingPlace"));
+        specialSightLayer = ~specialSightLayer;
+        GameObject temp = GameObject.FindGameObjectWithTag ("Player");
 		if (temp) {
 			playerMovement = temp.GetComponent<PlayerMovement> ();
 		}
@@ -104,13 +113,15 @@ public abstract class EnemySight : MonoBehaviour {
         walkSpeed = manager.Movement.Nav.speed;
         runSpeed = (runSpeed >= 0.0f) ? runSpeed : walkSpeed;
         pathToPlayer = new List<int> ();
+        reporter = GetComponent<AlertedReporter>();
 	}
 
 	protected virtual void Update() {
 		CheckSightline ();
 		if (alerted && pathToPlayer.Count == 0) {
 			Alerted = false;
-			manager.Movement.PauseMovement (alertedPauseLength);
+            manager.ShowMark("Question");
+            manager.Movement.PauseMovement (alertedPauseLength);
 		}
 	}
 
@@ -121,12 +132,15 @@ public abstract class EnemySight : MonoBehaviour {
 	protected abstract void CheckSightline ();
 
     public virtual void SetSightOnPlayer() {
-        Alerted = true;
         if (manager.IsBoss) {
             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.ParentVertexIndex);
         } else {
             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
+            if (!Alerted) manager.ShowMark("Exclamation");
         }
+        Alerted = true;
+        manager.Movement.HeardSound = false;
+        if (reporter) reporter.ReportToManager();
         if (pathToPlayer.Count > 0) {
             manager.Movement.Path = pathToPlayer;
         }

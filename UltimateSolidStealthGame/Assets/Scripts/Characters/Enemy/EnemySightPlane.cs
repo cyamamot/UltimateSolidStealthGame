@@ -53,13 +53,9 @@ public class EnemySightPlane : MonoBehaviour {
 	}
 
 	void Update() {
-        if (manager.Renderer.isVisible) {
-            startPosition = transform.position;
-            startPosition[1] = manager.Graph.FloorTop + 0.01f;
-            CreatePlane();
-        } else {
-            sightPlaneMesh.Clear();
-        }
+        startPosition = transform.position;
+        startPosition[1] = manager.Graph.FloorTop + 0.01f;
+        CreatePlane();
 	}
 
 	/*

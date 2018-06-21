@@ -71,11 +71,11 @@ public class EnemyWeaponSystem : MonoBehaviour {
 				if (manager.Sight.Alerted) {
 					if (Vector3.Angle (transform.forward.normalized, Vector3.right) % 90.0f == 0.0f) {
 						RaycastHit hit;
-						if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, manager.Sight.SightLayer)) {
+						if (Physics.Raycast (transform.position, transform.forward, out hit, Mathf.Infinity, manager.Sight.SpecialSightLayer)) {
                             if (range == 0 || range <= hit.distance) {
                                 if (hit.transform.CompareTag("Player") == true) {
                                     firing = true;
-                                    manager.Movement.StopMovement(0.5f);
+                                    manager.Movement.StopMovement(0.75f);
                                     gun.UseEquipment();
                                     StartCoroutine("FirePause");
                                 }

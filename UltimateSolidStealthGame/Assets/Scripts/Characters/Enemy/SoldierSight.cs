@@ -7,12 +7,8 @@ using UnityEngine;
 */
 public class SoldierSight : EnemySight{
 
-    int specialSightLayer;
-
 	protected override void Start() {
 		base.Start();
-        specialSightLayer = (~sightLayer) + (1 << LayerMask.NameToLayer("HidingPlace"));
-        specialSightLayer = ~specialSightLayer;
 	}
 
 	protected override void Update() {
@@ -56,10 +52,12 @@ public class SoldierSight : EnemySight{
         } else {
             pathToPlayer = manager.Graph.FindShortestPath(manager.Movement.CurrVertexIndex, playerMovement.CurrVertexIndex);
         }
+        if (reporter) reporter.ReportToManager();
         if (pathToPlayer.Count > 0) {
+            if (!Alerted) manager.ShowMark("Exclamation");
             Alerted = true;
             if (manager.Distraction) {
-                manager.Distraction.Distracted = false;
+                manager.Distraction.ResetDistraction();
             }
             manager.Movement.Path = pathToPlayer;
         }

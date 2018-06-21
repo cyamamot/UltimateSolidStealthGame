@@ -72,11 +72,10 @@ public abstract class EnemyDistraction : MonoBehaviour {
 	 	if distraction is destroyed before enemy gets to it, go back to patrolling
 	*/
 	protected virtual void LateUpdate () {
-		if (distracted) {
+		if (distracted && !manager.Sight.Alerted) {
 			if (distraction && pathToDistraction.Count == 0) { 
 				Vector3 pos = distraction.transform.position;
-				if (Mathf.Approximately(transform.position.x, pos.x) && Mathf.Approximately(transform.position.z, pos.z)
-                        || Vector3.Distance(transform.position, pos) <= manager.Graph.VertexDistance) {
+				if (Mathf.Approximately(transform.position.x, pos.x) && Mathf.Approximately(transform.position.z, pos.z)) {
 					enabled = false;
 					manager.Movement.enabled = false;
 					if (manager.Sight) manager.Sight.enabled = false;
@@ -105,11 +104,13 @@ public abstract class EnemyDistraction : MonoBehaviour {
 	*/
 	public virtual void SetDistraction (int vertex, ref GameObject obj) {
 		if (!manager.Sight.Alerted && vertex >= 0) {
-			distraction = obj;
-			distracted = true;
 			pathToDistraction = manager.Graph.FindShortestPath (manager.Movement.CurrVertexIndex, vertex);
 			if (pathToDistraction.Count > 0) {
-				manager.Movement.Path = pathToDistraction;
+                distraction = obj;
+                if (!distracted) manager.ShowMark("Question");
+                manager.Movement.HeardSound = false;
+                distracted = true;
+                manager.Movement.Path = pathToDistraction;
 			}
 		}
 	}

@@ -28,6 +28,9 @@ public class PlayerManager : CharacterManager {
     public InteractSystem Interact {
         get { return interact; }
     }
+    public SwipeManager Swipe {
+        get { return swipe; }
+    }
 
 	protected override void Awake () {
 		base.Awake ();
@@ -51,5 +54,7 @@ public class PlayerManager : CharacterManager {
 		health.enabled = false;
 		GetComponent<SwipeManager> ().enabled = false;
 		GetComponent<Collider> ().enabled = false;
+        LevelManager levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+        levelManager.LevelFailed();
 	}
 }

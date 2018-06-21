@@ -9,7 +9,7 @@ public class InteractSystem : MonoBehaviour {
 
     PlayerManager manager;
 
-	void Start () {
+	void Awake () {
         manager = GetComponent<PlayerManager>();
         enabled = false;
 	}
