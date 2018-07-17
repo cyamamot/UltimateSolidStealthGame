@@ -21,7 +21,7 @@ public class LevelManager : MonoBehaviour {
     [SerializeField]
     MissionFailedScreen failedScreen;
     [SerializeField]
-    FaceTime faceTime;
+    FaceTime2 faceTime;
     [SerializeField]
     Image blackoutScreen;
 

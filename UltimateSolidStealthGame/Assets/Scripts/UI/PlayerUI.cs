@@ -82,9 +82,13 @@ public class PlayerUI : MonoBehaviour {
     Button crouchButton;
     RectTransform screenRect;
     int screenWidth;
+    int screenHeight;
 
     public int ScreenWidth {
         get { return screenWidth; }
+    }
+    public int ScreenHeight {
+        get { return screenHeight; }
     }
 
 	void Awake () {
@@ -105,6 +109,7 @@ public class PlayerUI : MonoBehaviour {
         healthBar = healthBarObject.GetComponent<Slider>();
         crouchButton = crouchButtonObject.GetComponent<Button>();
         screenWidth = (int)(screenRect.rect.width + 1);
+        screenHeight = (int)(screenRect.rect.height + 1);
 	}
 
     void Update () {
